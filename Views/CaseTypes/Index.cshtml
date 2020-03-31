@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Resolve.Models.CaseType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseTypeTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LongDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseTypeTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LongDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CaseTypeID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CaseTypeID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CaseTypeID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,124 @@
+﻿@model Resolve.Models.Case
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div>
+    <h4>General Case Details</h4>
+    <br>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OnBehalfOf)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OnBehalfOf)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseStatus)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseCreationTimestamp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseCreationTimestamp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseType.CaseTypeID)
+        </dd>
+    </div><hr />
+        <div>
+            <h4>Specific Case Details</h4>
+
+
+            <br>
+            Here specific case details will reside!
+
+
+        </div><hr />
+    <div>
+    <br>
+
+        <h4>Case Comments</h4>
+    <br>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Posted By</th>
+                    <th>Comment</th>
+                    <th>Timestamp</th>
+                </tr>
+                @foreach (var item in Model.CaseComments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CommentTimestamp)
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <form asp-action="CreateComment">
+                <label for="Comment">Comment</label>
+                <input type="text" id="Comment" name="Comment" class="form-control"/>
+                <br>
+                <input type="hidden" value="@Model.UserID" name="UserID" />
+                <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                <input type="submit" value="Post Comment" class="btn btn-primary"/>
+            </form>
+
+            <!--
+            <a class="btn btn-primary" asp-controller="CaseComments" asp-action="Create" asp-route-id="@Model.CaseID">Post Comment</a>
+            -->
+
+
+        </dd>
+ </div><hr />
+<div>
+
+        <h4>Case Audit Details</h4>
+    <br>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Audit Log</th>
+                </tr>
+                @foreach (var item in Model.CaseAudits)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuditLog)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
