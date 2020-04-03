@@ -13,12 +13,21 @@ using Microsoft.Identity.Web;
 using Resolve.Services;
 using Resolve.Infrastructure;
 using Resolve.Models;
+using Resolve.Data;
 
 namespace Resolve.Controllers
 {
     [Authorize]
     public class HomeController : Controller
+
+
     {
+        private readonly ResolveCaseContext _context;
+
+        public HomeController(ResolveCaseContext context)
+        {
+            _context = context;
+        }
 
         readonly ITokenAcquisition tokenAcquisition;
         readonly WebOptions webOptions;
@@ -39,27 +48,27 @@ namespace Resolve.Controllers
         }
         */
 
-        public IActionResult Index()
+        [AuthorizeForScopes(Scopes = new[] { Constants.ScopeUserRead })]
+        public async Task<IActionResult> Index()
         {
-            var email = User.Identity.Name;
-            Console.WriteLine(email);
-            var prop = Profile().GetType().GetProperties();            
-            
-            foreach (var child in prop)
-            {
-                Console.WriteLine(child.Name);
-                /*
-                object value = child.GetValue(prop);
-                if (child.Name == "GivenName")
-                {
-                    string fname = value?.ToString();
-                    ViewData["Fname"] = fname;
-                }
-                */
-                
-            }
-            
-            
+            /*
+            var ADemail = User.Identity.Name;            
+            var @User = await _context.User
+            .Include(s => s.U)
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(m => m. == id);
+            var DBemail = "test";
+            */
+
+            // test
+            Graph::GraphServiceClient graphClient = GetGraphServiceClient(new[] { Constants.ScopeUserRead });
+
+            var me = await graphClient.Me.Request().GetAsync();
+            ViewData["Me"] = me;
+
+
+
+
 
             return View();
         }
