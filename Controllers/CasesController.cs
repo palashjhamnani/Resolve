@@ -42,7 +42,7 @@ namespace Resolve.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Console.WriteLine("Check Check");
+                    //Console.WriteLine("Check Check");
                     Console.WriteLine(id);
                     _context.Add(caseComment);
                     await _context.SaveChangesAsync();
@@ -82,6 +82,7 @@ namespace Resolve.Controllers
 
             var @case = await _context.Case
                 .Include(s => s.CaseType)
+                //.ThenInclude(q => q.CaseTypeTitle)
                 .Include(u => u.User)
                 .Include(p => p.CaseComments)
                 .ThenInclude(e => e.User)
