@@ -22,7 +22,7 @@ namespace Resolve.Controllers
         // GET: CaseComments
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.CaseComment.Include(c => c.Case).Include(c => c.User);
+            var resolveCaseContext = _context.CaseComment.Include(c => c.Case).Include(c => c.LocalUser);
             return View(await resolveCaseContext.ToListAsync());
         }
 
@@ -36,7 +36,7 @@ namespace Resolve.Controllers
 
             var caseComment = await _context.CaseComment
                 .Include(c => c.Case)
-                .Include(c => c.User)
+                .Include(c => c.LocalUser)
                 .FirstOrDefaultAsync(m => m.CaseCommentID == id);
             if (caseComment == null)
             {
@@ -59,7 +59,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,UserID")] CaseComment caseComment)
+        public async Task<IActionResult> Create(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,LocalUserID")] CaseComment caseComment)
         {
             //caseComment.CaseID = cid;
             //HttpContext.Request.Form["UserName"];
@@ -101,7 +101,7 @@ namespace Resolve.Controllers
                 return NotFound();
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", caseComment.CaseID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", caseComment.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseComment.LocalUserID);
             return View(caseComment);
         }
 
@@ -110,7 +110,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,UserID")] CaseComment caseComment)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,LocalUserID")] CaseComment caseComment)
         {
             if (id != caseComment.CaseCommentID)
             {
@@ -138,7 +138,7 @@ namespace Resolve.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", caseComment.CaseID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", caseComment.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseComment.LocalUserID);
             return View(caseComment);
         }
 
@@ -152,7 +152,7 @@ namespace Resolve.Controllers
 
             var caseComment = await _context.CaseComment
                 .Include(c => c.Case)
-                .Include(c => c.User)
+                .Include(c => c.LocalUser)
                 .FirstOrDefaultAsync(m => m.CaseCommentID == id);
             if (caseComment == null)
             {

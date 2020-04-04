@@ -22,7 +22,7 @@ namespace Resolve.Controllers
         // GET: CaseTypes
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.CaseType.Include(c => c.User);
+            var resolveCaseContext = _context.CaseType.Include(c => c.LocalUser);
             return View(await resolveCaseContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
-                .Include(c => c.User)
+                .Include(c => c.LocalUser)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {
@@ -48,7 +48,7 @@ namespace Resolve.Controllers
         // GET: CaseTypes/Create
         public IActionResult Create()
         {
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID");
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,UserID")] CaseType caseType)
+        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalUserID")] CaseType caseType)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace Resolve.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", caseType.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseType.LocalUserID);
             return View(caseType);
         }
 
@@ -82,7 +82,7 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", caseType.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseType.LocalUserID);
             return View(caseType);
         }
 
@@ -91,7 +91,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,UserID")] CaseType caseType)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalUserID")] CaseType caseType)
         {
             if (id != caseType.CaseTypeID)
             {
@@ -118,7 +118,7 @@ namespace Resolve.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", caseType.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseType.LocalUserID);
             return View(caseType);
         }
 
@@ -131,7 +131,7 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
-                .Include(c => c.User)
+                .Include(c => c.LocalUser)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {

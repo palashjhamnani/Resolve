@@ -6,6 +6,15 @@
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20200325050502_v1.cs" />
+    <Compile Remove="Migrations\20200325050502_v1.Designer.cs" />
+    <Compile Remove="Migrations\20200404000737_UserChange.cs" />
+    <Compile Remove="Migrations\20200404000737_UserChange.Designer.cs" />
+    <Compile Remove="Migrations\20200404001308_v1.cs" />
+    <Compile Remove="Migrations\20200404001308_v1.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.1" />

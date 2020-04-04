@@ -10,7 +10,7 @@ namespace Resolve.Data
         {
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<LocalUser> LocalUser { get; set; }
         public DbSet<CaseType> CaseType { get; set; }
         public DbSet<Case> Case { get; set; }
         public DbSet<Approver> Approver { get; set; }
@@ -22,7 +22,7 @@ namespace Resolve.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Case>()
-                .HasOne(p => p.User)
+                .HasOne(p => p.LocalUser)
                 .WithMany(q => q.Cases)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -36,7 +36,7 @@ namespace Resolve.Data
             .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Approver>()
-                .HasKey(c => new { c.CaseID, c.UserID });
+                .HasKey(c => new { c.CaseID, c.LocalUserID });
 
             modelBuilder.Entity<CaseComment>()
             .Property(b => b.CommentTimestamp)

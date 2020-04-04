@@ -19,7 +19,7 @@ namespace Resolve.Models
 
         public int CaseID { get; set; }
         public Case Case { get; set; }
-        public int UserID { get; set; }
-        public User User { get; set; }
+        public int LocalUserID { get; set; }
+        public LocalUser LocalUser { get; set; }
     }
 }

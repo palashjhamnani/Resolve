@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.LocalUser)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OnBehalfOf)
@@ -34,7 +34,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserID)
+                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OnBehalfOf)

@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200325050502_v1")]
+    [Migration("20200404050701_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,18 +26,21 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("LocalUserID")
                         .HasColumnType("int");
 
                     b.Property<int>("Approved")
                         .HasColumnType("int");
 
+                    b.Property<string>("LocalUserID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.HasKey("CaseID", "UserID");
+                    b.HasKey("CaseID", "LocalUserID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("LocalUserID1");
 
                     b.ToTable("Approver");
                 });
@@ -60,17 +63,20 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("OnBehalfOf")
+                    b.Property<int>("LocalUserID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<string>("LocalUserID1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("OnBehalfOf")
                         .HasColumnType("int");
 
                     b.HasKey("CaseID");
 
                     b.HasIndex("CaseTypeID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("LocalUserID1");
 
                     b.ToTable("Case");
                 });
@@ -94,14 +100,17 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("LocalUserID")
                         .HasColumnType("int");
+
+                    b.Property<string>("LocalUserID1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CaseAuditID");
 
                     b.HasIndex("CaseID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("LocalUserID1");
 
                     b.ToTable("CaseAudit");
                 });
@@ -125,14 +134,17 @@ namespace Resolve.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("LocalUserID")
                         .HasColumnType("int");
+
+                    b.Property<string>("LocalUserID1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CaseCommentID");
 
                     b.HasIndex("CaseID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("LocalUserID1");
 
                     b.ToTable("CaseComment");
                 });
@@ -147,17 +159,39 @@ namespace Resolve.Migrations
                     b.Property<string>("CaseTypeTitle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LocalUserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocalUserID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("LongDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("CaseTypeID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("LocalUserID1");
 
                     b.ToTable("CaseType");
+                });
+
+            modelBuilder.Entity("Resolve.Models.LocalUser", b =>
+                {
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmailID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LocalUserID");
+
+                    b.ToTable("LocalUser");
                 });
 
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
@@ -181,27 +215,6 @@ namespace Resolve.Migrations
                     b.ToTable("SampleCaseType");
                 });
 
-            modelBuilder.Entity("Resolve.Models.User", b =>
-                {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EmailID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserID");
-
-                    b.ToTable("User");
-                });
-
             modelBuilder.Entity("Resolve.Models.Approver", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
@@ -210,11 +223,9 @@ namespace Resolve.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Resolve.Models.User", "User")
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocalUserID1");
                 });
 
             modelBuilder.Entity("Resolve.Models.Case", b =>
@@ -225,11 +236,10 @@ namespace Resolve.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Resolve.Models.User", "User")
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany("Cases")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("LocalUserID1")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseAudit", b =>
@@ -240,11 +250,9 @@ namespace Resolve.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Resolve.Models.User", "User")
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocalUserID1");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseComment", b =>
@@ -255,20 +263,16 @@ namespace Resolve.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Resolve.Models.User", "User")
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocalUserID1");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseType", b =>
                 {
-                    b.HasOne("Resolve.Models.User", "User")
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocalUserID1");
                 });
 
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>

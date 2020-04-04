@@ -34,7 +34,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateComment(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,UserID")] CaseComment caseComment)
+        public async Task<IActionResult> CreateComment(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,LocalUserID")] CaseComment caseComment)
         {
             //caseComment.CaseID = cid;
             //HttpContext.Request.Form["UserName"];
@@ -67,7 +67,7 @@ namespace Resolve.Controllers
         // GET: Cases
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.Case.Include(s => s.CaseType).Include(u => u.User);
+            var resolveCaseContext = _context.Case.Include(s => s.CaseType).Include(u => u.LocalUser);
             //var resolveCaseContext = _context.Case;
             return View(await resolveCaseContext.ToListAsync());
         }
@@ -83,9 +83,9 @@ namespace Resolve.Controllers
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)
-                .Include(u => u.User)
+                .Include(u => u.LocalUser)
                 .Include(p => p.CaseComments)
-                .ThenInclude(e => e.User)
+                .ThenInclude(e => e.LocalUser)
                 .Include(a => a.CaseAudits)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
@@ -102,7 +102,7 @@ namespace Resolve.Controllers
         public IActionResult Create()
         {
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID");
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
             return View();
         }
 
@@ -113,18 +113,18 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseID,UserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
+        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(@case);
-                var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, UserID = 1};
+                var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
                 _context.Add(test);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", @case.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }
 
@@ -142,7 +142,7 @@ namespace Resolve.Controllers
                 return NotFound();
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", @case.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }
 
@@ -151,7 +151,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,UserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
         {
             if (id != @case.CaseID)
             {
@@ -179,7 +179,7 @@ namespace Resolve.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", @case.UserID);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }
 
@@ -193,7 +193,7 @@ namespace Resolve.Controllers
 
             var @case = await _context.Case
                 .Include(s => s.CaseType)
-                .Include(u => u.User)
+                .Include(u => u.LocalUser)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {

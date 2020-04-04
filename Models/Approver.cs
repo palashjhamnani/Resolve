@@ -15,8 +15,8 @@ namespace Resolve.Models
 
         // Case to be approved by
         [Display(Name = "Approver")]
-        public int UserID { get; set; }
-        public User User { get; set; }
+        public int LocalUserID { get; set; }
+        public LocalUser LocalUser { get; set; }
 
         public int Approved { get; set; }
         public int Order { get; set; }     

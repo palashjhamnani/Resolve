@@ -17,8 +17,8 @@ namespace Resolve.Models
         public string LongDescription { get; set; }
 
         [Display(Name = "Default Approver")]
-        public int UserID { get; set; }
-        public User User { get; set; }
+        public int LocalUserID { get; set; }
+        public LocalUser LocalUser { get; set; }
 
         public ICollection<Case> Cases { get; set; }
     }

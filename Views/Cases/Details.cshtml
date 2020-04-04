@@ -10,10 +10,10 @@
     <br>
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
+            @Html.DisplayNameFor(model => model.LocalUser)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)
+            @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OnBehalfOf)
@@ -65,7 +65,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+                            @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Comment)
@@ -81,7 +81,7 @@
                 <label for="Comment">Comment</label>
                 <input type="text" id="Comment" name="Comment" class="form-control"/>
                 <br>
-                <input type="hidden" value="@Model.UserID" name="UserID" />
+                <input type="hidden" value="@Model.LocalUserID" name="LocalUserID" />
                 <input type="hidden" value="@Model.CaseID" name="CaseID" />
                 <input type="submit" value="Post Comment" class="btn btn-primary"/>
             </form>
