@@ -13,6 +13,12 @@
     <Compile Remove="Migrations\20200404000737_UserChange.Designer.cs" />
     <Compile Remove="Migrations\20200404001308_v1.cs" />
     <Compile Remove="Migrations\20200404001308_v1.Designer.cs" />
+    <Compile Remove="Migrations\20200404050701_v1.cs" />
+    <Compile Remove="Migrations\20200404050701_v1.Designer.cs" />
+    <Compile Remove="Migrations\20200404192040_V1.cs" />
+    <Compile Remove="Migrations\20200404192040_V1.Designer.cs" />
+    <Compile Remove="Migrations\20200404192629_V1.cs" />
+    <Compile Remove="Migrations\20200404192629_V1.Designer.cs" />
   </ItemGroup>
 
 

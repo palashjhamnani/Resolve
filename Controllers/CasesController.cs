@@ -100,9 +100,11 @@ namespace Resolve.Controllers
 
         // GET: Cases/Create
         public IActionResult Create()
-        {
+        {          
+            //ViewData["LocalUserID"] = LUserID[0];
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
+                       
             return View();
         }
 
@@ -118,8 +120,8 @@ namespace Resolve.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(@case);
-                var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
-                _context.Add(test);
+                //var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
+                //_context.Add(test);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

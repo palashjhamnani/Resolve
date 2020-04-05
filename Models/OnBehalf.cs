@@ -13,7 +13,7 @@ namespace Resolve.Models
 
         // Case to be approved by
         [Display(Name = "On behalf of")]
-        public int LocalUserID { get; set; }
+        public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
     }
 }
