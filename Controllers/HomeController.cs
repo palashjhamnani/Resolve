@@ -50,7 +50,7 @@ namespace Resolve.Controllers
         public async Task<IActionResult> Index()
         {
             var ADemail = User.Identity.Name;
-            Console.WriteLine(ADemail);
+            //Console.WriteLine(ADemail);
             var LocalUserEmail = _context.LocalUser
                 .FromSqlRaw("SELECT * FROM dbo.LocalUser where EmailID={0}", ADemail)
                 .ToList();
@@ -58,7 +58,7 @@ namespace Resolve.Controllers
 
             if (c == 0)
             {
-                Console.WriteLine("Creating Local User");
+                //Console.WriteLine("Creating Local User");
                 Graph::GraphServiceClient graphClient = GetGraphServiceClient(new[] { Constants.ScopeUserRead });
                 var me = await graphClient.Me.Request().GetAsync() as Microsoft.Graph.User;
                 var properties = me.GetType().GetProperties();
@@ -106,17 +106,17 @@ namespace Resolve.Controllers
                 };
                 _context.Add(CreateUser);
                 await _context.SaveChangesAsync();
-
+                /*
                 Console.WriteLine("Created");
                 Console.WriteLine(LocalUserAttributes["NetID"]);
                 Console.WriteLine(LocalUserAttributes["FirstName"]);
                 Console.WriteLine(LocalUserAttributes["LastName"]);
                 Console.WriteLine(LocalUserAttributes["EmailID"]);
-
+                */
             }
             else
             {
-                Console.WriteLine("User Already Exists!");
+                //Console.WriteLine("User Already Exists!");
                 Console.WriteLine(LocalUserEmail[0].LocalUserID);
             }
             

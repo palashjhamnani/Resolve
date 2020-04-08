@@ -13,7 +13,7 @@ namespace Resolve.Models
 
         // Case Created by
         [Display(Name = "Case Created By")]
-        public int LocalUserID { get; set; }
+        public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
 
         // Case can be on behalf of someone who doesn't yet exist in User table, below is a flag      

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Resolve.Models
 {
@@ -17,7 +18,7 @@ namespace Resolve.Models
         public string LongDescription { get; set; }
 
         [Display(Name = "Default Approver")]
-        public int LocalUserID { get; set; }
+        public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
 
         public ICollection<Case> Cases { get; set; }

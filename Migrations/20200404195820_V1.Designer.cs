@@ -10,8 +10,8 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200404050701_v1")]
-    partial class v1
+    [Migration("20200404195820_V1")]
+    partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,21 +26,18 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocalUserID")
-                        .HasColumnType("int");
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Approved")
                         .HasColumnType("int");
-
-                    b.Property<string>("LocalUserID1")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.HasKey("CaseID", "LocalUserID");
 
-                    b.HasIndex("LocalUserID1");
+                    b.HasIndex("LocalUserID");
 
                     b.ToTable("Approver");
                 });
@@ -63,10 +60,7 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocalUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocalUserID1")
+                    b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("OnBehalfOf")
@@ -76,7 +70,7 @@ namespace Resolve.Migrations
 
                     b.HasIndex("CaseTypeID");
 
-                    b.HasIndex("LocalUserID1");
+                    b.HasIndex("LocalUserID");
 
                     b.ToTable("Case");
                 });
@@ -100,17 +94,14 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocalUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocalUserID1")
+                    b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CaseAuditID");
 
                     b.HasIndex("CaseID");
 
-                    b.HasIndex("LocalUserID1");
+                    b.HasIndex("LocalUserID");
 
                     b.ToTable("CaseAudit");
                 });
@@ -134,17 +125,14 @@ namespace Resolve.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("LocalUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocalUserID1")
+                    b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CaseCommentID");
 
                     b.HasIndex("CaseID");
 
-                    b.HasIndex("LocalUserID1");
+                    b.HasIndex("LocalUserID");
 
                     b.ToTable("CaseComment");
                 });
@@ -159,10 +147,7 @@ namespace Resolve.Migrations
                     b.Property<string>("CaseTypeTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocalUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocalUserID1")
+                    b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LongDescription")
@@ -170,7 +155,7 @@ namespace Resolve.Migrations
 
                     b.HasKey("CaseTypeID");
 
-                    b.HasIndex("LocalUserID1");
+                    b.HasIndex("LocalUserID");
 
                     b.ToTable("CaseType");
                 });
@@ -225,7 +210,9 @@ namespace Resolve.Migrations
 
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("LocalUserID1");
+                        .HasForeignKey("LocalUserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Resolve.Models.Case", b =>
@@ -238,7 +225,7 @@ namespace Resolve.Migrations
 
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany("Cases")
-                        .HasForeignKey("LocalUserID1")
+                        .HasForeignKey("LocalUserID")
                         .OnDelete(DeleteBehavior.NoAction);
                 });
 
@@ -252,7 +239,7 @@ namespace Resolve.Migrations
 
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("LocalUserID1");
+                        .HasForeignKey("LocalUserID");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseComment", b =>
@@ -265,14 +252,14 @@ namespace Resolve.Migrations
 
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("LocalUserID1");
+                        .HasForeignKey("LocalUserID");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseType", b =>
                 {
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
-                        .HasForeignKey("LocalUserID1");
+                        .HasForeignKey("LocalUserID");
                 });
 
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>

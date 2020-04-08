@@ -79,7 +79,9 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-
+            var luser = _context.LocalUser
+                .FromSqlRaw("SELECT * FROM dbo.LocalUser where EmailID={0}", User.Identity.Name).ToList();
+            ViewData["LUserID"] = luser[0].LocalUserID;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)
@@ -100,9 +102,11 @@ namespace Resolve.Controllers
 
         // GET: Cases/Create
         public IActionResult Create()
-        {
+        {          
+            //ViewData["LocalUserID"] = LUserID[0];
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
+                       
             return View();
         }
 
@@ -118,8 +122,8 @@ namespace Resolve.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(@case);
-                var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
-                _context.Add(test);
+                //var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
+                //_context.Add(test);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

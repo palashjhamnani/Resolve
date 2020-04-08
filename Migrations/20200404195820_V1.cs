@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Resolve.Migrations
 {
-    public partial class v1 : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,15 +29,14 @@ namespace Resolve.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaseTypeTitle = table.Column<string>(nullable: true),
                     LongDescription = table.Column<string>(nullable: true),
-                    LocalUserID = table.Column<int>(nullable: false),
-                    LocalUserID1 = table.Column<string>(nullable: true)
+                    LocalUserID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CaseType", x => x.CaseTypeID);
                     table.ForeignKey(
-                        name: "FK_CaseType_LocalUser_LocalUserID1",
-                        column: x => x.LocalUserID1,
+                        name: "FK_CaseType_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
                         principalTable: "LocalUser",
                         principalColumn: "LocalUserID",
                         onDelete: ReferentialAction.Restrict);
@@ -49,8 +48,7 @@ namespace Resolve.Migrations
                 {
                     CaseID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LocalUserID = table.Column<int>(nullable: false),
-                    LocalUserID1 = table.Column<string>(nullable: true),
+                    LocalUserID = table.Column<string>(nullable: true),
                     OnBehalfOf = table.Column<int>(nullable: false),
                     CaseStatus = table.Column<string>(nullable: true),
                     CaseCreationTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
@@ -65,8 +63,8 @@ namespace Resolve.Migrations
                         principalTable: "CaseType",
                         principalColumn: "CaseTypeID");
                     table.ForeignKey(
-                        name: "FK_Case_LocalUser_LocalUserID1",
-                        column: x => x.LocalUserID1,
+                        name: "FK_Case_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
                         principalTable: "LocalUser",
                         principalColumn: "LocalUserID");
                 });
@@ -76,8 +74,7 @@ namespace Resolve.Migrations
                 columns: table => new
                 {
                     CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<int>(nullable: false),
-                    LocalUserID1 = table.Column<string>(nullable: true),
+                    LocalUserID = table.Column<string>(nullable: false),
                     Approved = table.Column<int>(nullable: false),
                     Order = table.Column<int>(nullable: false)
                 },
@@ -91,11 +88,11 @@ namespace Resolve.Migrations
                         principalColumn: "CaseID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Approver_LocalUser_LocalUserID1",
-                        column: x => x.LocalUserID1,
+                        name: "FK_Approver_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
                         principalTable: "LocalUser",
                         principalColumn: "LocalUserID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,8 +104,7 @@ namespace Resolve.Migrations
                     AuditTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     AuditLog = table.Column<string>(nullable: false),
                     CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<int>(nullable: false),
-                    LocalUserID1 = table.Column<string>(nullable: true)
+                    LocalUserID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -120,8 +116,8 @@ namespace Resolve.Migrations
                         principalColumn: "CaseID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CaseAudit_LocalUser_LocalUserID1",
-                        column: x => x.LocalUserID1,
+                        name: "FK_CaseAudit_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
                         principalTable: "LocalUser",
                         principalColumn: "LocalUserID",
                         onDelete: ReferentialAction.Restrict);
@@ -136,8 +132,7 @@ namespace Resolve.Migrations
                     Comment = table.Column<string>(nullable: false),
                     CommentTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<int>(nullable: false),
-                    LocalUserID1 = table.Column<string>(nullable: true)
+                    LocalUserID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,8 +144,8 @@ namespace Resolve.Migrations
                         principalColumn: "CaseID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CaseComment_LocalUser_LocalUserID1",
-                        column: x => x.LocalUserID1,
+                        name: "FK_CaseComment_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
                         principalTable: "LocalUser",
                         principalColumn: "LocalUserID",
                         onDelete: ReferentialAction.Restrict);
@@ -177,9 +172,9 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Approver_LocalUserID1",
+                name: "IX_Approver_LocalUserID",
                 table: "Approver",
-                column: "LocalUserID1");
+                column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Case_CaseTypeID",
@@ -187,9 +182,9 @@ namespace Resolve.Migrations
                 column: "CaseTypeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Case_LocalUserID1",
+                name: "IX_Case_LocalUserID",
                 table: "Case",
-                column: "LocalUserID1");
+                column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseAudit_CaseID",
@@ -197,9 +192,9 @@ namespace Resolve.Migrations
                 column: "CaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseAudit_LocalUserID1",
+                name: "IX_CaseAudit_LocalUserID",
                 table: "CaseAudit",
-                column: "LocalUserID1");
+                column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseComment_CaseID",
@@ -207,14 +202,14 @@ namespace Resolve.Migrations
                 column: "CaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseComment_LocalUserID1",
+                name: "IX_CaseComment_LocalUserID",
                 table: "CaseComment",
-                column: "LocalUserID1");
+                column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseType_LocalUserID1",
+                name: "IX_CaseType_LocalUserID",
                 table: "CaseType",
-                column: "LocalUserID1");
+                column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SampleCaseType_CaseID1",
