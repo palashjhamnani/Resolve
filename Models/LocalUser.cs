@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Resolve.Models
 {
-    public class LocalUser: IdentityUser
+    public class LocalUser
     {
         // LocalUserID will be populated as UW NetID at the first authentication
         // Assumption: this data about the user will never change
