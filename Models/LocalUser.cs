@@ -9,7 +9,8 @@ namespace Resolve.Models
 {
     public class LocalUser
     {
-        // LocalUserID will be populated as UW NetID at the first authentication 
+        // LocalUserID will be populated as UW NetID at the first authentication
+        // Assumption: this data about the user will never change
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string LocalUserID { get; set; }
         public string FirstName { get; set; }
