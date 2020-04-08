@@ -79,7 +79,9 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-
+            var luser = _context.LocalUser
+                .FromSqlRaw("SELECT * FROM dbo.LocalUser where EmailID={0}", User.Identity.Name).ToList();
+            ViewData["LUserID"] = luser[0].LocalUserID;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)
