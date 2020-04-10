@@ -18,25 +18,21 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Admin Menu
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" asp-area="" asp-controller="LocalGroups" asp-action="Index">Groups</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="CaseTypes" asp-action="Index">CaseTypes</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="CaseComments" asp-action="Index">CaseComments</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Cases" asp-action="Index">All Cases</a>
+                        </div>
+                    </div>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cases" asp-action="Index">Cases</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CaseComments" asp-action="Index">CaseComments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CaseTypes" asp-action="Index">CaseTypes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Profile">Profile</a>
-                        </li>
+                        </li>                        
                     </ul>
                 </div>
             </div>

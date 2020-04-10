@@ -11,9 +11,11 @@ namespace Resolve.Data
         }
 
         public DbSet<LocalUser> LocalUser { get; set; }
+        public DbSet<LocalGroup> LocalGroup { get; set; }
         public DbSet<CaseType> CaseType { get; set; }
         public DbSet<Case> Case { get; set; }
         public DbSet<Approver> Approver { get; set; }
+        public DbSet<GroupAssignment> GroupAssignment { get; set; }
         public DbSet<CaseAudit> CaseAudit { get; set; }
         public DbSet<CaseComment> CaseComment { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
@@ -37,6 +39,9 @@ namespace Resolve.Data
 
             modelBuilder.Entity<Approver>()
                 .HasKey(c => new { c.CaseID, c.LocalUserID });
+
+            modelBuilder.Entity<GroupAssignment>()
+                .HasKey(c => new { c.CaseID, c.LocalGroupID });
 
             modelBuilder.Entity<CaseComment>()
             .Property(b => b.CommentTimestamp)

@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200404195820_V1")]
+    [Migration("20200410202405_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,7 +147,7 @@ namespace Resolve.Migrations
                     b.Property<string>("CaseTypeTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LocalUserID")
+                    b.Property<string>("LocalGroupID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LongDescription")
@@ -155,9 +155,46 @@ namespace Resolve.Migrations
 
                     b.HasKey("CaseTypeID");
 
-                    b.HasIndex("LocalUserID");
+                    b.HasIndex("LocalGroupID");
 
                     b.ToTable("CaseType");
+                });
+
+            modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
+                {
+                    b.Property<int>("CaseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocalGroupID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CaseID", "LocalGroupID");
+
+                    b.HasIndex("LocalGroupID");
+
+                    b.ToTable("GroupAssignment");
+                });
+
+            modelBuilder.Entity("Resolve.Models.LocalGroup", b =>
+                {
+                    b.Property<string>("LocalGroupID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GroupDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LocalGroupID");
+
+                    b.HasIndex("LocalUserID");
+
+                    b.ToTable("LocalGroup");
                 });
 
             modelBuilder.Entity("Resolve.Models.LocalUser", b =>
@@ -256,6 +293,28 @@ namespace Resolve.Migrations
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseType", b =>
+                {
+                    b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
+                        .WithMany()
+                        .HasForeignKey("LocalGroupID");
+                });
+
+            modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
+                        .WithMany()
+                        .HasForeignKey("LocalGroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.LocalGroup", b =>
                 {
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()

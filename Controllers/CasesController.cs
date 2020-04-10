@@ -80,8 +80,8 @@ namespace Resolve.Controllers
                 return NotFound();
             }
             var luser = _context.LocalUser
-                .FromSqlRaw("SELECT * FROM dbo.LocalUser where EmailID={0}", User.Identity.Name).ToList();
-            ViewData["LUserID"] = luser[0].LocalUserID;
+                .FromSqlRaw("SELECT * FROM dbo.LocalUser where LocalUserID={0}", User.Identity.Name).ToList();
+            ViewData["LUserID"] = luser[0].EmailID;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)
@@ -105,7 +105,7 @@ namespace Resolve.Controllers
         {          
             //ViewData["LocalUserID"] = LUserID[0];
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
-            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
+            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
                        
             return View();
         }
@@ -119,16 +119,17 @@ namespace Resolve.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
         {
+
             if (ModelState.IsValid)
             {
                 _context.Add(@case);
                 //var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
                 //_context.Add(test);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
-            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
+            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }
 

@@ -1,9 +1,118 @@
-﻿@{
+﻿@model Resolve.Models.LocalUser
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @ViewData["Username"]</h1>
-    @ViewData["Fname"]
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+            <div class="row">
+                <div class="col-8">
+                    <h4>Cases created by you</h4>
+                    <br>
+                </div>
+                <div class="col-4">
+                    <div class="float-right"><a class="btn btn-primary" asp-controller="Cases" asp-action="Create">New Case</a></div>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Case ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Case Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    @foreach (var item in Model.Cases)
+                    {
+                        <a href="#">
+                            <tr>
+                                <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
+                                <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
+                            </tr>
+                        </a>
+                      }
+                    </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+            <h4>Cases assigned to you</h4>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>twitter</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-12" style="border:1px solid #cecece;">
+            <h4>Cases assigned to your groups</h4>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>twitter</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

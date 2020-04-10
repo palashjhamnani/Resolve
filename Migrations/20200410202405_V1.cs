@@ -22,6 +22,26 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LocalGroup",
+                columns: table => new
+                {
+                    LocalGroupID = table.Column<string>(nullable: false),
+                    GroupName = table.Column<string>(nullable: false),
+                    GroupDescription = table.Column<string>(nullable: true),
+                    LocalUserID = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocalGroup", x => x.LocalGroupID);
+                    table.ForeignKey(
+                        name: "FK_LocalGroup_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
+                        principalTable: "LocalUser",
+                        principalColumn: "LocalUserID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CaseType",
                 columns: table => new
                 {
@@ -29,16 +49,16 @@ namespace Resolve.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaseTypeTitle = table.Column<string>(nullable: true),
                     LongDescription = table.Column<string>(nullable: true),
-                    LocalUserID = table.Column<string>(nullable: true)
+                    LocalGroupID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CaseType", x => x.CaseTypeID);
                     table.ForeignKey(
-                        name: "FK_CaseType_LocalUser_LocalUserID",
-                        column: x => x.LocalUserID,
-                        principalTable: "LocalUser",
-                        principalColumn: "LocalUserID",
+                        name: "FK_CaseType_LocalGroup_LocalGroupID",
+                        column: x => x.LocalGroupID,
+                        principalTable: "LocalGroup",
+                        principalColumn: "LocalGroupID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -152,6 +172,30 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GroupAssignment",
+                columns: table => new
+                {
+                    CaseID = table.Column<int>(nullable: false),
+                    LocalGroupID = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupAssignment", x => new { x.CaseID, x.LocalGroupID });
+                    table.ForeignKey(
+                        name: "FK_GroupAssignment_Case_CaseID",
+                        column: x => x.CaseID,
+                        principalTable: "Case",
+                        principalColumn: "CaseID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupAssignment_LocalGroup_LocalGroupID",
+                        column: x => x.LocalGroupID,
+                        principalTable: "LocalGroup",
+                        principalColumn: "LocalGroupID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SampleCaseType",
                 columns: table => new
                 {
@@ -207,8 +251,18 @@ namespace Resolve.Migrations
                 column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseType_LocalUserID",
+                name: "IX_CaseType_LocalGroupID",
                 table: "CaseType",
+                column: "LocalGroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupAssignment_LocalGroupID",
+                table: "GroupAssignment",
+                column: "LocalGroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocalGroup_LocalUserID",
+                table: "LocalGroup",
                 column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
@@ -229,6 +283,9 @@ namespace Resolve.Migrations
                 name: "CaseComment");
 
             migrationBuilder.DropTable(
+                name: "GroupAssignment");
+
+            migrationBuilder.DropTable(
                 name: "SampleCaseType");
 
             migrationBuilder.DropTable(
@@ -236,6 +293,9 @@ namespace Resolve.Migrations
 
             migrationBuilder.DropTable(
                 name: "CaseType");
+
+            migrationBuilder.DropTable(
+                name: "LocalGroup");
 
             migrationBuilder.DropTable(
                 name: "LocalUser");

@@ -10,90 +10,90 @@ using Resolve.Models;
 
 namespace Resolve.Controllers
 {
-    public class CaseTypesController : Controller
+    public class LocalGroupsController : Controller
     {
         private readonly ResolveCaseContext _context;
 
-        public CaseTypesController(ResolveCaseContext context)
+        public LocalGroupsController(ResolveCaseContext context)
         {
             _context = context;
         }
 
-        // GET: CaseTypes
+        // GET: LocalGroups
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.CaseType.Include(c => c.LocalGroup);
+            var resolveCaseContext = _context.LocalGroup.Include(l => l.LocalUser);
             return View(await resolveCaseContext.ToListAsync());
         }
 
-        // GET: CaseTypes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: LocalGroups/Details/5
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var caseType = await _context.CaseType
-                .Include(c => c.LocalGroup)
-                .FirstOrDefaultAsync(m => m.CaseTypeID == id);
-            if (caseType == null)
+            var localGroup = await _context.LocalGroup
+                .Include(l => l.LocalUser)
+                .FirstOrDefaultAsync(m => m.LocalGroupID == id);
+            if (localGroup == null)
             {
                 return NotFound();
             }
 
-            return View(caseType);
+            return View(localGroup);
         }
 
-        // GET: CaseTypes/Create
+        // GET: LocalGroups/Create
         public IActionResult Create()
         {
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID");
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
             return View();
         }
 
-        // POST: CaseTypes/Create
+        // POST: LocalGroups/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID")] CaseType caseType)
+        public async Task<IActionResult> Create([Bind("LocalGroupID,GroupName,GroupDescription,LocalUserID")] LocalGroup localGroup)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(caseType);
+                _context.Add(localGroup);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
-            return View(caseType);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", localGroup.LocalUserID);
+            return View(localGroup);
         }
 
-        // GET: CaseTypes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: LocalGroups/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var caseType = await _context.CaseType.FindAsync(id);
-            if (caseType == null)
+            var localGroup = await _context.LocalGroup.FindAsync(id);
+            if (localGroup == null)
             {
                 return NotFound();
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
-            return View(caseType);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", localGroup.LocalUserID);
+            return View(localGroup);
         }
 
-        // POST: CaseTypes/Edit/5
+        // POST: LocalGroups/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID")] CaseType caseType)
+        public async Task<IActionResult> Edit(string id, [Bind("LocalGroupID,GroupName,GroupDescription,LocalUserID")] LocalGroup localGroup)
         {
-            if (id != caseType.CaseTypeID)
+            if (id != localGroup.LocalGroupID)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace Resolve.Controllers
             {
                 try
                 {
-                    _context.Update(caseType);
+                    _context.Update(localGroup);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CaseTypeExists(caseType.CaseTypeID))
+                    if (!LocalGroupExists(localGroup.LocalGroupID))
                     {
                         return NotFound();
                     }
@@ -118,43 +118,43 @@ namespace Resolve.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalUser, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
-            return View(caseType);
+            ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", localGroup.LocalUserID);
+            return View(localGroup);
         }
 
-        // GET: CaseTypes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: LocalGroups/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var caseType = await _context.CaseType
-                .Include(c => c.LocalGroupID)
-                .FirstOrDefaultAsync(m => m.CaseTypeID == id);
-            if (caseType == null)
+            var localGroup = await _context.LocalGroup
+                .Include(l => l.LocalUser)
+                .FirstOrDefaultAsync(m => m.LocalGroupID == id);
+            if (localGroup == null)
             {
                 return NotFound();
             }
 
-            return View(caseType);
+            return View(localGroup);
         }
 
-        // POST: CaseTypes/Delete/5
+        // POST: LocalGroups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var caseType = await _context.CaseType.FindAsync(id);
-            _context.CaseType.Remove(caseType);
+            var localGroup = await _context.LocalGroup.FindAsync(id);
+            _context.LocalGroup.Remove(localGroup);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CaseTypeExists(int id)
+        private bool LocalGroupExists(string id)
         {
-            return _context.CaseType.Any(e => e.CaseTypeID == id);
+            return _context.LocalGroup.Any(e => e.LocalGroupID == id);
         }
     }
 }

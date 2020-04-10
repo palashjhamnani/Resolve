@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.LongDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LocalUser)
+                @Html.DisplayNameFor(model => model.LocalGroup)
             </th>
             <th></th>
         </tr>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.LongDescription)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CaseTypeID">Edit</a> |

@@ -52,7 +52,7 @@ namespace Resolve.Controllers
             var ADemail = User.Identity.Name;
             //Console.WriteLine(ADemail);
             var LocalUserEmail = _context.LocalUser
-                .FromSqlRaw("SELECT * FROM dbo.LocalUser where EmailID={0}", ADemail)
+                .FromSqlRaw("SELECT * FROM dbo.LocalUser where LocalUserID={0}", ADemail)
                 .ToList();
             var c = LocalUserEmail.Count;
 
@@ -99,10 +99,10 @@ namespace Resolve.Controllers
                         
                 }
                 //ViewData["Me"] = me;              
-                var CreateUser = new LocalUser { LocalUserID = LocalUserAttributes["NetID"],
+                var CreateUser = new LocalUser { LocalUserID = LocalUserAttributes["EmailID"],
                 FirstName = LocalUserAttributes["FirstName"],
                 LastName = LocalUserAttributes["LastName"],
-                EmailID = LocalUserAttributes["EmailID"]
+                EmailID = LocalUserAttributes["NetID"]
                 };
                 _context.Add(CreateUser);
                 await _context.SaveChangesAsync();
@@ -117,19 +117,19 @@ namespace Resolve.Controllers
             else
             {
                 //Console.WriteLine("User Already Exists!");
-                Console.WriteLine(LocalUserEmail[0].LocalUserID);
+                //Console.WriteLine(LocalUserEmail[0].LocalUserID);
             }
-            
-            /*                       
-            var @User = await _context.User
-            .Include(s => s.U)
-            .Include(u => u.User)
-            .FirstOrDefaultAsync(m => m. == id);
-            var DBemail = "test";
+            /*
+            var Luser = _context.LocalUser
+            .Single(b => b.LocalUserID == ADemail);
+            var Luid = Luser.LocalUserID;
             */
+            var UCases = await _context.LocalUser
+            .Include(s => s.Cases)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
 
-            // test
-            return View();
+            return View(UCases);
         }
 
 

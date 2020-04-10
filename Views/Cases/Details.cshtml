@@ -82,7 +82,7 @@
                 <label for="Comment">Comment</label>
                 <input type="text" id="Comment" name="Comment" class="form-control"/>
                 <br>
-                <input type="hidden" value="@ViewData["LUserID"]" name="LocalUserID" />
+                <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
                 <input type="hidden" value="@Model.CaseID" name="CaseID" />
                 <input type="submit" value="Post Comment" class="btn btn-primary"/>
             </form>

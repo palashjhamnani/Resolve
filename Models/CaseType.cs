@@ -17,9 +17,9 @@ namespace Resolve.Models
         [Display(Name = "Description")]
         public string LongDescription { get; set; }
 
-        [Display(Name = "Default Approver")]
-        public string LocalUserID { get; set; }
-        public LocalUser LocalUser { get; set; }
+        [Display(Name = "Default Group")]
+        public string LocalGroupID { get; set; }
+        public LocalGroup LocalGroup { get; set; }
 
         public ICollection<Case> Cases { get; set; }
     }
