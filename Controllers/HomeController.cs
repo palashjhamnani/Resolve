@@ -45,7 +45,7 @@ namespace Resolve.Controllers
             _logger = logger;
         }
         */
-
+        //[Authorize("Admin")]
         [AuthorizeForScopes(Scopes = new[] { Constants.ScopeUserRead })]
         public async Task<IActionResult> Index()
         {
@@ -124,8 +124,11 @@ namespace Resolve.Controllers
             .Single(b => b.LocalUserID == ADemail);
             var Luid = Luser.LocalUserID;
             */
+            // Cases created by the User and assigned to the User
             var UCases = await _context.LocalUser
             .Include(s => s.Cases)
+            .ThenInclude(w => w.CaseType)
+            .Include(q => q.CasesforApproval).ThenInclude(q => q.Case).ThenInclude(q => q.CaseType)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
 

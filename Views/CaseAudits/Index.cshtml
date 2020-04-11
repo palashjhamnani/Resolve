@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Resolve.Models.CaseAudit>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AuditTimestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuditLog)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Case)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocalUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuditTimestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuditLog)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Case.CaseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CaseAuditID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CaseAuditID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CaseAuditID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

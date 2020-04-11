@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Resolve.Data;
 using Resolve.Infrastructure;
 using Resolve.Services;
+using Resolve.Authorization;
 
 namespace Resolve
 {
@@ -52,6 +53,12 @@ namespace Resolve
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options));
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(AdminAuthPolicy.Name,
+                                  AdminAuthPolicy.Build);
+            });
+
             // Token acquisition service based on MSAL.NET 
             // and chosen token cache implementation
             services.AddWebAppCallsProtectedWebApi(Configuration, new string[] { Constants.ScopeUserRead })
@@ -70,6 +77,8 @@ namespace Resolve
             services.AddGraphService(Configuration);
             services.AddDbContext<ResolveCaseContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ResolveContext")));
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,5 +17,6 @@ namespace Resolve.Models
         public string LastName { get; set; }
         public string EmailID { get; set; }
         public ICollection<Case> Cases { get; set; }
+        public ICollection<Approver> CasesforApproval { get; set; }
     }
 }

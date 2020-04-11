@@ -196,6 +196,30 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OnBehalf",
+                columns: table => new
+                {
+                    CaseID = table.Column<int>(nullable: false),
+                    LocalUserID = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OnBehalf", x => new { x.CaseID, x.LocalUserID });
+                    table.ForeignKey(
+                        name: "FK_OnBehalf_Case_CaseID",
+                        column: x => x.CaseID,
+                        principalTable: "Case",
+                        principalColumn: "CaseID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OnBehalf_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
+                        principalTable: "LocalUser",
+                        principalColumn: "LocalUserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SampleCaseType",
                 columns: table => new
                 {
@@ -266,6 +290,11 @@ namespace Resolve.Migrations
                 column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OnBehalf_LocalUserID",
+                table: "OnBehalf",
+                column: "LocalUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SampleCaseType_CaseID1",
                 table: "SampleCaseType",
                 column: "CaseID1");
@@ -284,6 +313,9 @@ namespace Resolve.Migrations
 
             migrationBuilder.DropTable(
                 name: "GroupAssignment");
+
+            migrationBuilder.DropTable(
+                name: "OnBehalf");
 
             migrationBuilder.DropTable(
                 name: "SampleCaseType");

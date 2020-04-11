@@ -43,6 +43,9 @@ namespace Resolve.Data
             modelBuilder.Entity<GroupAssignment>()
                 .HasKey(c => new { c.CaseID, c.LocalGroupID });
 
+            modelBuilder.Entity<OnBehalf>()
+                .HasKey(c => new { c.CaseID, c.LocalUserID });
+
             modelBuilder.Entity<CaseComment>()
             .Property(b => b.CommentTimestamp)
             .HasDefaultValueSql("getdate()");
@@ -53,6 +56,9 @@ namespace Resolve.Data
 
 
         }
+        
+
+        public DbSet<Resolve.Models.OnBehalf> OnBehalf { get; set; }
 
     }
 }

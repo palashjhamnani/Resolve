@@ -31,14 +31,12 @@
                     
                     @foreach (var item in Model.Cases)
                     {
-                        <a href="#">
                             <tr>
                                 <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
                                 <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
                                 <td>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)</td>
                                 <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
                             </tr>
-                        </a>
                       }
                     </tbody>
             </table>
@@ -49,30 +47,22 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Case ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Case Type</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var item in Model.CasesforApproval)
+                    {
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
+                        <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
+                        <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>twitter</td>
-                    </tr>
+                    }
                 </tbody>
             </table>
         </div>

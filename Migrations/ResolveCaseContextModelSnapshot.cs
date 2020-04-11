@@ -214,6 +214,21 @@ namespace Resolve.Migrations
                     b.ToTable("LocalUser");
                 });
 
+            modelBuilder.Entity("Resolve.Models.OnBehalf", b =>
+                {
+                    b.Property<int>("CaseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CaseID", "LocalUserID");
+
+                    b.HasIndex("LocalUserID");
+
+                    b.ToTable("OnBehalf");
+                });
+
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
                 {
                     b.Property<int>("CaseID")
@@ -317,6 +332,21 @@ namespace Resolve.Migrations
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
                         .HasForeignKey("LocalUserID");
+                });
+
+            modelBuilder.Entity("Resolve.Models.OnBehalf", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
+                        .WithMany()
+                        .HasForeignKey("LocalUserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
