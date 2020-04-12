@@ -120,14 +120,76 @@ namespace Resolve.Controllers
             }
             // Populate or Check validity of User's group membership
 
-            var UsersLocalGroups = _context.UserGroup
-                .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
+            var UsersLGroups = _context.UserGroup
+                .Where(m => m.LocalUserID == ADemail)
+                .ToList();
+            HashSet<string> UsersLocalGroups = new HashSet<string>();
+            foreach (var g in UsersLGroups)
+            {
+                UsersLocalGroups.Add(g.LocalGroupID);
+            }
+            HashSet<string> UsersRetrievedGroups = new HashSet<string>();
+            foreach (var claim in User.Claims)
+            {
+                if (claim.Type == "groups")
+                {
+                    UsersRetrievedGroups.Add(claim.Value);
+                }                
+            }
+            HashSet<string> AllLocalGroups = new HashSet<string>();
+            var AllGroups = _context.LocalGroup.ToList();
+            foreach (var g in AllGroups)
+            {
+                AllLocalGroups.Add(g.LocalGroupID);
+            }
+            HashSet<string> GroupsToBeAdded = new HashSet<string>();
+            HashSet<string> GroupsToBeRemoved = new HashSet<string>();
+
+            // Check for every groups that is associated with our application (Resolve)
+            foreach (var group in AllLocalGroups)
+            {
+                if (UsersRetrievedGroups.Contains(group)){
+                    if (UsersLocalGroups.Contains(group))
+                    { }
+                    else
+                    {
+                        GroupsToBeAdded.Add(group);
+                    }
+                }
+                else
+                {
+                    if (UsersLocalGroups.Contains(group))
+                    {
+                        GroupsToBeRemoved.Add(group);
+                    }
+                    else { }
+                }
+            }
+
+            foreach (var g in GroupsToBeAdded)
+            {
+                var test = new UserGroup { LocalGroupID = g, LocalUserID = ADemail};
+                _context.Add(test);                
+            }
+            foreach (var g in GroupsToBeRemoved)
+            {
+                var test = _context.UserGroup.Single(b => b.LocalUserID == ADemail && b.LocalGroupID == g);
+                _context.Remove(test);
+            }
+            await _context.SaveChangesAsync();
 
             // Cases created by the User, assigned to the User, and assigned to the groups to which the User belongs to
             var UCases = await _context.LocalUser
-            .Include(s => s.Cases)
-            .ThenInclude(w => w.CaseType)
-            .Include(q => q.CasesforApproval).ThenInclude(q => q.Case).ThenInclude(q => q.CaseType)
+                .Include(s => s.Cases)
+                .ThenInclude(w => w.CaseType)
+                    .Include(q => q.CasesforApproval)
+                    .ThenInclude(q => q.Case)
+                    .ThenInclude(q => q.CaseType)
+                        .Include(e => e.UserGroups)
+                        .ThenInclude(e => e.LocalGroup)
+                        .ThenInclude(e => e.GroupCases)
+                        .ThenInclude(e => e.Case)
+                        .ThenInclude(e => e.CaseType)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
 
