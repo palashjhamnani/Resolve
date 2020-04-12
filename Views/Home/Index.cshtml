@@ -4,6 +4,7 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <br>
 
 <div class="container">
@@ -18,33 +19,33 @@
                     <div class="float-right"><a class="btn btn-primary" asp-controller="Cases" asp-action="Create">New Case</a></div>
                 </div>
             </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Case ID</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Case Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    @foreach (var item in Model.Cases)
-                    {
-                            <tr>
-                                <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
-                                <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
-                            </tr>
-                      }
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Case ID</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Case Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Cases)
+                        {
+                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                            <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
+                            <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
+                        </tr>
+                        }
                     </tbody>
-            </table>
+                </table>          
         </div>
         <div class="col-lg-6" style="border:1px solid #cecece;">
             <h4>Cases assigned to you</h4>
             <br>
-            <table class="table table-hover">
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th scope="col">Case ID</th>
@@ -56,7 +57,7 @@
                 <tbody>
                     @foreach (var item in Model.CasesforApproval)
                     {
-                    <tr>
+                    <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                         <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseID)</a></td>
                         <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
                         <td>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
@@ -74,7 +75,7 @@
         <div class="col-12" style="border:1px solid #cecece;">
             <h4>Cases assigned to your groups</h4>
             <br>
-            <table class="table table-hover">
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th scope="col">Group</th>
@@ -89,7 +90,7 @@
                     {
                         @foreach (var c in item.LocalGroup.GroupCases)
                         {
-                    <tr>
+                    <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
                         <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
                         <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@c.CaseID">@Html.DisplayFor(modelItem => c.CaseID)</a></td>
                         <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
