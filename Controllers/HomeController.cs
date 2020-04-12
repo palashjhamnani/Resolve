@@ -117,14 +117,13 @@ namespace Resolve.Controllers
             else
             {
                 //Console.WriteLine("User Already Exists!");
-                //Console.WriteLine(LocalUserEmail[0].LocalUserID);
             }
-            /*
-            var Luser = _context.LocalUser
-            .Single(b => b.LocalUserID == ADemail);
-            var Luid = Luser.LocalUserID;
-            */
-            // Cases created by the User and assigned to the User
+            // Populate or Check validity of User's group membership
+
+            var UsersLocalGroups = _context.UserGroup
+                .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
+
+            // Cases created by the User, assigned to the User, and assigned to the groups to which the User belongs to
             var UCases = await _context.LocalUser
             .Include(s => s.Cases)
             .ThenInclude(w => w.CaseType)

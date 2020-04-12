@@ -63,6 +63,30 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserGroup",
+                columns: table => new
+                {
+                    LocalUserID = table.Column<string>(nullable: false),
+                    LocalGroupID = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroup", x => new { x.LocalUserID, x.LocalGroupID });
+                    table.ForeignKey(
+                        name: "FK_UserGroup_LocalGroup_LocalGroupID",
+                        column: x => x.LocalGroupID,
+                        principalTable: "LocalGroup",
+                        principalColumn: "LocalGroupID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserGroup_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
+                        principalTable: "LocalUser",
+                        principalColumn: "LocalUserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Case",
                 columns: table => new
                 {
@@ -298,6 +322,11 @@ namespace Resolve.Migrations
                 name: "IX_SampleCaseType_CaseID1",
                 table: "SampleCaseType",
                 column: "CaseID1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroup_LocalGroupID",
+                table: "UserGroup",
+                column: "LocalGroupID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -319,6 +348,9 @@ namespace Resolve.Migrations
 
             migrationBuilder.DropTable(
                 name: "SampleCaseType");
+
+            migrationBuilder.DropTable(
+                name: "UserGroup");
 
             migrationBuilder.DropTable(
                 name: "Case");

@@ -250,6 +250,21 @@ namespace Resolve.Migrations
                     b.ToTable("SampleCaseType");
                 });
 
+            modelBuilder.Entity("Resolve.Models.UserGroup", b =>
+                {
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LocalGroupID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LocalUserID", "LocalGroupID");
+
+                    b.HasIndex("LocalGroupID");
+
+                    b.ToTable("UserGroup");
+                });
+
             modelBuilder.Entity("Resolve.Models.Approver", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
@@ -259,7 +274,7 @@ namespace Resolve.Migrations
                         .IsRequired();
 
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
-                        .WithMany()
+                        .WithMany("CasesforApproval")
                         .HasForeignKey("LocalUserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -321,7 +336,7 @@ namespace Resolve.Migrations
                         .IsRequired();
 
                     b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
-                        .WithMany()
+                        .WithMany("GroupCases")
                         .HasForeignKey("LocalGroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -354,6 +369,21 @@ namespace Resolve.Migrations
                     b.HasOne("Resolve.Models.Case", "Case")
                         .WithMany()
                         .HasForeignKey("CaseID1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.UserGroup", b =>
+                {
+                    b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
+                        .WithMany()
+                        .HasForeignKey("LocalGroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("LocalUserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

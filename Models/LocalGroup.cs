@@ -21,6 +21,7 @@ namespace Resolve.Models
         [Display(Name = "Default Approver")]
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
+        public ICollection<GroupAssignment> GroupCases { get; set; }
 
     }
 }
