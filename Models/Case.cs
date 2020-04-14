@@ -31,6 +31,7 @@ namespace Resolve.Models
         public ICollection<CaseComment> CaseComments { get; set; }
         public ICollection<CaseAudit> CaseAudits { get; set; }
         public ICollection<Approver> Approvers { get; set; }
+        public ICollection<CaseAttachment> CaseAttachments { get; set; }
 
     }  
 

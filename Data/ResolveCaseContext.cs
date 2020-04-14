@@ -19,6 +19,7 @@ namespace Resolve.Data
         public DbSet<GroupAssignment> GroupAssignment { get; set; }
         public DbSet<CaseAudit> CaseAudit { get; set; }
         public DbSet<CaseComment> CaseComment { get; set; }
+        public DbSet<CaseAttachment> CaseAttachment { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
         
 
@@ -56,6 +57,10 @@ namespace Resolve.Data
 
             modelBuilder.Entity<CaseAudit>()
             .Property(b => b.AuditTimestamp)
+            .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<CaseAttachment>()
+            .Property(b => b.AttachmentTimestamp)
             .HasDefaultValueSql("getdate()");
 
 

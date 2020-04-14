@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Resolve.Models.CaseAttachment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Case)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocalUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FilePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AttachmentTimestamp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Case.CaseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FilePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CaseAttachmentID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CaseAttachmentID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CaseAttachmentID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200412002200_V1")]
+    [Migration("20200413235146_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,36 @@ namespace Resolve.Migrations
                     b.HasIndex("LocalUserID");
 
                     b.ToTable("Case");
+                });
+
+            modelBuilder.Entity("Resolve.Models.CaseAttachment", b =>
+                {
+                    b.Property<int>("CaseAttachmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AttachmentTimestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CaseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocalUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CaseAttachmentID");
+
+                    b.HasIndex("CaseID");
+
+                    b.HasIndex("LocalUserID");
+
+                    b.ToTable("CaseAttachment");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseAudit", b =>
@@ -294,6 +324,19 @@ namespace Resolve.Migrations
                         .WithMany("Cases")
                         .HasForeignKey("LocalUserID")
                         .OnDelete(DeleteBehavior.NoAction);
+                });
+
+            modelBuilder.Entity("Resolve.Models.CaseAttachment", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany("CaseAttachments")
+                        .HasForeignKey("CaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Resolve.Models.LocalUser", "LocalUser")
+                        .WithMany()
+                        .HasForeignKey("LocalUserID");
                 });
 
             modelBuilder.Entity("Resolve.Models.CaseAudit", b =>

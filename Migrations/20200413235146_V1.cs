@@ -140,6 +140,34 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CaseAttachment",
+                columns: table => new
+                {
+                    CaseAttachmentID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CaseID = table.Column<int>(nullable: false),
+                    LocalUserID = table.Column<string>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
+                    AttachmentTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseAttachment", x => x.CaseAttachmentID);
+                    table.ForeignKey(
+                        name: "FK_CaseAttachment_Case_CaseID",
+                        column: x => x.CaseID,
+                        principalTable: "Case",
+                        principalColumn: "CaseID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseAttachment_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
+                        principalTable: "LocalUser",
+                        principalColumn: "LocalUserID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CaseAudit",
                 columns: table => new
                 {
@@ -279,6 +307,16 @@ namespace Resolve.Migrations
                 column: "LocalUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseAttachment_CaseID",
+                table: "CaseAttachment",
+                column: "CaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseAttachment_LocalUserID",
+                table: "CaseAttachment",
+                column: "LocalUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaseAudit_CaseID",
                 table: "CaseAudit",
                 column: "CaseID");
@@ -333,6 +371,9 @@ namespace Resolve.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Approver");
+
+            migrationBuilder.DropTable(
+                name: "CaseAttachment");
 
             migrationBuilder.DropTable(
                 name: "CaseAudit");

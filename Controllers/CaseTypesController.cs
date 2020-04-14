@@ -131,7 +131,6 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
-                .Include(c => c.LocalGroupID)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {
