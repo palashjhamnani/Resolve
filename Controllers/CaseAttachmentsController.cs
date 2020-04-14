@@ -11,6 +11,7 @@ using Resolve.Models;
 using Resolve.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
+using Microsoft.AspNetCore.Http;
 
 namespace Resolve.Controllers
 {
@@ -70,25 +71,29 @@ namespace Resolve.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = null;
-                if (model.Attachment != null)
+                if (model.Attachments != null && model.Attachments.Count > 0)
                 {
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Attachment.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    // Use CopyTo() method provided by IFormFile interface to
-                    // copy the file to wwwroot/images folder
-                    model.Attachment.CopyTo(new FileStream(filePath, FileMode.Create));
+                    foreach (IFormFile Attachment in model.Attachments)
+                    {
+                        string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
+                        uniqueFileName = Guid.NewGuid().ToString() + "_" + Attachment.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        // Use CopyTo() method provided by IFormFile interface to
+                        // copy the file to wwwroot/images folder
+                        Attachment.CopyTo(new FileStream(filePath, FileMode.Create));
+                        CaseAttachment newAttachment = new CaseAttachment
+                        {
+                            LocalUserID = User.Identity.Name,
+                            CaseID = model.CaseID,
+                            // Store the file name in PhotoPath property of the employee object
+                            // which gets saved to the Employees database table
+                            FilePath = uniqueFileName
+                        };
+                        _context.Add(newAttachment);
+                    }                    
+                    await _context.SaveChangesAsync();
                 }
-                CaseAttachment newAttachment = new CaseAttachment
-                {
-                    LocalUserID = User.Identity.Name,
-                    CaseID = model.CaseID,
-                    // Store the file name in PhotoPath property of the employee object
-                    // which gets saved to the Employees database table
-                    FilePath = uniqueFileName
-                };
-                _context.Add(newAttachment);
-                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", model.CaseID);

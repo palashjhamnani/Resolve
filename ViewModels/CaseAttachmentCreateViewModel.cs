@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Resolve.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Resolve.ViewModels
 {
@@ -11,6 +12,7 @@ namespace Resolve.ViewModels
     {
         public int CaseID { get; set; }
         public Case Case { get; set; }
-        public IFormFile Attachment { get; set; }
+        [Required]
+        public List<IFormFile> Attachments { get; set; }
     }
 }
