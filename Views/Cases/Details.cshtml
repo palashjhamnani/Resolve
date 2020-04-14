@@ -6,56 +6,49 @@
 }
 
 
-<div>
-    <h4>General Case Details</h4>
-    <br>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.LocalUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OnBehalfOf)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OnBehalfOf)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CaseStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CaseStatus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CaseCreationTimestamp)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CaseCreationTimestamp)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CaseType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CaseType.CaseTypeID)
-        </dd>
-    </div><hr />
-        <div>
-            <h4>Specific Case Details</h4>
+<br>
 
-
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+            <h4>General Case Details</h4>
             <br>
-            Here specific case details will reside!
-
-
-        </div><hr />
-    <div>
-    <br>
-
-        <h4>Case Comments</h4>
-    <br>
-        <dd class="col-sm-10">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.LocalUser)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.OnBehalfOf)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.OnBehalfOf)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.CaseStatus)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.CaseStatus)
+                </dd>
+                <dt class="col-sm-4">
+                    Created On
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.CaseCreationTimestamp)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.CaseType)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.CaseType.CaseTypeID)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+        <h4>Comments</h4>
+        <br>
             <table class="table">
                 <tr>
                     <th>Posted By</th>
@@ -79,45 +72,91 @@
             </table>
 
             <form asp-action="CreateComment">
-                <label for="Comment">Comment</label>
-                <input type="text" id="Comment" name="Comment" class="form-control"/>
-                <br>
                 <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
                 <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                <input type="submit" value="Post Comment" class="btn btn-primary"/>
+                <div class="input-group mb-3">
+                    <input id="Comment" name="Comment" type="text" class="form-control" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">Post</button>
+                    </div>
+                </div>
             </form>
 
-            <!--
-            <a class="btn btn-primary" asp-controller="CaseComments" asp-action="Create" asp-route-id="@Model.CaseID">Post Comment</a>
-            -->
+        </div>
+    </div>
 
-
-        </dd>
- </div><hr />
-<div>
-
-        <h4>Case Audit Details</h4>
     <br>
-        <dd class="col-sm-10">
+
+    <div class="row">
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+            <h4>Specific Case Details</h4>
+            <br>
+            Here specific case details will reside!
+        </div>
+        <div class="col-lg-6" style="border:1px solid #cecece;">
+            <h4>Attachments</h4>
+            <br>
             <table class="table">
                 <tr>
+                    <th>Posted By</th>
+                    <th>File Name</th>
                     <th>Timestamp</th>
-                    <th>Audit Log</th>
                 </tr>
-                @foreach (var item in Model.CaseAudits)
+                @foreach (var item in Model.CaseAttachments)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                            @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.AuditLog)
+                            @Html.DisplayFor(modelItem => item.FileName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
                         </td>
                     </tr>
                 }
             </table>
-        </dd>
-    </dl>
+
+
+
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile04">
+                    <label class="custom-file-label" for="inputGroupFile04">Choose File/Files...</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Create</button>
+                </div>
+            </div>
+            <br />
+        </div>
+
+    </div>
+
+
+<div>
+
+    <h4>Case Audit Details</h4>
+    <br>
+        <table class="table">
+            <tr>
+                <th>Timestamp</th>
+                <th>Audit Log</th>
+            </tr>
+            @foreach (var item in Model.CaseAudits)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuditLog)
+                    </td>
+                </tr>
+            }
+        </table>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a> |

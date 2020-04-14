@@ -87,10 +87,13 @@ namespace Resolve.Controllers
                             CaseID = model.CaseID,
                             // Store the file name in PhotoPath property of the employee object
                             // which gets saved to the Employees database table
-                            FilePath = uniqueFileName
+                            FilePath = uniqueFileName,
+                            FileName = Attachment.FileName
                         };
                         _context.Add(newAttachment);
-                    }                    
+
+                    }
+                    
                     await _context.SaveChangesAsync();
                 }
                 

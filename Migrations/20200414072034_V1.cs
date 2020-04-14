@@ -148,6 +148,7 @@ namespace Resolve.Migrations
                     CaseID = table.Column<int>(nullable: false),
                     LocalUserID = table.Column<string>(nullable: true),
                     FilePath = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
                     AttachmentTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>

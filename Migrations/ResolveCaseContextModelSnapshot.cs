@@ -88,6 +88,9 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 

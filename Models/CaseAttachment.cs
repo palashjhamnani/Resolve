@@ -19,6 +19,7 @@ namespace Resolve.Models
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
         public string FilePath { get; set; }
+        public string FileName { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime AttachmentTimestamp { get; set; }
