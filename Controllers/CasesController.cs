@@ -27,59 +27,7 @@ namespace Resolve.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
-        // GET: CaseAttachments/Create
-        public IActionResult CreateAttachment()
-        {
-            ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID");
-            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
-            return View();
-        }
-
-        // POST: CaseAttachments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAttachment(CaseAttachmentCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                string uniqueFileName = null;
-                if (model.Attachments != null && model.Attachments.Count > 0)
-                {
-                    foreach (IFormFile Attachment in model.Attachments)
-                    {
-                        string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
-                        uniqueFileName = Guid.NewGuid().ToString() + "_" + Attachment.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        // Use CopyTo() method provided by IFormFile interface to
-                        // copy the file to wwwroot/images folder
-                        Attachment.CopyTo(new FileStream(filePath, FileMode.Create));
-                        CaseAttachment newAttachment = new CaseAttachment
-                        {
-                            LocalUserID = User.Identity.Name,
-                            CaseID = model.CaseID,
-                            // Store the file name in PhotoPath property of the employee object
-                            // which gets saved to the Employees database table
-                            FilePath = uniqueFileName,
-                            FileName = Attachment.FileName
-                        };
-                        _context.Add(newAttachment);
-
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
-
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", model.CaseID);
-            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseAttachment.LocalUserID);
-            return View();
-        }
-
-
-
+        
 
 
         // GET: CaseComments/Create
@@ -140,9 +88,6 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-            var luser = _context.LocalUser
-                .FromSqlRaw("SELECT * FROM dbo.LocalUser where LocalUserID={0}", User.Identity.Name).ToList();
-            ViewData["LUserID"] = luser[0].EmailID;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)

@@ -54,9 +54,9 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseAttachments/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID");
+            //ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID");
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
             return View();
         }
@@ -66,8 +66,12 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CaseAttachmentCreateViewModel model)
+        public async Task<IActionResult> Create(int id, CaseAttachmentCreateViewModel model)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 string uniqueFileName = null;
@@ -84,7 +88,7 @@ namespace Resolve.Controllers
                         CaseAttachment newAttachment = new CaseAttachment
                         {
                             LocalUserID = User.Identity.Name,
-                            CaseID = model.CaseID,
+                            CaseID = id,
                             // Store the file name in PhotoPath property of the employee object
                             // which gets saved to the Employees database table
                             FilePath = uniqueFileName,

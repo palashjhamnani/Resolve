@@ -94,8 +94,19 @@
             Here specific case details will reside!
         </div>
         <div class="col-lg-6" style="border:1px solid #cecece;">
-            <h4>Attachments</h4>
-            <br>
+            <div class="row">
+                <div class="col-8">
+                    <h4>Attachments</h4>
+                    <br>
+                </div>
+                <div class="col-4">
+                    <div class="float-right">
+                        <a class="btn btn-outline-primary" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
+                        Create
+                        </a>
+                    </div>
+                </div>
+            </div>
             <table class="table">
                 <tr>
                     <th>Posted By</th>
@@ -116,24 +127,11 @@
                         </td>
                     </tr>
                 }
-            </table>
-
-
-
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="inputGroupFile04">
-                    <label class="custom-file-label" for="inputGroupFile04">Choose File/Files...</label>
-                </div>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Create</button>
-                </div>
-            </div>
-            <br />
+            </table>            
         </div>
 
     </div>
-
+    <br />
 
 <div>
 
