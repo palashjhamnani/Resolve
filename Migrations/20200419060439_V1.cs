@@ -276,17 +276,15 @@ namespace Resolve.Migrations
                 name: "SampleCaseType",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseID1 = table.Column<int>(nullable: false),
+                    CaseID = table.Column<int>(nullable: false),
                     CaseDescription = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SampleCaseType", x => x.CaseID);
                     table.ForeignKey(
-                        name: "FK_SampleCaseType_Case_CaseID1",
-                        column: x => x.CaseID1,
+                        name: "FK_SampleCaseType_Case_CaseID",
+                        column: x => x.CaseID,
                         principalTable: "Case",
                         principalColumn: "CaseID",
                         onDelete: ReferentialAction.Cascade);
@@ -356,11 +354,6 @@ namespace Resolve.Migrations
                 name: "IX_OnBehalf_LocalUserID",
                 table: "OnBehalf",
                 column: "LocalUserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SampleCaseType_CaseID1",
-                table: "SampleCaseType",
-                column: "CaseID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserGroup_LocalGroupID",

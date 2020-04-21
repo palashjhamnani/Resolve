@@ -265,20 +265,13 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
                 {
                     b.Property<int>("CaseID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("CaseDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CaseID1")
-                        .HasColumnType("int");
-
                     b.HasKey("CaseID");
-
-                    b.HasIndex("CaseID1");
 
                     b.ToTable("SampleCaseType");
                 });
@@ -414,7 +407,7 @@ namespace Resolve.Migrations
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
                         .WithMany()
-                        .HasForeignKey("CaseID1")
+                        .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

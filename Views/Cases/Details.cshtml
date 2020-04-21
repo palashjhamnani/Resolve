@@ -42,7 +42,7 @@
                     @Html.DisplayNameFor(model => model.CaseType)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.CaseType.CaseTypeID)
+                    @Html.DisplayFor(model => model.CaseType.CaseTypeTitle)
                 </dd>
             </dl>
         </div>
@@ -91,7 +91,7 @@
         <div class="col-lg-6" style="border:1px solid #cecece;">
             <h4>Specific Case Details</h4>
             <br>
-            Here specific case details will reside!
+
         </div>
         <div class="col-lg-6" style="border:1px solid #cecece;">
             <div class="row">
@@ -154,7 +154,7 @@
                 </tr>
             }
         </table>
-
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a> |

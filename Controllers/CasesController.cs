@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
 
-
 namespace Resolve.Controllers
 {
     public class CasesController : Controller
@@ -101,7 +100,11 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-
+            var tableName = @case.CaseType.CaseTypeTitle;
+            //string strA = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ";
+            //string str = String.Concat(strA, tableName);
+            //var ColumnNames = _context.Case.FromSqlRaw(str).ToList();
+            //ViewData["Columns"] = ColumnNames;
             return View(@case);
         }
 
@@ -131,14 +134,45 @@ namespace Resolve.Controllers
             {
                 _context.Add(@case);
                 //var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
-                //_context.Add(test);
+                //_context.Add(test);                
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
+                var cid = @case.CaseID;
+                return RedirectToAction("CreateCaseTypeData", new { id = cid });
+                //return RedirectToAction("Index", "Home");
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }
+
+
+        // Enter data for a specific case type
+        // GET: Cases/CreateCaseTypeData
+        public IActionResult CreateCaseTypeData(int id)
+        {
+            return View();
+        }
+        // POST: Cases/CreateCaseTypeData
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCaseTypeData(int id, SampleCaseType samplecasetype)
+        {
+            if (ModelState.IsValid)
+            {
+                SampleCaseType newCase = new SampleCaseType
+                {
+                    CaseID = id,
+                    CaseDescription = samplecasetype.CaseDescription
+                };
+                _context.Add(newCase);
+                await _context.SaveChangesAsync();
+                var cid = id;
+                return RedirectToAction("Details", new { id = cid });
+                //return RedirectToAction("Index", "Home");
+            }
+            return View(samplecasetype);
+        }
+
 
         // GET: Cases/Edit/5
         public async Task<IActionResult> Edit(int? id)

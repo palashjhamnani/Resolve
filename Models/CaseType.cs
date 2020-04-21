@@ -10,8 +10,8 @@ namespace Resolve.Models
     public class CaseType
     {
         public int CaseTypeID { get; set; }
-
-        [Display(Name = "Case Type Title")]
+        // Create a model in CaseTypeModels folder with this name
+        [Display(Name = "Case Type Entity Name")]
         public string CaseTypeTitle { get; set; }
 
         [Display(Name = "Description")]
