@@ -92,12 +92,12 @@ namespace Resolve.Controllers
 
             var @case = await _context.Case
                 .Include(s => s.CaseType)
-                //.ThenInclude(q => q.CaseTypeTitle)
                 .Include(u => u.LocalUser)
-                .Include(p => p.CaseComments)
-                .ThenInclude(e => e.LocalUser)
+                .Include(p => p.CaseComments).ThenInclude(e => e.LocalUser)
                 .Include(a => a.CaseAudits)
                 .Include(a => a.CaseAttachments).ThenInclude(e => e.LocalUser)
+                .Include(a => a.GroupAssignments).ThenInclude(e => e.LocalGroup)
+                .Include(a => a.Approvers).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.Sample2)
                 .FirstOrDefaultAsync(m => m.CaseID == id);

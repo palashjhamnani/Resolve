@@ -35,7 +35,7 @@
                                 {
                                     string shortDate = item.CaseCreationTimestamp.ToShortDateString();
                                     <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
-                                        <td>@Html.DisplayFor(modelItem => item.CaseID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                                         <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
                                         <td>@Html.DisplayFor(modelItem => shortDate)</td>
                                         <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
@@ -83,7 +83,7 @@
                                 @foreach (var item in Model.CasesforApproval)
                                 {
                                     <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
-                                        <td>@Html.DisplayFor(modelItem => item.CaseID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
@@ -138,7 +138,7 @@
                                     {
                                         <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
                                             <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.CaseID)</td>
+                                            <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>

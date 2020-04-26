@@ -92,6 +92,7 @@ namespace Resolve.Migrations
                 {
                     CaseID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CaseCID = table.Column<string>(nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+100000)"),
                     LocalUserID = table.Column<string>(nullable: true),
                     OnBehalfOf = table.Column<int>(nullable: false),
                     CaseStatus = table.Column<string>(nullable: true),

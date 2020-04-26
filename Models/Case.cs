@@ -10,6 +10,7 @@ namespace Resolve.Models
     public class Case
     {
         public int CaseID { get; set; }
+        public string CaseCID { get; set; }
 
         // Case Created by
         [Display(Name = "Case Created By")]
@@ -28,10 +29,16 @@ namespace Resolve.Models
         public int CaseTypeID { get; set; }
         public CaseType CaseType { get; set; }
 
+        // Below are the properties of a Case made accessible
+
         public ICollection<CaseComment> CaseComments { get; set; }
         public ICollection<CaseAudit> CaseAudits { get; set; }
         public ICollection<Approver> Approvers { get; set; }
+        public ICollection<GroupAssignment> GroupAssignments { get; set; }
         public ICollection<CaseAttachment> CaseAttachments { get; set; }
+
+        // Add a line for every new Case Type added to the application
+
         public ICollection<SampleCaseType> SampleCaseType { get; set; }
         public ICollection<Sample2> Sample2 { get; set; }
 

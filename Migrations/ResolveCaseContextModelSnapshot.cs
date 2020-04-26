@@ -47,6 +47,11 @@ namespace Resolve.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CaseCID")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("'CASE' + CONVERT([nvarchar](23),[CaseID]+100000)");
+
                     b.Property<DateTime>("CaseCreationTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -383,7 +388,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("GroupAssignments")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -420,7 +425,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.Sample2", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("Sample2")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -429,7 +434,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("SampleCaseType")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

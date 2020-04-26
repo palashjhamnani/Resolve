@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200424221339_V1")]
+    [Migration("20200426040620_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,11 @@ namespace Resolve.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CaseCID")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("'CASE' + CONVERT([nvarchar](23),[CaseID]+100000)");
 
                     b.Property<DateTime>("CaseCreationTimestamp")
                         .ValueGeneratedOnAdd()
@@ -385,7 +390,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("GroupAssignments")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,7 +427,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.Sample2", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("Sample2")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -431,7 +436,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.SampleCaseType", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("SampleCaseType")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
