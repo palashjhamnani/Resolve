@@ -47,8 +47,8 @@
             </dl>
         </div>
         <div class="col-lg-6" style="border:1px solid #cecece;">
-        <h4>Comments</h4>
-        <br>
+            <h4>Comments</h4>
+            <br>
             <table class="table">
                 <tr>
                     <th>Posted By</th>
@@ -91,6 +91,39 @@
         <div class="col-lg-6" style="border:1px solid #cecece;">
             <h4>Specific Case Details</h4>
             <br>
+            @{
+
+                if (Model.CaseType.CaseTypeTitle == "SampleCaseType")
+                {
+                    @foreach (var item in Model.SampleCaseType)
+                    {
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(modelItem => item.CaseDescription)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(modelItem => item.CaseDescription)
+                            </dd>
+                        </dl>
+                    }
+                }
+                else
+                    if (Model.CaseType.CaseTypeTitle == "Sample2")
+                {
+                    @foreach (var item in Model.Sample2)
+                    {
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(modelItem => item.SampleDescription)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(modelItem => item.SampleDescription)
+                            </dd>
+                        </dl>
+                    }
+                }
+            }
+
 
         </div>
         <div class="col-lg-6" style="border:1px solid #cecece;">

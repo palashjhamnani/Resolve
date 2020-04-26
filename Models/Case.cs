@@ -32,6 +32,8 @@ namespace Resolve.Models
         public ICollection<CaseAudit> CaseAudits { get; set; }
         public ICollection<Approver> Approvers { get; set; }
         public ICollection<CaseAttachment> CaseAttachments { get; set; }
+        public ICollection<SampleCaseType> SampleCaseType { get; set; }
+        public ICollection<Sample2> Sample2 { get; set; }
 
     }  
 

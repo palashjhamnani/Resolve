@@ -80,13 +80,16 @@ namespace Resolve.Controllers
             return View(await resolveCaseContext.ToListAsync());
         }
 
-        // GET: Cases/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
+
+
+            // GET: Cases/Details/5
+            public async Task<IActionResult> Details(int? id)
+            {
             if (id == null)
             {
                 return NotFound();
-            }
+            }            
+
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 //.ThenInclude(q => q.CaseTypeTitle)
@@ -95,16 +98,13 @@ namespace Resolve.Controllers
                 .ThenInclude(e => e.LocalUser)
                 .Include(a => a.CaseAudits)
                 .Include(a => a.CaseAttachments).ThenInclude(e => e.LocalUser)
+                .Include(p => p.SampleCaseType)
+                .Include(p => p.Sample2)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {
                 return NotFound();
             }
-            var tableName = @case.CaseType.CaseTypeTitle;
-            //string strA = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ";
-            //string str = String.Concat(strA, tableName);
-            //var ColumnNames = _context.Case.FromSqlRaw(str).ToList();
-            //ViewData["Columns"] = ColumnNames;
             return View(@case);
         }
 
@@ -137,41 +137,16 @@ namespace Resolve.Controllers
                 //_context.Add(test);                
                 await _context.SaveChangesAsync();
                 var cid = @case.CaseID;
-                return RedirectToAction("CreateCaseTypeData", new { id = cid });
+                var redirectFunction = _context.CaseType
+                    .Single(b => b.CaseTypeID == @case.CaseTypeID);
+                var redirectFunctionName = redirectFunction.CaseTypeTitle;
+                return RedirectToAction(redirectFunctionName, "CaseSpecificDetails", new { id = cid });
                 //return RedirectToAction("Index", "Home");
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
-        }
-
-
-        // Enter data for a specific case type
-        // GET: Cases/CreateCaseTypeData
-        public IActionResult CreateCaseTypeData(int id)
-        {
-            return View();
-        }
-        // POST: Cases/CreateCaseTypeData
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCaseTypeData(int id, SampleCaseType samplecasetype)
-        {
-            if (ModelState.IsValid)
-            {
-                SampleCaseType newCase = new SampleCaseType
-                {
-                    CaseID = id,
-                    CaseDescription = samplecasetype.CaseDescription
-                };
-                _context.Add(newCase);
-                await _context.SaveChangesAsync();
-                var cid = id;
-                return RedirectToAction("Details", new { id = cid });
-                //return RedirectToAction("Index", "Home");
-            }
-            return View(samplecasetype);
-        }
+        }     
 
 
         // GET: Cases/Edit/5

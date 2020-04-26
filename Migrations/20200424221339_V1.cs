@@ -273,6 +273,24 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sample2",
+                columns: table => new
+                {
+                    CaseID = table.Column<int>(nullable: false),
+                    SampleDescription = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sample2", x => x.CaseID);
+                    table.ForeignKey(
+                        name: "FK_Sample2_Case_CaseID",
+                        column: x => x.CaseID,
+                        principalTable: "Case",
+                        principalColumn: "CaseID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SampleCaseType",
                 columns: table => new
                 {
@@ -380,6 +398,9 @@ namespace Resolve.Migrations
 
             migrationBuilder.DropTable(
                 name: "OnBehalf");
+
+            migrationBuilder.DropTable(
+                name: "Sample2");
 
             migrationBuilder.DropTable(
                 name: "SampleCaseType");

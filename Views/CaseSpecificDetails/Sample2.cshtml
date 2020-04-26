@@ -1,4 +1,4 @@
-﻿@model Resolve.Models.SampleCaseType
+﻿@model Resolve.Models.Sample2
 
 @{
     ViewData["Title"] = "Create Specific Details";
@@ -6,16 +6,16 @@
 
 <h1>Create</h1>
 
-<h4>Sample Case Type Details</h4>
+<h4>Sample2 Case Type Details</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateCaseTypeData">
+        <form asp-action="Sample2">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CaseDescription" class="control-label"></label>
-                <input asp-for="CaseDescription" class="form-control" />
-                <span asp-validation-for="CaseDescription" class="text-danger"></span>
+                <label asp-for="SampleDescription" class="control-label"></label>
+                <input asp-for="SampleDescription" class="form-control" />
+                <span asp-validation-for="SampleDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -21,7 +21,7 @@ namespace Resolve.Data
         public DbSet<CaseComment> CaseComment { get; set; }
         public DbSet<CaseAttachment> CaseAttachment { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
-        
+        public DbSet<Sample2> Sample2 { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
