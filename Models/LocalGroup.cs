@@ -13,11 +13,12 @@ namespace Resolve.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None), Required]
         public string LocalGroupID { get; set; }    
         [Required]
+        // Group name will be same as the AD Group Name
         public string GroupName { get; set; }
 
         [Display(Name = "Description")]
         public string GroupDescription { get; set; }
-
+        // This user will be the default approver pre-assigned to a case with this group
         [Display(Name = "Default Approver")]
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
