@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,7 +13,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Resolve</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -18,27 +21,30 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Admin Menu
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" asp-area="" asp-controller="LocalGroups" asp-action="Index">Groups</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="UserGroups" asp-action="Index">Group Memberships</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="CaseTypes" asp-action="Index">Case Types</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="CaseComments" asp-action="Index">Case Comments</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="Index">Case Attachments</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Cases" asp-action="Index">All Cases</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Approvers" asp-action="Index">Approvers</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="GroupAssignments" asp-action="Index">Group Assignments</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="OnBehalves" asp-action="Index">On Behalf</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="CaseAudits" asp-action="Index">Audit Logs</a>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+                    {
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin Menu
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" asp-area="" asp-controller="LocalGroups" asp-action="Index">Groups</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="UserGroups" asp-action="Index">Group Memberships</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CaseTypes" asp-action="Index">Case Types</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CaseComments" asp-action="Index">Case Comments</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="Index">Case Attachments</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Cases" asp-action="Index">All Cases</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Approvers" asp-action="Index">Approvers</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="GroupAssignments" asp-action="Index">Group Assignments</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="OnBehalves" asp-action="Index">On Behalf</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CaseAudits" asp-action="Index">Audit Logs</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>                        
+                        </li>
                     </ul>
                 </div>
             </div>
