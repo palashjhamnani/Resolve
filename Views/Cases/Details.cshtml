@@ -1,4 +1,7 @@
 ﻿@model Resolve.Models.Case
+@using Microsoft.Identity.Web
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Details";
@@ -6,7 +9,6 @@
 }
 
     <div class="container-fluid">
-
         <div class="row">
             <!-- Area Chart -->
             <div class="col-xl-12 col-lg-12">
@@ -15,57 +17,77 @@
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                         <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID</h6>
                         <div class="dropdown no-arrow">
+                            @{
+                                List<string> approvers = new List<string>();
+                                foreach (var item in Model.Approvers)
+                                {
+                                    approvers.Add(item.LocalUserID);
+                                }
+                            }
 
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approveModal">
-                                Approve
-                            </button>
+                            @if (approvers.Contains(User.GetDisplayName()) || (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+                            {
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approveModal">
+                                    Approve
+                                </button>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Approve Case?</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ...
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-success">Confirm</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Approve Case?</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ...
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-success">Approve</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#rejectModal">
-                                Reject
-                            </button>
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#rejectModal">
+                                    Reject
+                                </button>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Reject Case?</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ...
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-danger">Confirm</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Reject Case?</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ...
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-danger">Reject</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-success btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                    Approve
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This sections is enabled only for Approvers and Admins">
+                                    Reject
+                                </button>
+                            }
+
 
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg">
                                 Audit
@@ -97,7 +119,7 @@
                                                     </tr>
                                                 }
                                             </table>
-                                        </div>                                        
+                                        </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             <button type="button" class="btn btn-primary">Save changes</button>
@@ -211,7 +233,7 @@
                         </div>
                     </div>
                 </div>
-            </div>          
+            </div>
         </div>
 
         <div class="row">
@@ -273,7 +295,7 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                         <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
-                        <div class="dropdown no-arrow">                            
+                        <div class="dropdown no-arrow">
                             <a class="btn btn-primary btn-sm" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
                                 Create
                             </a>
@@ -306,8 +328,8 @@
                         </div>
                     </div>
                 </div>
-            </div>      
-            
+            </div>
+
 
         </div>
 
@@ -359,12 +381,12 @@
                         </div>
                     </div>
                 </div>
-            </div>            
-        </div>        
+            </div>
+        </div>
 
     </div>
 
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
