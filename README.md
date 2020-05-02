@@ -3,8 +3,8 @@ Resolve is a case management software developed to manage cases, which are servi
 
 Before you run the application, you would need to create an "appsettings.json" file in the parent directory of the application with the following contents:
 
----------------------------------------------------------------------------------------------
 
+```javascript
 {
   "AzureAd": {
     "Instance": "https://login.microsoftonline.com/",
@@ -27,7 +27,6 @@ Before you run the application, you would need to create an "appsettings.json" f
     "ResolveContext": ""
   }
 }
-
----------------------------------------------------------------------------------------------
+```
 
 Fill values w.r.t your application for Domain, TenantId, ClientId, ClientSecret & ConnectionStrings for Database
