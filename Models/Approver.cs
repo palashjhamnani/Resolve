@@ -17,9 +17,9 @@ namespace Resolve.Models
         [Display(Name = "Approver")]
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
-
+        // Default values: 0, -1 is Reject, 1 is Approved
         public int Approved { get; set; }
-        public int Order { get; set; }     
+        public int Order { get; set; }
 
     }
     

@@ -50,8 +50,6 @@ namespace Resolve.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //Console.WriteLine("Check Check");
-                    Console.WriteLine(id);
                     _context.Add(caseComment);
                     await _context.SaveChangesAsync();
                     var cid = HttpContext.Request.Form["CaseID"];
@@ -63,7 +61,7 @@ namespace Resolve.Controllers
             catch (Exception)
             {
 
-                Console.WriteLine("Error Palash!");
+                Console.WriteLine("Error!");
             }
 
             return View(caseComment);
@@ -88,8 +86,8 @@ namespace Resolve.Controllers
             if (id == null)
             {
                 return NotFound();
-            }            
-
+            }
+            ViewData["Approved"] = "NotSet";
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 .Include(u => u.LocalUser)
@@ -238,6 +236,46 @@ namespace Resolve.Controllers
         private bool CaseExists(int id)
         {
             return _context.Case.Any(e => e.CaseID == id);
+        }
+
+
+        // Approve
+        public IActionResult Approve(int? id)
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var cid = HttpContext.Request.Form["CaseID"];
+            var caseForApproval = await _context.Approver.FindAsync(Convert.ToInt32(cid), User.Identity.Name);
+            if (caseForApproval == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                caseForApproval.Approved = 1;
+                _context.Update(caseForApproval);
+                await _context.SaveChangesAsync();
+                ViewData["Approved"] = "Success";
+                //var cid = HttpContext.Request.Form["CaseID"];
+                return RedirectToAction("Details", new { id = cid });
+                //return RedirectToAction(nameof(Details));                
+            }
+            catch (Exception)
+            {
+                ViewData["Approved"] = "Error";
+            }
+
+            return RedirectToAction("Details", new { id = cid });
         }
     }
 }
