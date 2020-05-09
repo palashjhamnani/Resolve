@@ -81,13 +81,22 @@ namespace Resolve.Controllers
 
 
             // GET: Cases/Details/5
-            public async Task<IActionResult> Details(int? id)
+            public async Task<IActionResult> Details(int? id, int? approved)
             {
             if (id == null)
             {
                 return NotFound();
             }
             ViewData["Approved"] = "NotSet";
+            if (approved == 1)
+            {
+                ViewData["Approved"] = "Success";
+            }
+            else
+                if (approved == 0)
+                {
+                    ViewData["Approved"] = "Failed";
+                }
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 .Include(u => u.LocalUser)
@@ -131,12 +140,26 @@ namespace Resolve.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(@case);
-                //var test = new CaseAudit {AuditLog = "Case Created", CaseID = 1, LocalUserID = 1};
-                //_context.Add(test);                
                 await _context.SaveChangesAsync();
                 var cid = @case.CaseID;
+                // Adding audit log
+                var audit = new CaseAudit {AuditLog = "Case Created", CaseID = cid, LocalUserID = User.Identity.Name};
+                _context.Add(audit);
+                // Creating helper variables
                 var redirectFunction = _context.CaseType
                     .Single(b => b.CaseTypeID == @case.CaseTypeID);
+                var approver_group = redirectFunction.LocalGroupID;
+                var approver = _context.LocalGroup
+                    .Single(b => b.LocalGroupID == approver_group);
+                var approver_user = approver.LocalUserID;
+                // Adding default Approver assignment
+                var approver_add = new Approver {CaseID = cid, LocalUserID = approver_user, Approved = 0, Order = 1};
+                _context.Add(approver_add);
+                // Adding Group Assignment
+                var group_add = new GroupAssignment { CaseID = cid, LocalGroupID = approver_group};
+                _context.Add(group_add);
+                await _context.SaveChangesAsync();
+                
                 var redirectFunctionName = redirectFunction.CaseTypeTitle;
                 return RedirectToAction(redirectFunctionName, "CaseSpecificDetails", new { id = cid });
                 //return RedirectToAction("Index", "Home");
@@ -144,7 +167,7 @@ namespace Resolve.Controllers
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
-        }     
+        }
 
 
         // GET: Cases/Edit/5
@@ -267,15 +290,15 @@ namespace Resolve.Controllers
                 await _context.SaveChangesAsync();
                 ViewData["Approved"] = "Success";
                 //var cid = HttpContext.Request.Form["CaseID"];
-                return RedirectToAction("Details", new { id = cid });
-                //return RedirectToAction(nameof(Details));                
+                return RedirectToAction("Details", new { id = cid, approved = 1 });
+                //return RedirectToAction(nameof(Details));
             }
             catch (Exception)
             {
                 ViewData["Approved"] = "Error";
             }
 
-            return RedirectToAction("Details", new { id = cid });
+            return RedirectToAction("Details", new { id = cid, approved = 0 });
         }
     }
 }

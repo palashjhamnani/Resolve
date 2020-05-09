@@ -18,9 +18,18 @@
                         <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID</h6>
                         @{
                             if (ViewData["Approved"].ToString() == "Success")
-                            {                                
+                            {
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     The case has been approved!
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            }
+                            if (ViewData["Approved"].ToString() == "Failed")
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    The case could not be approved at this time. Please contact administrator!
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

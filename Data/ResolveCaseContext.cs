@@ -32,7 +32,7 @@ namespace Resolve.Data
 
             modelBuilder.Entity<Case>()
                 .Property(p => p.CaseCID)
-                .HasComputedColumnSql("'CASE' + CONVERT([nvarchar](23),[CaseID]+100000)");
+                .HasComputedColumnSql("'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)");
 
             modelBuilder.Entity<Case>()
                 .HasOne(p => p.CaseType)
