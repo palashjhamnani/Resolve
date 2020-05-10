@@ -18,13 +18,13 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
+                </button>                
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
                     {
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-outline-secondary dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Admin Menu
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -41,6 +41,14 @@
                             </div>
                         </div>
                     }
+                    <form class="form-inline my-2 my-lg-0 ml-auto">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Case ID" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary mr-1" type="button">Search</button>
+                            </div>
+                        </div>
+                    </form>                   
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

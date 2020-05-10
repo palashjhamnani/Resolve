@@ -97,6 +97,11 @@ namespace Resolve.Controllers
                 {
                     ViewData["Approved"] = "Failed";
                 }
+            else
+                if (approved == -1)
+            {
+                ViewData["Approved"] = "RejectSuccess";
+            }
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 .Include(u => u.LocalUser)
@@ -278,7 +283,8 @@ namespace Resolve.Controllers
                 return NotFound();
             }
             var cid = HttpContext.Request.Form["CaseID"];
-            var caseForApproval = await _context.Approver.FindAsync(Convert.ToInt32(cid), User.Identity.Name);
+            int int_cid = Convert.ToInt32(cid);
+            var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
             if (caseForApproval == null)
             {
                 return NotFound();
@@ -287,6 +293,8 @@ namespace Resolve.Controllers
             {
                 caseForApproval.Approved = 1;
                 _context.Update(caseForApproval);
+                var audit = new CaseAudit { AuditLog = "Case Approved", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
                 await _context.SaveChangesAsync();
                 ViewData["Approved"] = "Success";
                 //var cid = HttpContext.Request.Form["CaseID"];
@@ -300,5 +308,48 @@ namespace Resolve.Controllers
 
             return RedirectToAction("Details", new { id = cid, approved = 0 });
         }
+
+        // Approve
+        public IActionResult Reject(int? id)
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var cid = HttpContext.Request.Form["CaseID"];
+            int int_cid = Convert.ToInt32(cid);
+            var caseForReject = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
+            if (caseForReject == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                caseForReject.Approved = -1;
+                _context.Update(caseForReject);
+                var audit = new CaseAudit { AuditLog = "Case Rejected", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
+                await _context.SaveChangesAsync();                
+                //var cid = HttpContext.Request.Form["CaseID"];
+                return RedirectToAction("Details", new { id = cid, approved = -1 });
+                //return RedirectToAction(nameof(Details));
+            }
+            catch (Exception)
+            {
+                ViewData["Approved"] = "Error";
+            }
+
+            return RedirectToAction("Details", new { id = cid, approved = 0 });
+        }
+
+
     }
 }
