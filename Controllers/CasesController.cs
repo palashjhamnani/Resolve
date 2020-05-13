@@ -12,6 +12,7 @@ using Resolve.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Identity.Web;
 
 namespace Resolve.Controllers
 {
@@ -102,6 +103,16 @@ namespace Resolve.Controllers
             {
                 ViewData["Approved"] = "RejectSuccess";
             }
+            bool is_user_admin = false;
+            var user_name = User.GetDisplayName();
+            string u_name = user_name.ToString();
+            var u_admin = _context.UserGroup
+                .Where(b => b.LocalUserID == u_name && b.LocalGroupID == "773d56cf-4ede-494e-8823-1956116230f1");
+            if (u_admin.Count() != 0)
+            {
+                is_user_admin = true;
+            }
+            ViewData["is_user_admin"] = is_user_admin;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 .Include(u => u.LocalUser)

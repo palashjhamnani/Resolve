@@ -8,718 +8,729 @@
 
 }
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Area Chart -->
-            <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+@{
+    var u_admin = ViewData["is_user_admin"];
+    bool user_is_admin = false;
+    user_is_admin = Convert.ToBoolean(u_admin);
+    //if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+    //{
+    //    user_is_admin = true;
+    //}
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Area Chart -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                    @{
+                        int approved_count = 0;
+                        int approved_success_count = 0;
+                        int reject_count = 0;
+                        foreach (var item in Model.Approvers)
+                        {
+                            if (item.Approved == 1)
+                            {
+                                approved_count = approved_count + 1;
+                                approved_success_count = approved_success_count + 1;
+                            }
+                            else
+                                if (item.Approved == -1)
+                            {
+                                approved_count = approved_count + 1;
+                                reject_count = reject_count + 1;
+                            }
+                        }
+                        int total_approvers = Model.Approvers.Count;
+                        int approvals_remaining = total_approvers - approved_count;
+                        if (approvals_remaining == 0 && reject_count == 0)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-success">Approved</span></h6>
+                        }
+                        else
+                            if (approvals_remaining == 0 && reject_count != 0)
+                                {
+                                    <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-danger">Rejected</span></h6>
+                                }
+                        else
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@total_approvers Approvals Pending</span></h6>
+                        }
+
+                    }
+
+                    @{
+                        if (ViewData["Approved"].ToString() == "Success")
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                The case has been APPROVED successfully!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        else
+                            if (ViewData["Approved"].ToString() == "RejectSuccess")
+                                {
+                                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                        The case has been REJECTED successfully!
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                }
+                        else
+                            if (ViewData["Approved"].ToString() == "Failed")
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        The case could not be approved at this time. Please contact administrator!
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                }
+                    }
+                    <div class="dropdown no-arrow">
                         @{
-                            int approved_count = 0;
-                            int approved_success_count = 0;
-                            int reject_count = 0;
+                            int approved = 2;
+                            List<string> approvers = new List<string>();
+                            //List<int> approved_all = new List<int>();
                             foreach (var item in Model.Approvers)
                             {
-                                if (item.Approved == 1)
+                                approvers.Add(item.LocalUserID);
+                                //approved_all.Add(item.Approved);
+                                if (item.LocalUserID == User.GetDisplayName())
                                 {
-                                    approved_count = approved_count + 1;
-                                    approved_success_count = approved_success_count + 1;
-                                }
-                                else
-                                    if (item.Approved == -1)
-                                {
-                                    approved_count = approved_count + 1;
-                                    reject_count = reject_count + 1;
+                                    approved = item.Approved;
                                 }
                             }
-                            int total_approvers = Model.Approvers.Count;
-                            int approvals_remaining = total_approvers - approved_count;
-                            if (approvals_remaining == 0 && reject_count == 0)
-                            {
-                                <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-success">Approved</span></h6>
-                            }
-                            else
-                            if (approvals_remaining == 0 && reject_count != 0)
-                            {
-                                <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-danger">Rejected</span></h6>
-                            }
-                            else
-                            {
-                                <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@total_approvers Approvals Pending</span></h6>
-                            }
-
                         }
 
-                        @{
-                            if (ViewData["Approved"].ToString() == "Success")
-                            {
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    The case has been APPROVED successfully!
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            }
-                            else
-                            if (ViewData["Approved"].ToString() == "RejectSuccess")
-                            {
-                                <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                    The case has been REJECTED successfully!
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            }
-                            else
-                            if (ViewData["Approved"].ToString() == "Failed")
-                            {
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    The case could not be approved at this time. Please contact administrator!
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            }
-                        }
-                        <div class="dropdown no-arrow">
-                            @{
-                                int approved = 2;
-                                List<string> approvers = new List<string>();
-                                //List<int> approved_all = new List<int>();
-                                foreach (var item in Model.Approvers)
-                                {
-                                    approvers.Add(item.LocalUserID);
-                                    //approved_all.Add(item.Approved);
-                                    if (item.LocalUserID == User.GetDisplayName())
-                                    {
-                                        approved = item.Approved;
-                                    }
-                                }
-                            }
 
-                            @if (approvers.Contains(User.GetDisplayName()) || (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
-                            {
-                                if (approvers.Contains(User.GetDisplayName()) && (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
-                                {
-                                    if (approvals_remaining == 0)
-                                    {
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn1Reopen">
-                                            Reopen
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="Cdn1Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-warning" type="submit">Reopen</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn1Approve">
-                                            Approve
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn1Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-success" type="submit">Approve</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn1Reject">
-                                            Reject
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn1Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Reject">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-danger" type="submit">Reject</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                                else
-                                    if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
-                                {
-                                    if (approvals_remaining == 0)
-                                    {
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn2Reopen">
-                                            Reopen
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="Cdn2Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-warning" type="submit">Reopen</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn2Approve">
-                                            Approve
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn2Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-success" type="submit">Approve</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn2Reject">
-                                            Reject
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn2Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Reject">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-danger" type="submit">Reject</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                                else
-                                    if (approvers.Contains(User.GetDisplayName()))
-                                {
-                                    if (approved == 1 || approved == -1)
-                                    {
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn3Reopen">
-                                            Reopen
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="Cdn3Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reopen for Self</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-warning" type="submit">Reopen</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                        if (approved == 0)
-                                    {
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn3Approve">
-                                            Approve
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn3Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Approve Case?</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Approve">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-success" type="submit">Approve</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn3Reject">
-                                            Reject
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="cdn3Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reject Case?</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ...
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <form asp-action="Reject">
-                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                            <button class="btn btn-danger" type="submit">Reject</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                            }
-                            else
+                        @if (approvers.Contains(User.GetDisplayName()) || user_is_admin)
+                        {
+                            if (approvers.Contains(User.GetDisplayName()) && user_is_admin)
                             {
                                 if (approvals_remaining == 0)
                                 {
-                                    <button type="button" class="btn btn-warning btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn1Reopen">
                                         Reopen
                                     </button>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-success btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
-                                        Approve
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
-                                        Reject
-                                    </button>
-                                }
-                            }
 
-
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg">
-                                Audit
-                            </button>
-                            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Case Audit Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <table class="table">
-                                                <tr>
-                                                    <th>Timestamp</th>
-                                                    <th>Audit Log</th>
-                                                </tr>
-                                                @foreach (var item in Model.CaseAudits)
-                                                {
-                                                    <tr>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.AuditTimestamp)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.AuditLog)
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </table>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-
-
-            <div class="col-xl-6 col-lg-7">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                        <h6 class="m-0 font-weight-bold text-primary">General Case Details</h6>
-                        <div class="dropdown no-arrow">
-
-                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#approverModal">
-                                Approvers
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="approverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Approvers</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="card shadow mb-4">
-                                                <!-- Card Header - Dropdown -->
-                                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                                                    <h6 class="m-0 font-weight-bold text-primary">Approvers</h6>
-                                                    <div class="dropdown no-arrow">
-                                                        <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="Cdn1Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                                 </div>
-                                                <!-- Card Body -->
-                                                <div class="card-body">
-                                                    <div class="chart-area" style="overflow: auto; height: 150px;">
-                                                        @foreach (var item in Model.Approvers)
-                                                        {
-                                                            <dl class="row">
-                                                                @item.LocalUser.FirstName @item.LocalUser.LastName
-                                                            </dl>
-                                                        }
-                                                    </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-warning" type="submit">Reopen</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#GroupAssignmentsModal">
-                                Group Assignments
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="GroupAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Group Assignments</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">                                            
-                                            <div class="card shadow mb-4">
-                                                <!-- Card Header - Dropdown -->
-                                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                                                    <h6 class="m-0 font-weight-bold text-primary">Group Assignments</h6>
-                                                    <div class="dropdown no-arrow">
-                                                        <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                                                    </div>
-                                                </div>
-                                                <!-- Card Body -->
-                                                <div class="card-body">
-                                                    <div class="chart-area" style="overflow: auto; height: 150px;">
-                                                        @foreach (var item in Model.GroupAssignments)
-                                                        {
-                                                            <dl class="row">
-                                                                @item.LocalGroup.GroupName
-                                                            </dl>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>                                            
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                        </div>
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body">
-                        <div class="chart-area" style="overflow: auto; height: 150px;">
-                            <dl class="row">
-                                <dt class="col-sm-4">
-                                    @Html.DisplayNameFor(model => model.LocalUser)
-                                </dt>
-                                <dd class="col-sm-8">
-                                    @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
-                                </dd>
-                                <dt class="col-sm-4">
-                                    @Html.DisplayNameFor(model => model.OnBehalfOf)
-                                </dt>
-                                <dd class="col-sm-8">
-                                    @Html.DisplayFor(model => model.OnBehalfOf)
-                                </dd>
-                                <dt class="col-sm-4">
-                                    @Html.DisplayNameFor(model => model.CaseStatus)
-                                </dt>
-                                <dd class="col-sm-8">
-                                    @Html.DisplayFor(model => model.CaseStatus)
-                                </dd>
-                                <dt class="col-sm-4">
-                                    Created On
-                                </dt>
-                                <dd class="col-sm-8">
-                                    @Html.DisplayFor(model => model.CaseCreationTimestamp)
-                                </dd>
-                                <dt class="col-sm-4">
-                                    @Html.DisplayNameFor(model => model.CaseType)
-                                </dt>
-                                <dd class="col-sm-8">
-                                    @Html.DisplayFor(model => model.CaseType.CaseTypeTitle)
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-xl-6 col-lg-7">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                        <h6 class="m-0 font-weight-bold text-primary">Comments</h6>                        
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body">
-                        <div class="chart-area" style="overflow: auto; height: 150px;">
-                            <table class="table">
-                                <tr>
-                                    <th>Posted By</th>
-                                    <th>Comment</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                                @foreach (var item in Model.CaseComments)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Comment)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CommentTimestamp)
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
-
-                            <form asp-action="CreateComment">
-                                <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
-                                <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                <div class="input-group mb-3">
-                                    <input id="Comment" name="Comment" type="text" class="form-control" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-primary" type="submit">Post</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-
-
-            <div class="col-xl-6 col-lg-7">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                        <h6 class="m-0 font-weight-bold text-primary">Specific Case Details</h6>
-                        <div class="dropdown no-arrow">
-                            <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                        </div>
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body">
-                        <div class="chart-area" style="overflow: auto; height: 150px;">
-                            @{
-
-                                if (Model.CaseType.CaseTypeTitle == "SampleCaseType")
-                                {
-                                    @foreach (var item in Model.SampleCaseType)
-                                    {
-                                        <dl class="row">
-                                            <dt class="col-sm-4">
-                                                @Html.DisplayNameFor(modelItem => item.CaseDescription)
-                                            </dt>
-                                            <dd class="col-sm-8">
-                                                @Html.DisplayFor(modelItem => item.CaseDescription)
-                                            </dd>
-                                        </dl>
-                                    }
                                 }
                                 else
-                                    if (Model.CaseType.CaseTypeTitle == "Sample2")
                                 {
-                                    @foreach (var item in Model.Sample2)
-                                    {
-                                        <dl class="row">
-                                            <dt class="col-sm-4">
-                                                @Html.DisplayNameFor(modelItem => item.SampleDescription)
-                                            </dt>
-                                            <dd class="col-sm-8">
-                                                @Html.DisplayFor(modelItem => item.SampleDescription)
-                                            </dd>
-                                        </dl>
-                                    }
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn1Approve">
+                                        Approve
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn1Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-success" type="submit">Approve</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn1Reject">
+                                        Reject
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn1Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Reject">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-danger" type="submit">Reject</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="col-xl-6 col-lg-7">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                        <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
-                        <div class="dropdown no-arrow">
-                            <a class="btn btn-primary btn-sm" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
-                                Create
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body">
-                        <div class="chart-area" style="overflow: auto; height: 150px;">
-                            <table class="table">
-                                <tr>
-                                    <th>Posted By</th>
-                                    <th>File Name</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                                @foreach (var item in Model.CaseAttachments)
+                            else
+                                if (user_is_admin)
+                            {
+                                if (approvals_remaining == 0)
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.FileName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
-                                        </td>
-                                    </tr>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn2Reopen">
+                                        Reopen
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="Cdn2Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-warning" type="submit">Reopen</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
-                            </table>
+                                else
+                                {
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn2Approve">
+                                        Approve
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn2Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-success" type="submit">Approve</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn2Reject">
+                                        Reject
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn2Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Reject">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-danger" type="submit">Reject</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                                if (approvers.Contains(User.GetDisplayName()))
+                            {
+                                if (approved == 1 || approved == -1)
+                                {
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn3Reopen">
+                                        Reopen
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="Cdn3Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for Self</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-warning" type="submit">Reopen</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                    if (approved == 0)
+                                {
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn3Approve">
+                                        Approve
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn3Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Approve">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-success" type="submit">Approve</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn3Reject">
+                                        Reject
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="cdn3Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form asp-action="Reject">
+                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <button class="btn btn-danger" type="submit">Reject</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (approvals_remaining == 0)
+                            {
+                                <button type="button" class="btn btn-warning btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                    Reopen
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-success btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                    Approve
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                    Reject
+                                </button>
+                            }
+                        }
+
+
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg">
+                            Audit
+                        </button>
+                        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Case Audit Details</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table">
+                                            <tr>
+                                                <th>Timestamp</th>
+                                                <th>Audit Log</th>
+                                            </tr>
+                                            @foreach (var item in Model.CaseAudits)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.AuditLog)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+
+
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                    <h6 class="m-0 font-weight-bold text-primary">General Case Details</h6>
+                    <div class="dropdown no-arrow">
+
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#approverModal">
+                            Approvers
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="approverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Approvers</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card shadow mb-4">
+                                            <!-- Card Header - Dropdown -->
+                                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                                                <h6 class="m-0 font-weight-bold text-primary">Approvers</h6>
+                                                <div class="dropdown no-arrow">
+                                                    <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
+                                                </div>
+                                            </div>
+                                            <!-- Card Body -->
+                                            <div class="card-body">
+                                                <div class="chart-area" style="overflow: auto; height: 150px;">
+                                                    @foreach (var item in Model.Approvers)
+                                                    {
+                                                        <dl class="row">
+                                                            @item.LocalUser.FirstName @item.LocalUser.LastName
+                                                        </dl>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#GroupAssignmentsModal">
+                            Group Assignments
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="GroupAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Group Assignments</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card shadow mb-4">
+                                            <!-- Card Header - Dropdown -->
+                                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                                                <h6 class="m-0 font-weight-bold text-primary">Group Assignments</h6>
+                                                <div class="dropdown no-arrow">
+                                                    <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
+                                                </div>
+                                            </div>
+                                            <!-- Card Body -->
+                                            <div class="card-body">
+                                                <div class="chart-area" style="overflow: auto; height: 150px;">
+                                                    @foreach (var item in Model.GroupAssignments)
+                                                    {
+                                                        <dl class="row">
+                                                            @item.LocalGroup.GroupName
+                                                        </dl>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.LocalUser)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.OnBehalfOf)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.OnBehalfOf)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.CaseStatus)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.CaseStatus)
+                            </dd>
+                            <dt class="col-sm-4">
+                                Created On
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.CaseCreationTimestamp)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.CaseType)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.CaseType.CaseTypeTitle)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                    <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                        <table class="table">
+                            <tr>
+                                <th>Posted By</th>
+                                <th>Comment</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            @foreach (var item in Model.CaseComments)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Comment)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CommentTimestamp)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                        <form asp-action="CreateComment">
+                            <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
+                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                            <div class="input-group mb-3">
+                                <input id="Comment" name="Comment" type="text" class="form-control" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="submit">Post</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                    <h6 class="m-0 font-weight-bold text-primary">Specific Case Details</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                        @{
+
+                            if (Model.CaseType.CaseTypeTitle == "SampleCaseType")
+                            {
+                                @foreach (var item in Model.SampleCaseType)
+                                {
+                                    <dl class="row">
+                                        <dt class="col-sm-4">
+                                            @Html.DisplayNameFor(modelItem => item.CaseDescription)
+                                        </dt>
+                                        <dd class="col-sm-8">
+                                            @Html.DisplayFor(modelItem => item.CaseDescription)
+                                        </dd>
+                                    </dl>
+                                }
+                            }
+                            else
+                                if (Model.CaseType.CaseTypeTitle == "Sample2")
+                            {
+                                @foreach (var item in Model.Sample2)
+                                {
+                                    <dl class="row">
+                                        <dt class="col-sm-4">
+                                            @Html.DisplayNameFor(modelItem => item.SampleDescription)
+                                        </dt>
+                                        <dd class="col-sm-8">
+                                            @Html.DisplayFor(modelItem => item.SampleDescription)
+                                        </dd>
+                                    </dl>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
+                    <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="btn btn-primary btn-sm" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
+                            Create
+                        </a>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                        <table class="table">
+                            <tr>
+                                <th>Posted By</th>
+                                <th>File Name</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            @foreach (var item in Model.CaseAttachments)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FileName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
