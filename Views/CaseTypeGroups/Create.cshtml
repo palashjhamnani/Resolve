@@ -1,0 +1,34 @@
+﻿@model Resolve.Models.CaseTypeGroup
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>CaseTypeGroup</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CaseTypeID" class="control-label"></label>
+                <select asp-for="CaseTypeID" class ="form-control" asp-items="ViewBag.CaseTypeID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocalGroupID" class="control-label"></label>
+                <select asp-for="LocalGroupID" class ="form-control" asp-items="ViewBag.LocalGroupID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

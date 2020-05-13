@@ -14,6 +14,7 @@ namespace Resolve.Data
         public DbSet<LocalGroup> LocalGroup { get; set; }
         public DbSet<UserGroup> UserGroup { get; set; }
         public DbSet<CaseType> CaseType { get; set; }
+        public DbSet<CaseTypeGroup> CaseTypeGroup { get; set; }
         public DbSet<Case> Case { get; set; }
         public DbSet<Approver> Approver { get; set; }
         public DbSet<GroupAssignment> GroupAssignment { get; set; }
@@ -45,6 +46,21 @@ namespace Resolve.Data
 
             modelBuilder.Entity<Approver>()
                 .HasKey(c => new { c.CaseID, c.LocalUserID });
+            modelBuilder.Entity<Approver>()
+                .Property(e => e.Order)
+                .HasDefaultValue(1);
+            modelBuilder.Entity<Approver>()
+                .Property(e => e.Approved)
+                .HasDefaultValue(0);
+
+            modelBuilder.Entity<CaseTypeGroup>()
+                .HasKey(c => new { c.CaseTypeID, c.LocalGroupID });
+            modelBuilder.Entity<CaseTypeGroup>()
+                .Property(e => e.Order)
+                .HasDefaultValue(1);
+            modelBuilder.Entity<CaseTypeGroup>()
+                .Property(e => e.Approved)
+                .HasDefaultValue(0);
 
             modelBuilder.Entity<GroupAssignment>()
                 .HasKey(c => new { c.CaseID, c.LocalGroupID });

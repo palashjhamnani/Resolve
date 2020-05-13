@@ -92,7 +92,7 @@ namespace Resolve.Migrations
                 {
                     CaseID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseCID = table.Column<string>(nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+100000)"),
+                    CaseCID = table.Column<string>(nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)"),
                     LocalUserID = table.Column<string>(nullable: true),
                     OnBehalfOf = table.Column<int>(nullable: false),
                     CaseStatus = table.Column<string>(nullable: true),
@@ -115,13 +115,39 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CaseTypeGroup",
+                columns: table => new
+                {
+                    CaseTypeID = table.Column<int>(nullable: false),
+                    LocalGroupID = table.Column<string>(nullable: false),
+                    Approved = table.Column<int>(nullable: false, defaultValue: 0),
+                    Order = table.Column<int>(nullable: false, defaultValue: 1)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseTypeGroup", x => new { x.CaseTypeID, x.LocalGroupID });
+                    table.ForeignKey(
+                        name: "FK_CaseTypeGroup_CaseType_CaseTypeID",
+                        column: x => x.CaseTypeID,
+                        principalTable: "CaseType",
+                        principalColumn: "CaseTypeID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseTypeGroup_LocalGroup_LocalGroupID",
+                        column: x => x.LocalGroupID,
+                        principalTable: "LocalGroup",
+                        principalColumn: "LocalGroupID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Approver",
                 columns: table => new
                 {
                     CaseID = table.Column<int>(nullable: false),
                     LocalUserID = table.Column<string>(nullable: false),
-                    Approved = table.Column<int>(nullable: false),
-                    Order = table.Column<int>(nullable: false)
+                    Approved = table.Column<int>(nullable: false, defaultValue: 0),
+                    Order = table.Column<int>(nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -360,6 +386,11 @@ namespace Resolve.Migrations
                 column: "LocalGroupID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseTypeGroup_LocalGroupID",
+                table: "CaseTypeGroup",
+                column: "LocalGroupID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupAssignment_LocalGroupID",
                 table: "GroupAssignment",
                 column: "LocalGroupID");
@@ -393,6 +424,9 @@ namespace Resolve.Migrations
 
             migrationBuilder.DropTable(
                 name: "CaseComment");
+
+            migrationBuilder.DropTable(
+                name: "CaseTypeGroup");
 
             migrationBuilder.DropTable(
                 name: "GroupAssignment");
