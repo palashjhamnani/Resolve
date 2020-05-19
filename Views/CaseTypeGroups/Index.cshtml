@@ -20,9 +20,6 @@
                 @Html.DisplayNameFor(model => model.LocalGroup)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Approved)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
             <th></th>
@@ -38,15 +35,12 @@
                 @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Approved)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Order)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "Edit", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID }) |
+                @Html.ActionLink("Details", "Details", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID }) |
+                @Html.ActionLink("Delete", "Delete", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID })
             </td>
         </tr>
 }

@@ -23,6 +23,7 @@ namespace Resolve.Models
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
         public ICollection<GroupAssignment> GroupCases { get; set; }
+        public ICollection<CaseTypeGroup> CaseTypeGroups { get; set; }
 
     }
 }

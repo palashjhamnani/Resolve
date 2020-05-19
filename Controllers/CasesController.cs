@@ -154,7 +154,7 @@ namespace Resolve.Controllers
         {
 
             if (ModelState.IsValid)
-            {
+            {                
                 _context.Add(@case);
                 await _context.SaveChangesAsync();
                 var cid = @case.CaseID;
@@ -180,7 +180,7 @@ namespace Resolve.Controllers
                 return RedirectToAction(redirectFunctionName, "CaseSpecificDetails", new { id = cid });
                 //return RedirectToAction("Index", "Home");
             }
-            ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
+            ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle", @case.CaseTypeID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
         }

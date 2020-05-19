@@ -21,6 +21,7 @@ namespace Resolve.Data
         public DbSet<CaseAudit> CaseAudit { get; set; }
         public DbSet<CaseComment> CaseComment { get; set; }
         public DbSet<CaseAttachment> CaseAttachment { get; set; }
+        public DbSet<Resolve.Models.OnBehalf> OnBehalf { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
         public DbSet<Sample2> Sample2 { get; set; }
 
@@ -30,16 +31,13 @@ namespace Resolve.Data
                 .HasOne(p => p.LocalUser)
                 .WithMany(q => q.Cases)
                 .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<Case>()
                 .Property(p => p.CaseCID)
                 .HasComputedColumnSql("'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)");
-
             modelBuilder.Entity<Case>()
                 .HasOne(p => p.CaseType)
                 .WithMany(q => q.Cases)
                 .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<Case>()
             .Property(b => b.CaseCreationTimestamp)
             .HasDefaultValueSql("getdate()");
@@ -53,14 +51,17 @@ namespace Resolve.Data
                 .Property(e => e.Approved)
                 .HasDefaultValue(0);
 
+            modelBuilder.Entity<CaseType>()
+                .Property(e => e.GroupNumber)
+                .HasDefaultValue(1);
+            modelBuilder.Entity<CaseType>()
+                .HasAlternateKey(e => e.CaseTypeTitle);
+
             modelBuilder.Entity<CaseTypeGroup>()
                 .HasKey(c => new { c.CaseTypeID, c.LocalGroupID });
             modelBuilder.Entity<CaseTypeGroup>()
                 .Property(e => e.Order)
                 .HasDefaultValue(1);
-            modelBuilder.Entity<CaseTypeGroup>()
-                .Property(e => e.Approved)
-                .HasDefaultValue(0);
 
             modelBuilder.Entity<GroupAssignment>()
                 .HasKey(c => new { c.CaseID, c.LocalGroupID });
@@ -85,9 +86,7 @@ namespace Resolve.Data
 
 
         }
-        
-
-        public DbSet<Resolve.Models.OnBehalf> OnBehalf { get; set; }
+               
 
     }
 }

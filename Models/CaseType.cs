@@ -10,18 +10,17 @@ namespace Resolve.Models
     public class CaseType
     {
         public int CaseTypeID { get; set; }
-        // Create a model in ~/Models/CaseTypeModels/ folder with this name
-        [Display(Name = "Case Type Entity Name")]
+
+        // No Blank Spaces. Create a model in ~/Models/CaseTypeModels/ folder with this name        
+        [Display(Name = "Case Type Entity Name")]       
         public string CaseTypeTitle { get; set; }
-        //public Type Ctype { get; set; }
 
         [Display(Name = "Description")]
-        public string LongDescription { get; set; }
-
-        [Display(Name = "Default Group")]
+        public string? LongDescription { get; set; }
         public string LocalGroupID { get; set; }
         public LocalGroup LocalGroup { get; set; }
-
+        public int? GroupNumber { get; set; }
         public ICollection<Case> Cases { get; set; }
+        public ICollection<CaseTypeGroup> CaseTypeGroups { get; set; }
     }
 }

@@ -35,6 +35,7 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
+                .Include(c => c.CaseTypeGroups).ThenInclude(p => p.LocalGroup).ThenInclude(p => p.LocalUser)
                 .Include(c => c.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
@@ -53,17 +54,18 @@ namespace Resolve.Controllers
         }
 
         // POST: CaseTypes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID")] CaseType caseType)
+        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID,GroupNumber")] CaseType caseType)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(caseType);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "CaseTypeGroups", new { id = caseType.GroupNumber });
+                //return RedirectToAction(nameof(Index));
             }
             ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
             return View(caseType);
@@ -87,11 +89,11 @@ namespace Resolve.Controllers
         }
 
         // POST: CaseTypes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID")] CaseType caseType)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID,GroupNumber")] CaseType caseType)
         {
             if (id != caseType.CaseTypeID)
             {
@@ -118,7 +120,7 @@ namespace Resolve.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalUser, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
+            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
             return View(caseType);
         }
 
@@ -131,6 +133,7 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
+                .Include(c => c.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {

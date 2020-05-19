@@ -13,12 +13,10 @@ namespace Resolve.Models
         public int CaseTypeID { get; set; }
         public CaseType CaseType { get; set; }
 
-        // Case to be approved by        
+        // Case to be approved by
         public string LocalGroupID { get; set; }
         public LocalGroup LocalGroup { get; set; }
-        // Default values: 0, -1 is Reject, 1 is Approved
-        public int Approved { get; set; }
-        public int Order { get; set; }
+        public int? Order { get; set; }
 
     }
 

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Create</h1>
@@ -24,10 +25,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="LocalGroupID" class="control-label"></label>
-                <select asp-for="LocalGroupID" class ="form-control" asp-items="ViewBag.LocalGroupID"></select>
+                <select asp-for="LocalGroupID" class="form-control" asp-items="ViewBag.LocalGroupID"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="GroupNumber" class="control-label"></label>
+                <input asp-for="GroupNumber" class="form-control" />
+                <span asp-validation-for="GroupNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Next" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200513215841_V1")]
+    [Migration("20200514014852_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,6 +189,11 @@ namespace Resolve.Migrations
                     b.Property<string>("CaseTypeTitle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<string>("LocalGroupID")
                         .HasColumnType("nvarchar(450)");
 
@@ -210,12 +215,12 @@ namespace Resolve.Migrations
                     b.Property<string>("LocalGroupID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Approved")
+                    b.Property<int?>("Approved")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("Order")
+                    b.Property<int?>("Order")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
@@ -419,13 +424,13 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.CaseTypeGroup", b =>
                 {
                     b.HasOne("Resolve.Models.CaseType", "CaseType")
-                        .WithMany()
+                        .WithMany("CaseTypeGroups")
                         .HasForeignKey("CaseTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
-                        .WithMany()
+                        .WithMany("CaseTypeGroups")
                         .HasForeignKey("LocalGroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

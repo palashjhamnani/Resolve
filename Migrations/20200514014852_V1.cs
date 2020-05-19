@@ -49,7 +49,8 @@ namespace Resolve.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaseTypeTitle = table.Column<string>(nullable: true),
                     LongDescription = table.Column<string>(nullable: true),
-                    LocalGroupID = table.Column<string>(nullable: true)
+                    LocalGroupID = table.Column<string>(nullable: true),
+                    GroupNumber = table.Column<int>(nullable: true, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -120,8 +121,8 @@ namespace Resolve.Migrations
                 {
                     CaseTypeID = table.Column<int>(nullable: false),
                     LocalGroupID = table.Column<string>(nullable: false),
-                    Approved = table.Column<int>(nullable: false, defaultValue: 0),
-                    Order = table.Column<int>(nullable: false, defaultValue: 1)
+                    Approved = table.Column<int>(nullable: true, defaultValue: 0),
+                    Order = table.Column<int>(nullable: true, defaultValue: 1)
                 },
                 constraints: table =>
                 {
