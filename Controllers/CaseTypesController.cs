@@ -64,7 +64,8 @@ namespace Resolve.Controllers
             {
                 _context.Add(caseType);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "CaseTypeGroups", new { id = caseType.GroupNumber });
+                int ctypeid = caseType.CaseTypeID;
+                return RedirectToAction("Create", "CaseTypeGroups", new { id = caseType.GroupNumber, cid = ctypeid });
                 //return RedirectToAction(nameof(Index));
             }
             ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);

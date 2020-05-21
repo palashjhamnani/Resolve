@@ -47,9 +47,10 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseTypeGroups/Create
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? id, int? cid)
         {
             ViewData["NumberOfGroups"] = id;
+            ViewData["CTypeID"] = cid;
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
             ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID");
             return View();
@@ -60,7 +61,7 @@ namespace Resolve.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? id, CaseTypeGroup caseTypeGroup)
+        public async Task<IActionResult> Create(int? id, int? cid, CaseTypeGroup caseTypeGroup)
         {
             if (id == null)
             {

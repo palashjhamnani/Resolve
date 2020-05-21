@@ -41,6 +41,9 @@ namespace Resolve.Data
             modelBuilder.Entity<Case>()
             .Property(b => b.CaseCreationTimestamp)
             .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<Case>()
+                .Property(r => r.Processed)
+                .HasDefaultValue(0);
 
             modelBuilder.Entity<Approver>()
                 .HasKey(c => new { c.CaseID, c.LocalUserID });
@@ -71,6 +74,9 @@ namespace Resolve.Data
 
             modelBuilder.Entity<UserGroup>()
                 .HasKey(c => new { c.LocalUserID, c.LocalGroupID });
+
+            modelBuilder.Entity<LocalGroup>()
+                .HasAlternateKey(e => e.GroupName);
 
             modelBuilder.Entity<CaseComment>()
             .Property(b => b.CommentTimestamp)

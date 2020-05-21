@@ -53,6 +53,10 @@
     <Compile Remove="Migrations\20200513215841_V1.Designer.cs" />
     <Compile Remove="Migrations\20200513224323_V1.cs" />
     <Compile Remove="Migrations\20200513224323_V1.Designer.cs" />
+    <Compile Remove="Migrations\20200514014852_V1.cs" />
+    <Compile Remove="Migrations\20200514014852_V1.Designer.cs" />
+    <Compile Remove="Migrations\20200520071515_V1.cs" />
+    <Compile Remove="Migrations\20200520071515_V1.Designer.cs" />
   </ItemGroup>
 
 
@@ -60,9 +64,9 @@
     <PackageReference Include="FormFactory" Version="5.0.67" />
     <PackageReference Include="FormFactory.AspNetCore" Version="5.0.67" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-preview.3.20181.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0-preview.3.20181.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

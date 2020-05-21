@@ -10,7 +10,7 @@
 <h4>CaseTypeGroup</h4>
 <hr />
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <form asp-action="Create">
             <div class="form-row">
                 @{
@@ -29,10 +29,20 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         string casetype = "CaseType" + num;
-                        <div class="form-group col-md-3">
-                            <label asp-for="CaseTypeID" class="control-label"></label>
-                            <select name=@casetype asp-for="CaseTypeID" class="form-control" asp-items="ViewBag.CaseTypeID"></select>
-                        </div>
+                        if (ViewData["CTypeID"] != null)
+                        {
+                            int cid = Convert.ToInt32(ViewData["CTypeID"]);
+                            <div class="form-group col-md-3">
+                                <input type="hidden" value="@cid" name=@casetype asp-for="CaseTypeID" class="form-control" />                            
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-md-3">
+                                <label asp-for="CaseTypeID" class="control-label"></label>
+                                <select name=@casetype asp-for="CaseTypeID" class="form-control" asp-items="ViewBag.CaseTypeID"></select>
+                            </div>
+                        }
                         string localgroup = "LocalGroup" + num;
                         <div class="form-group col-md-5">
                             <label asp-for="LocalGroupID" class="control-label"></label>

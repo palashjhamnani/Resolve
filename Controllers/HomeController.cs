@@ -180,16 +180,16 @@ namespace Resolve.Controllers
 
             // Cases created by the User, assigned to the User, and assigned to the groups to which the User belongs to
             var UCases = await _context.LocalUser
-                .Include(s => s.Cases)
-                .ThenInclude(w => w.CaseType)
-                    .Include(q => q.CasesforApproval)
+                .Include(s => s.Cases.Where(p => p.Processed == 0))
+                    .ThenInclude(w => w.CaseType)
+                .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0))
                     .ThenInclude(q => q.Case)
                     .ThenInclude(q => q.CaseType)
-                        .Include(e => e.UserGroups)
+                .Include(e => e.UserGroups)
                         .ThenInclude(e => e.LocalGroup)
-                        .ThenInclude(e => e.GroupCases)
+                        .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
                         .ThenInclude(e => e.Case)
-                        .ThenInclude(e => e.CaseType)
+                        .ThenInclude(e => e.CaseType)                        
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
 

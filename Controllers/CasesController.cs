@@ -162,9 +162,21 @@ namespace Resolve.Controllers
                 var audit = new CaseAudit {AuditLog = "Case Created", CaseID = cid, LocalUserID = User.Identity.Name};
                 _context.Add(audit);
                 // Creating helper variables
-                var redirectFunction = _context.CaseType
+                var CType = _context.CaseType
                     .Single(b => b.CaseTypeID == @case.CaseTypeID);
-                var approver_group = redirectFunction.LocalGroupID;
+                var CTypeGroups = _context.CaseTypeGroup
+                    .Where(b => b.CaseTypeID == @case.CaseTypeID);
+                foreach (var item in CTypeGroups)
+                {                    
+                    var app = _context.LocalGroup
+                        .Single(b => b.LocalGroupID == item.LocalGroupID);
+                    var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
+                    _context.Add(app_add);
+                    var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
+                    _context.Add(grp_add);
+                }
+                /*
+                var approver_group = CType.LocalGroupID;
                 var approver = _context.LocalGroup
                     .Single(b => b.LocalGroupID == approver_group);
                 var approver_user = approver.LocalUserID;
@@ -174,9 +186,11 @@ namespace Resolve.Controllers
                 // Adding Group Assignment
                 var group_add = new GroupAssignment { CaseID = cid, LocalGroupID = approver_group};
                 _context.Add(group_add);
+                */
+
                 await _context.SaveChangesAsync();
                 
-                var redirectFunctionName = redirectFunction.CaseTypeTitle;
+                var redirectFunctionName = CType.CaseTypeTitle;
                 return RedirectToAction(redirectFunctionName, "CaseSpecificDetails", new { id = cid });
                 //return RedirectToAction("Index", "Home");
             }

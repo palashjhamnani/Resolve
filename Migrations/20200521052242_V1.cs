@@ -33,6 +33,7 @@ namespace Resolve.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LocalGroup", x => x.LocalGroupID);
+                    table.UniqueConstraint("AK_LocalGroup_GroupName", x => x.GroupName);
                     table.ForeignKey(
                         name: "FK_LocalGroup_LocalUser_LocalUserID",
                         column: x => x.LocalUserID,
@@ -47,7 +48,7 @@ namespace Resolve.Migrations
                 {
                     CaseTypeID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseTypeTitle = table.Column<string>(nullable: true),
+                    CaseTypeTitle = table.Column<string>(nullable: false),
                     LongDescription = table.Column<string>(nullable: true),
                     LocalGroupID = table.Column<string>(nullable: true),
                     GroupNumber = table.Column<int>(nullable: true, defaultValue: 1)
@@ -55,6 +56,7 @@ namespace Resolve.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CaseType", x => x.CaseTypeID);
+                    table.UniqueConstraint("AK_CaseType_CaseTypeTitle", x => x.CaseTypeTitle);
                     table.ForeignKey(
                         name: "FK_CaseType_LocalGroup_LocalGroupID",
                         column: x => x.LocalGroupID,
@@ -98,7 +100,8 @@ namespace Resolve.Migrations
                     OnBehalfOf = table.Column<int>(nullable: false),
                     CaseStatus = table.Column<string>(nullable: true),
                     CaseCreationTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    CaseTypeID = table.Column<int>(nullable: false)
+                    CaseTypeID = table.Column<int>(nullable: false),
+                    Processed = table.Column<int>(nullable: true, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -121,7 +124,6 @@ namespace Resolve.Migrations
                 {
                     CaseTypeID = table.Column<int>(nullable: false),
                     LocalGroupID = table.Column<string>(nullable: false),
-                    Approved = table.Column<int>(nullable: true, defaultValue: 0),
                     Order = table.Column<int>(nullable: true, defaultValue: 1)
                 },
                 constraints: table =>

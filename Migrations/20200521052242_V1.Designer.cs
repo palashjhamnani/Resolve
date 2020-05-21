@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200514014852_V1")]
+    [Migration("20200521052242_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,11 @@ namespace Resolve.Migrations
 
                     b.Property<int>("OnBehalfOf")
                         .HasColumnType("int");
+
+                    b.Property<int?>("Processed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("CaseID");
 
@@ -187,7 +192,8 @@ namespace Resolve.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CaseTypeTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("GroupNumber")
                         .ValueGeneratedOnAdd()
@@ -202,6 +208,8 @@ namespace Resolve.Migrations
 
                     b.HasKey("CaseTypeID");
 
+                    b.HasAlternateKey("CaseTypeTitle");
+
                     b.HasIndex("LocalGroupID");
 
                     b.ToTable("CaseType");
@@ -214,11 +222,6 @@ namespace Resolve.Migrations
 
                     b.Property<string>("LocalGroupID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("Approved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<int?>("Order")
                         .ValueGeneratedOnAdd()
@@ -257,12 +260,14 @@ namespace Resolve.Migrations
 
                     b.Property<string>("GroupName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LocalGroupID");
+
+                    b.HasAlternateKey("GroupName");
 
                     b.HasIndex("LocalUserID");
 
