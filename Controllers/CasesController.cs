@@ -99,6 +99,11 @@ namespace Resolve.Controllers
                     ViewData["Approved"] = "Failed";
                 }
             else
+                if (approved == 2)
+            {
+                ViewData["Approved"] = "Reopened";
+            }
+            else
                 if (approved == -1)
             {
                 ViewData["Approved"] = "RejectSuccess";
@@ -292,7 +297,7 @@ namespace Resolve.Controllers
 
 
         // Approve
-        public IActionResult Approve(int? id)
+        public IActionResult Process(int? id)
         {
             return View();
         }
@@ -300,29 +305,119 @@ namespace Resolve.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Approve(int id)
+        public async Task<IActionResult> Process(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var cid = HttpContext.Request.Form["CaseID"];
+            var process_value = HttpContext.Request.Form["ProcessValue"];
             int int_cid = Convert.ToInt32(cid);
+            int details_arg = 0;
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
+            var caseProcessed = await _context.Case.FindAsync(int_cid);
             if (caseForApproval == null)
             {
                 return NotFound();
             }
             try
             {
-                caseForApproval.Approved = 1;
-                _context.Update(caseForApproval);
-                var audit = new CaseAudit { AuditLog = "Case Approved", CaseID = int_cid, LocalUserID = User.Identity.Name };
-                _context.Add(audit);
-                await _context.SaveChangesAsync();
+                if (process_value == "Approve")
+                {
+                    caseForApproval.Approved = 1;
+                    _context.Update(caseForApproval);
+                    var audit = new CaseAudit { AuditLog = "Case Approved", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    await _context.SaveChangesAsync();
+                    details_arg = 1;
+                }
+                else
+                    if (process_value == "Reopen")
+                {
+                    caseForApproval.Approved = 0;
+                    _context.Update(caseForApproval);
+                    var audit = new CaseAudit { AuditLog = "Case Reopened and marked as not-processed. Case put in pending status.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    // Mark Case as Not-Processed                    
+                    caseProcessed.Processed = 0;
+                    _context.Update(caseProcessed);                    
+                    await _context.SaveChangesAsync();
+                    details_arg = 2;
+                }
+                else
+                    if (process_value == "Reject")
+                {
+                    caseForApproval.Approved = -1;
+                    _context.Update(caseForApproval);
+                    caseProcessed.CaseStatus = "Rejected";
+                    _context.Update(caseProcessed);
+                    var audit = new CaseAudit { AuditLog = "Case Rejected", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    await _context.SaveChangesAsync();
+                    details_arg = -1;
+                }
+                
+                // Mark Case as Processed if all approvers have taken action or if any of the approver has rejected the case
+
+                var ApproversForCase = await _context.Approver
+                    .Where(p => p.CaseID == int_cid)
+                    .ToListAsync();
+                int approved_count = 0;                
+                int reject_count = 0;
+                foreach (var item in ApproversForCase)
+                {
+                    if (item.Approved == 1)
+                    {
+                        approved_count += 1;                        
+                    }
+                    else
+                        if (item.Approved == -1)
+                    {                        
+                        reject_count += 1;
+                    }
+                }
+                int processed_count = approved_count + reject_count;
+                int total_processors = ApproversForCase.Count;
+                int processors_remaining = total_processors - processed_count;
+                if (processors_remaining == 0 && reject_count == 0)
+                    {
+                    // Mark Case as Processed and Approved
+                    caseProcessed.CaseStatus = "Approved";
+                    _context.Update(caseProcessed);
+                    caseProcessed.Processed = 1;
+                    _context.Update(caseProcessed);
+                    var audit = new CaseAudit { AuditLog = "Case Processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    await _context.SaveChangesAsync();
+                }        
+                else
+                if (reject_count != 0)
+                    {
+                        // Mark Case as Processed and Rejected
+                        caseProcessed.CaseStatus = "Rejected";
+                        _context.Update(caseProcessed);
+                        caseProcessed.Processed = 1;
+                        _context.Update(caseProcessed);
+                        var audit = new CaseAudit { AuditLog = "Case Processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(audit);
+                        await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    // Mark Case in Pending
+                    caseProcessed.CaseStatus = "Pending";
+                    _context.Update(caseProcessed);                    
+                    var audit = new CaseAudit { AuditLog = "Case still in Pending status.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    await _context.SaveChangesAsync();
+                }
+                        
+
+
                 ViewData["Approved"] = "Success";
                 //var cid = HttpContext.Request.Form["CaseID"];
-                return RedirectToAction("Details", new { id = cid, approved = 1 });
+                return RedirectToAction("Details", new { id = cid, approved = details_arg });
                 //return RedirectToAction(nameof(Details));
             }
             catch (Exception)
@@ -333,46 +428,7 @@ namespace Resolve.Controllers
             return RedirectToAction("Details", new { id = cid, approved = 0 });
         }
 
-        // Approve
-        public IActionResult Reject(int? id)
-        {
-            return View();
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reject(int id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var cid = HttpContext.Request.Form["CaseID"];
-            int int_cid = Convert.ToInt32(cid);
-            var caseForReject = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
-            if (caseForReject == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                caseForReject.Approved = -1;
-                _context.Update(caseForReject);
-                var audit = new CaseAudit { AuditLog = "Case Rejected", CaseID = int_cid, LocalUserID = User.Identity.Name };
-                _context.Add(audit);
-                await _context.SaveChangesAsync();                
-                //var cid = HttpContext.Request.Form["CaseID"];
-                return RedirectToAction("Details", new { id = cid, approved = -1 });
-                //return RedirectToAction(nameof(Details));
-            }
-            catch (Exception)
-            {
-                ViewData["Approved"] = "Error";
-            }
-
-            return RedirectToAction("Details", new { id = cid, approved = 0 });
-        }
+        
 
 
     }

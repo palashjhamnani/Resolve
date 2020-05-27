@@ -238,7 +238,59 @@ namespace Resolve.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ByYou(string? cases)
+        {           
+            var PastCases = await _context.LocalUser
+            .Include(s => s.Cases.Where(p => p.Processed == 0))
+                .ThenInclude(w => w.CaseType)
+            .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0))
+                .ThenInclude(q => q.Case)
+                .ThenInclude(q => q.CaseType)
+            .Include(e => e.UserGroups)
+                    .ThenInclude(e => e.LocalGroup)
+                    .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
+                    .ThenInclude(e => e.Case)
+                    .ThenInclude(e => e.CaseType)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.LocalUserID == "o");
+            return View(PastCases);          
+        }
 
+        public async Task<IActionResult> ToYou(string? cases)
+        {
+            var PastCases = await _context.LocalUser
+            .Include(s => s.Cases.Where(p => p.Processed == 0))
+                .ThenInclude(w => w.CaseType)
+            .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0))
+                .ThenInclude(q => q.Case)
+                .ThenInclude(q => q.CaseType)
+            .Include(e => e.UserGroups)
+                    .ThenInclude(e => e.LocalGroup)
+                    .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
+                    .ThenInclude(e => e.Case)
+                    .ThenInclude(e => e.CaseType)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.LocalUserID == "o");
+            return View(PastCases);
+        }
+
+        public async Task<IActionResult> ToYourGroups()
+        {            
+            var PastCases = await _context.LocalUser
+            .Include(s => s.Cases.Where(p => p.Processed == 0))
+                .ThenInclude(w => w.CaseType)
+            .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0))
+                .ThenInclude(q => q.Case)
+                .ThenInclude(q => q.CaseType)
+            .Include(e => e.UserGroups)
+                    .ThenInclude(e => e.LocalGroup)
+                    .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
+                    .ThenInclude(e => e.Case)
+                    .ThenInclude(e => e.CaseType)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.LocalUserID == "o");
+            return View(PastCases);          
+        }
 
 
         [AllowAnonymous]

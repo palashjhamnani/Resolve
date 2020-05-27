@@ -50,10 +50,10 @@
                             <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-success">Approved</span></h6>
                         }
                         else
-                            if (approvals_remaining == 0 && reject_count != 0)
-                                {
-                                    <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-danger">Rejected</span></h6>
-                                }
+                            if (reject_count != 0)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-danger">Rejected</span></h6>
+                        }
                         else
                         {
                             <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@total_approvers Approvals Pending</span></h6>
@@ -73,24 +73,34 @@
                         }
                         else
                             if (ViewData["Approved"].ToString() == "RejectSuccess")
-                                {
-                                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                        The case has been REJECTED successfully!
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                }
+                        {
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                The case has been REJECTED successfully!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        else
+                            if (ViewData["Approved"].ToString() == "Reopened")
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                The case has been Re-Opened successfully!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
                         else
                             if (ViewData["Approved"].ToString() == "Failed")
-                                {
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        The case could not be approved at this time. Please contact administrator!
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                }
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                The case could not be approved at this time. Please contact administrator!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
                     }
                     <div class="dropdown no-arrow">
                         @{
@@ -134,8 +144,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
                                                         <button class="btn btn-warning" type="submit">Reopen</button>
                                                     </form>
                                                 </div>
@@ -164,8 +175,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Approve" name="ProcessValue" />
                                                         <button class="btn btn-success" type="submit">Approve</button>
                                                     </form>
                                                 </div>
@@ -192,8 +204,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Reject">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reject" name="ProcessValue" />
                                                         <button class="btn btn-danger" type="submit">Reject</button>
                                                     </form>
                                                 </div>
@@ -226,8 +239,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
                                                         <button class="btn btn-warning" type="submit">Reopen</button>
                                                     </form>
                                                 </div>
@@ -256,8 +270,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Approve" name="ProcessValue" />
                                                         <button class="btn btn-success" type="submit">Approve</button>
                                                     </form>
                                                 </div>
@@ -284,8 +299,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Reject">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reject" name="ProcessValue" />
                                                         <button class="btn btn-danger" type="submit">Reject</button>
                                                     </form>
                                                 </div>
@@ -318,8 +334,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
                                                         <button class="btn btn-warning" type="submit">Reopen</button>
                                                     </form>
                                                 </div>
@@ -349,8 +366,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Approve">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Approve" name="ProcessValue" />
                                                         <button class="btn btn-success" type="submit">Approve</button>
                                                     </form>
                                                 </div>
@@ -377,8 +395,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <form asp-action="Reject">
+                                                    <form asp-action="Process">
                                                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                        <input type="hidden" value="Reject" name="ProcessValue" />
                                                         <button class="btn btn-danger" type="submit">Reject</button>
                                                     </form>
                                                 </div>
@@ -425,6 +444,7 @@
                                             <tr>
                                                 <th>Timestamp</th>
                                                 <th>Audit Log</th>
+                                                <th>Action By</th>
                                             </tr>
                                             @foreach (var item in Model.CaseAudits)
                                             {
@@ -434,6 +454,9 @@
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.AuditLog)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.LocalUserID)
                                                     </td>
                                                 </tr>
                                             }
