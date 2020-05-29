@@ -1,8 +1,37 @@
-﻿
+﻿@model Resolve.Models.LocalUser
 @{
     ViewData["Title"] = "Past";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1>Past Cases Assigned to your Groups</h1>
+<h4>Past Cases Assigned to your Groups</h4>
 
+<br />
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Group</th>
+            <th scope="col">Case ID</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+            <th scope="col">Case Type</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.UserGroups)
+        {
+            @foreach (var c in item.LocalGroup.GroupCases)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
+                    <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@c.Case.CaseID">@Html.DisplayFor(modelItem => c.Case.CaseCID)</a></td>
+                    <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
+                    <td>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
+                    <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

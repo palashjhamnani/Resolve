@@ -1,8 +1,32 @@
-﻿
+﻿@model Resolve.Models.LocalUser
 @{
     ViewData["Title"] = "Past";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1>Past Cases Assigned to you</h1>
+<h4>Past Cases Assigned to you</h4>
 
+<br />
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Case ID</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+            <th scope="col">Case Type</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.CasesforApproval)
+        {
+            <tr>
+                <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.Case.CaseID">@Html.DisplayFor(modelItem => item.Case.CaseCID)</a></td>
+                <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                <td>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
+                <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
+            </tr>
+        }
+    </tbody>
+</table>
