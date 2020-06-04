@@ -8,13 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using Resolve.Data;
 using Resolve.Models;
 
-namespace Resolve.Controllers
+namespace Resolve.Areas.CaseTypes.Controllers
 {
-    public class CaseSpecificDetailsController : Controller
+    [Area("CaseTypes")]
+    //[Route(nameof(CaseTypes) + "/[controller]")]
+    public class SampleCaseTypeController : Controller
     {
+        
         private readonly ResolveCaseContext _context;
 
-        public CaseSpecificDetailsController(ResolveCaseContext context)
+        public SampleCaseTypeController(ResolveCaseContext context)
         {
             _context = context;
         }
@@ -24,7 +27,6 @@ namespace Resolve.Controllers
             return View();
         }
 
-        // Enter data for a specific case type
         // GET: Cases/CreateCaseTypeData
         public IActionResult SampleCaseType(int id)
         {
@@ -45,41 +47,10 @@ namespace Resolve.Controllers
                 _context.Add(newCase);
                 await _context.SaveChangesAsync();
                 var cid = id;
-                return RedirectToAction("Details", "Cases", new { id = cid });
-                //return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Cases", new { id = cid, area = "" });
             }
             return View(samplecasetype);
         }
-
-
-
-
-
-        public IActionResult Sample2(int id)
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Sample2(int id, Sample2 sample2)
-        {
-            if (ModelState.IsValid)
-            {
-                Sample2 newCase = new Sample2
-                {
-                    CaseID = id,
-                    SampleDescription = sample2.SampleDescription
-                };
-                _context.Add(newCase);
-                await _context.SaveChangesAsync();
-                var cid = id;
-                return RedirectToAction("Details", "Cases", new { id = cid });
-                //return RedirectToAction("Index", "Home");
-            }
-            return View(sample2);
-        }
-
-
 
     }
 }
