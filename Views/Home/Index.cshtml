@@ -97,9 +97,18 @@
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                     <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups</h6>                               
-                        <div class="dropdown no-arrow">                            
+                        <div class="dropdown no-arrow">                              
+                                <button class="btn-sm btn btn-outline-secondary dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    All Groups
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @foreach (var item in Model.UserGroups)
+                                    {
+                                        <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">@item.LocalGroup.GroupName</a>
+                                    }
+                                </div>
                             <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYourGroups">Past Cases</a>
-                        </div>       
+                        </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">

@@ -238,17 +238,29 @@ namespace Resolve.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Search(string searchString)
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search()
         {
-            var cases = from m in _context.Case
-                         select m;
-
-            if (!String.IsNullOrEmpty(searchString))
+            try
             {
-                cases = cases.Where(s => s.CaseCID.Contains(searchString));
+                var ss = HttpContext.Request.Form["SearchString"];
+                var SearchResults = from m in _context.Case
+                                        select m;
+                if (!String.IsNullOrEmpty(ss))
+                {
+                    SearchResults = SearchResults.Where(s => s.CaseCID.Contains(ss));
+                    SearchResults = SearchResults.Include(p => p.CaseType);
+                }
+                    
+                return View(await SearchResults.ToListAsync());
             }
-
-            return View(await cases.ToListAsync());
+            catch (Exception)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 

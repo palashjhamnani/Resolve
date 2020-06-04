@@ -179,24 +179,13 @@ namespace Resolve.Controllers
                     var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
                     _context.Add(grp_add);
                 }
-                /*
-                var approver_group = CType.LocalGroupID;
-                var approver = _context.LocalGroup
-                    .Single(b => b.LocalGroupID == approver_group);
-                var approver_user = approver.LocalUserID;
-                // Adding default Approver assignment
-                var approver_add = new Approver {CaseID = cid, LocalUserID = approver_user, Approved = 0, Order = 1};
-                _context.Add(approver_add);
-                // Adding Group Assignment
-                var group_add = new GroupAssignment { CaseID = cid, LocalGroupID = approver_group};
-                _context.Add(group_add);
-                */
+
 
                 await _context.SaveChangesAsync();
                 
                 var redirectFunctionName = CType.CaseTypeTitle;
-                return RedirectToAction(redirectFunctionName, "CaseSpecificDetails", new { id = cid });
-                //return RedirectToAction("Index", "Home");
+                return RedirectToAction(redirectFunctionName, redirectFunctionName, new { id = cid, area = "CaseTypes" });
+
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle", @case.CaseTypeID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
