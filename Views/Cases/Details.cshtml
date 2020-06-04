@@ -677,38 +677,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-area" style="overflow: auto; height: 150px;">
-                        @{
-
-                            if (Model.CaseType.CaseTypeTitle == "SampleCaseType")
-                            {
-                                @foreach (var item in Model.SampleCaseType)
-                                {
-                                    <dl class="row">
-                                        <dt class="col-sm-4">
-                                            @Html.DisplayNameFor(modelItem => item.CaseDescription)
-                                        </dt>
-                                        <dd class="col-sm-8">
-                                            @Html.DisplayFor(modelItem => item.CaseDescription)
-                                        </dd>
-                                    </dl>
-                                }
-                            }
-                            else
-                                if (Model.CaseType.CaseTypeTitle == "Sample2")
-                            {
-                                @foreach (var item in Model.Sample2)
-                                {
-                                    <dl class="row">
-                                        <dt class="col-sm-4">
-                                            @Html.DisplayNameFor(modelItem => item.SampleDescription)
-                                        </dt>
-                                        <dd class="col-sm-8">
-                                            @Html.DisplayFor(modelItem => item.SampleDescription)
-                                        </dd>
-                                    </dl>
-                                }
-                            }
-                        }
+                        <partial name="~/Areas/CaseSpecificDetails/Views/@Model.CaseType.CaseTypeTitle/Index.cshtml" />
                     </div>
                 </div>
             </div>

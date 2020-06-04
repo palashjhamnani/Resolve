@@ -184,7 +184,7 @@ namespace Resolve.Controllers
                 await _context.SaveChangesAsync();
                 
                 var redirectFunctionName = CType.CaseTypeTitle;
-                return RedirectToAction(redirectFunctionName, redirectFunctionName, new { id = cid, area = "CaseTypes" });
+                return RedirectToAction("Create", redirectFunctionName, new { id = cid, area = "CaseSpecificDetails" });
 
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle", @case.CaseTypeID);

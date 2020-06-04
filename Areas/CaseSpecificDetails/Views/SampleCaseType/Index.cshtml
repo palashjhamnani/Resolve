@@ -1,0 +1,13 @@
+﻿@model Resolve.Models.Case
+
+@foreach (var item in Model.SampleCaseType)
+{
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.CaseDescription)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.CaseDescription)
+        </dd>
+    </dl>
+}

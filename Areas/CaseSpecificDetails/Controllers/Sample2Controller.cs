@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Resolve.Data;
 using Resolve.Models;
 
-namespace Resolve.Areas.CaseTypes.Controllers
+namespace Resolve.Areas.CaseSpecificDetails.Controllers
 {
-    [Area("CaseTypes")]
+    [Area("CaseSpecificDetails")]
     //[Route(nameof(CaseTypes) + "/[controller]")]
     public class Sample2Controller : Controller
     {
@@ -28,13 +28,13 @@ namespace Resolve.Areas.CaseTypes.Controllers
         }
 
         
-        public IActionResult Sample2(int id)
+        public IActionResult Create(int id)
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Sample2(int id, Sample2 sample2)
+        public async Task<IActionResult> Create(int id, Sample2 sample2)
         {
             if (ModelState.IsValid)
             {
