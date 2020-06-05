@@ -704,6 +704,7 @@
                                 <th>Posted By</th>
                                 <th>File Name</th>
                                 <th>Timestamp</th>
+                                <th></th>
                             </tr>
                             @foreach (var item in Model.CaseAttachments)
                             {
@@ -716,6 +717,12 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
+                                    </td>
+                                    <td>
+                                        <a asp-controller="CaseAttachments" asp-action="Download" asp-route-id="@item.CaseAttachmentID">
+                                            <img src="~/images/download-icon2.jpg" height=14 width="15" alt="icon" /> Download
+                                        </a>
+
                                     </td>
                                 </tr>
                             }

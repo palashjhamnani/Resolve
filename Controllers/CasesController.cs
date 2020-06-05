@@ -128,6 +128,7 @@ namespace Resolve.Controllers
                 .Include(a => a.Approvers).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.Sample2)
+                .Include(p => p.SAR4)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {

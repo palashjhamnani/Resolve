@@ -162,7 +162,54 @@ namespace Resolve.Controllers
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseAttachment.LocalUserID);
             return View(caseAttachment);
         }
+        // GET: CaseAttachments/Download/5
+        public async Task<IActionResult> Download(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var caseAttachment = await _context.CaseAttachment.FindAsync(id);
+            if (caseAttachment == null)
+            {
+                return NotFound();
+            }
+            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
+
+            string filePath = Path.Combine(uploadsFolder, caseAttachment.FilePath);
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
         // GET: CaseAttachments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

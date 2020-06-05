@@ -24,6 +24,7 @@ namespace Resolve.Data
         public DbSet<Resolve.Models.OnBehalf> OnBehalf { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
         public DbSet<Sample2> Sample2 { get; set; }
+        public DbSet<SAR4> SAR4 { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
