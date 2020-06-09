@@ -309,17 +309,17 @@ namespace Resolve.Controllers
 
         public FileResult Download(string id)
         {
-            string filename = $"resolve_user_guide.docx";
+            string filename = $"resolve_user_guide.pdf";
             if (id == "dg")
             {
-                filename = $"resolve_dev_guide.docx";
+                filename = $"resolve_dev_guide.pdf";
             }
             else
                 if (id == "ag")
             {
-                filename = $"resolve_admin_guide.docx";
+                filename = $"resolve_admin_guide.pdf";
             }
-            var filepath = $"{filename}";
+            var filepath = $"Documentation/{filename}";
             byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             return File(fileBytes, "application/x-msdownload", filename);
         }
