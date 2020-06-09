@@ -95,7 +95,7 @@
                             if (ViewData["Approved"].ToString() == "Failed")
                         {
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                The case could not be approved at this time. Please contact administrator!
+                                The case could not be processed at this time. Please contact administrator!
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -485,40 +485,89 @@
                     <h6 class="m-0 font-weight-bold text-primary">General Case Details</h6>
                     <div class="dropdown no-arrow">
 
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#approverModal">
-                            Approvers
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#assignmentModal">
+                            Assignments
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="approverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="assignmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Approvers</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Assignments</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="card shadow mb-4">
-                                            <!-- Card Header - Dropdown -->
-                                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                                                <h6 class="m-0 font-weight-bold text-primary">Approvers</h6>
-                                                <div class="dropdown no-arrow">
-                                                    <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                                                </div>
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                <a class="nav-item nav-link active" id="nav-approver-tab" data-toggle="tab" href="#nav-approver" role="tab" aria-controls="nav-approver" aria-selected="true">Approvers</a>
+                                                <a class="nav-item nav-link" id="nav-group-tab" data-toggle="tab" href="#nav-group" role="tab" aria-controls="nav-group" aria-selected="false">Groups</a>                                                
                                             </div>
-                                            <!-- Card Body -->
-                                            <div class="card-body">
-                                                <div class="chart-area" style="overflow: auto; height: 150px;">
-                                                    @foreach (var item in Model.Approvers)
-                                                    {
-                                                        <dl class="row">
-                                                            @item.LocalUser.FirstName @item.LocalUser.LastName
-                                                        </dl>
-                                                    }
-                                                </div>
+                                        </nav>
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="nav-approver" role="tabpanel" aria-labelledby="nav-approver-tab">
+                                                <br /> <h6>Approvers assigned to this case</h6> <br />
+                                                <table class="table table-hover table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Status</th>                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item in Model.Approvers)
+                                                        {
+                                                        <tr>
+                                                            <td>@Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)</td>
+                                                            @{
+                                                                if (item.Approved == 0)
+                                                                {
+                                                                    <td>Pending</td>
+                                                                }
+                                                                else
+                                                                    if (item.Approved == 1)
+                                                                {
+                                                                    <td>Approved</td>
+                                                                }
+                                                                else
+                                                                    if (item.Approved == -1)
+                                                                {
+                                                                    <td>Rejected</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>@Html.DisplayFor(modelItem => item.Approved)</td>
+                                                                }
+                                                            }
+
+
+                                                        </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
                                             </div>
+                                            <div class="tab-pane fade" id="nav-group" role="tabpanel" aria-labelledby="nav-group-tab">
+                                                <br /> <h6>Groups assigned to this case</h6> <br />
+                                                <table class="table table-hover table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Group Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item in Model.GroupAssignments)
+                                                        {
+                                                            <tr>
+                                                                <td>@Html.DisplayFor(modelItem => item.LocalGroup.GroupName)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>                                           
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -528,48 +577,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#GroupAssignmentsModal">
-                            Group Assignments
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="GroupAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Group Assignments</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="card shadow mb-4">
-                                            <!-- Card Header - Dropdown -->
-                                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                                                <h6 class="m-0 font-weight-bold text-primary">Group Assignments</h6>
-                                                <div class="dropdown no-arrow">
-                                                    <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
-                                                </div>
-                                            </div>
-                                            <!-- Card Body -->
-                                            <div class="card-body">
-                                                <div class="chart-area" style="overflow: auto; height: 150px;">
-                                                    @foreach (var item in Model.GroupAssignments)
-                                                    {
-                                                        <dl class="row">
-                                                            @item.LocalGroup.GroupName
-                                                        </dl>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">Edit</a>
                     </div>
