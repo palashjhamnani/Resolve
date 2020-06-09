@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Resolve</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
@@ -52,7 +53,9 @@
                     </form>                   
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <!--
+                               <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            -->
                         </li>
                     </ul>
                 </div>
@@ -68,7 +71,17 @@
     <footer class="border-top footer text-muted">
         <div class="container-fluid align-middle">
             &copy; 2020 - Resolve - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+            <div class="btn-group dropup btn-sm">
+                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Guides
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ug"><i class="fa fa-download"></i> User Guide</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ag"><i class="fa fa-download"></i> Admin Guide</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="dg"><i class="fa fa-download"></i> Developer Guide</a>
+                </div>
+            </div>
+        </div>        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

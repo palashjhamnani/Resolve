@@ -305,5 +305,23 @@ namespace Resolve.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        public FileResult Download(string id)
+        {
+            string filename = $"resolve_user_guide.docx";
+            if (id == "dg")
+            {
+                filename = $"resolve_dev_guide.docx";
+            }
+            else
+                if (id == "ag")
+            {
+                filename = $"resolve_admin_guide.docx";
+            }
+            var filepath = $"{filename}";
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
+            return File(fileBytes, "application/x-msdownload", filename);
+        }
     }
 }

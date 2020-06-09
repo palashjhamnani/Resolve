@@ -198,5 +198,15 @@ namespace Resolve.Controllers
         {
             return _context.CaseAttachment.Any(e => e.CaseAttachmentID == id);
         }
+
+        public FileResult Download(int id)
+        {
+            var caseAttachment = _context.CaseAttachment
+                .FirstOrDefault(m => m.CaseAttachmentID == id);
+            string filename = caseAttachment.FilePath;
+            var filepath = $"wwwroot/Attachments/{filename}";
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
+            return File(fileBytes, "application/x-msdownload", filename);
+        }
     }
 }

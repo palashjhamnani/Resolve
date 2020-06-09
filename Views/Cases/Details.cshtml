@@ -707,23 +707,32 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-area" style="overflow: auto; height: 150px;">
-                        <table class="table">
+                        <table class="table table-sm">
                             <tr>
-                                <th>Posted By</th>
-                                <th>File Name</th>
-                                <th>Timestamp</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">File Name</th>
+                                <th scope="col">Timestamp</th>
+                                <th scope="col">Download</th>
+                                <th scope="col">Delete</th>
                             </tr>
                             @foreach (var item in Model.CaseAttachments)
                             {
+                                string shortDate = item.AttachmentTimestamp.ToShortDateString();
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.FileName)
+                                        @Html.DisplayFor(modelItem => item.FileName)                              
+                                    </td>
+                                    <td data-toggle="tooltip" title="@item.AttachmentTimestamp">
+                                        @Html.DisplayFor(modelItem => shortDate)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
+                                        <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="Download" asp-route-id="@item.CaseAttachmentID"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                    </td>
+                                    <td>
+                                        <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="QuickDelete" asp-route-id="@item.CaseAttachmentID"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             }
