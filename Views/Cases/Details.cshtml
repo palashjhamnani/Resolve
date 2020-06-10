@@ -92,10 +92,20 @@
                             </div>
                         }
                         else
+                            if (ViewData["Approved"].ToString() == "AttachDeleted")
+                        {
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                The attachment has been deleted successfully!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        else
                             if (ViewData["Approved"].ToString() == "Failed")
                         {
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                The case could not be processed at this time. Please contact administrator!
+                                The action could not be executed at this time. Please contact administrator!
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -440,7 +450,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <table class="table">
+                                        <table class="table table-sm">
                                             <tr>
                                                 <th>Timestamp</th>
                                                 <th>Audit Log</th>
@@ -463,8 +473,7 @@
                                         </table>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                        
                                     </div>
                                 </div>
                             </div>
@@ -584,7 +593,7 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                    <div class="chart-area" style="overflow: auto; height: 200px;">
                         <dl class="row">
                             <dt class="col-sm-4">
                                 @Html.DisplayNameFor(model => model.LocalUser)
@@ -631,8 +640,8 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 150px;">
-                        <table class="table">
+                    <div class="chart-area" style="overflow: auto; height: 122px;">
+                        <table class="table table-sm">
                             <tr>
                                 <th>Posted By</th>
                                 <th>Comment</th>
@@ -640,6 +649,7 @@
                             </tr>
                             @foreach (var item in Model.CaseComments)
                             {
+                                string shortDate = item.CommentTimestamp.ToShortDateString();
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
@@ -647,24 +657,25 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Comment)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CommentTimestamp)
+                                    <td data-toggle="tooltip" title="@item.CommentTimestamp">
+                                        @Html.DisplayFor(modelItem => shortDate)
                                     </td>
                                 </tr>
                             }
                         </table>
-
-                        <form asp-action="CreateComment">
-                            <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
-                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                            <div class="input-group mb-3">
-                                <input id="Comment" name="Comment" type="text" class="form-control" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary" type="submit">Post</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
+                </div>
+                <div class="card-footer">
+                    <form asp-action="CreateComment">
+                        <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
+                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                        <div class="input-group mb-3">
+                            <input id="Comment" name="Comment" type="text" class="form-control input-group-sm" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">Post</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -684,7 +695,7 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                    <div class="chart-area" style="overflow: auto; height: 200px;">
                         <partial name="~/Areas/CaseSpecificDetails/Views/@Model.CaseType.CaseTypeTitle/Index.cshtml" />
                     </div>
                 </div>
@@ -706,11 +717,11 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 150px;">
+                    <div class="chart-area" style="overflow: auto; height: 200px;">
                         <table class="table table-sm">
                             <tr>
-                                <th scope="col">Created By</th>
-                                <th scope="col">File Name</th>
+                                <th scope="col">Creator</th>
+                                <th scope="col">Filename</th>
                                 <th scope="col">Timestamp</th>
                                 <th scope="col">Download</th>
                                 <th scope="col">Delete</th>
@@ -728,11 +739,65 @@
                                     <td data-toggle="tooltip" title="@item.AttachmentTimestamp">
                                         @Html.DisplayFor(modelItem => shortDate)
                                     </td>
-                                    <td>
-                                        <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="Download" asp-route-id="@item.CaseAttachmentID"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                    <td>        
+                                        <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="Download" asp-route-id="@item.CaseAttachmentID"><i class="fa fa-download"></i></a>
                                     </td>
-                                    <td>
-                                        <a class="dropdown-item" asp-area="" asp-controller="CaseAttachments" asp-action="QuickDelete" asp-route-id="@item.CaseAttachmentID"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <td>                                        
+                                        <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#DelAttachment">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <div class="modal fade" id="DelAttachment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Delete Attachment?</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <dl class="row">
+                                                            <dt class="col-sm-4">
+                                                                @Html.DisplayNameFor(modelItem => item.FileName)
+                                                            </dt>
+                                                            <dd class="col-sm-8">
+                                                                @Html.DisplayFor(modelItem => item.FileName)
+                                                            </dd>
+                                                            <dt class="col-sm-4">
+                                                                Creator
+                                                            </dt>
+                                                            <dd class="col-sm-8">
+                                                                @Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)
+                                                            </dd>
+                                                            <dt class="col-sm-4">
+                                                                Created On
+                                                            </dt>
+                                                            <dd class="col-sm-8">
+                                                                @Html.DisplayFor(modelItem => item.AttachmentTimestamp)
+                                                            </dd>                                                            
+                                                        </dl>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form asp-controller="CaseAttachments" asp-action="QuickDelete">
+                                                            <input type="hidden" value="@Model.CaseID" name="CID" />
+                                                            <input type="hidden" value="@item.CaseAttachmentID" name="CAID" />
+                                                            @{
+                                                                if (User.GetDisplayName() == item.LocalUserID || user_is_admin)
+                                                                {
+                                                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <label>You do not have permission to delete this attachment!</label>
+                                                                }
+                                                            }
+                                                        </form>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }

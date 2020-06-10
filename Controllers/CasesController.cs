@@ -104,6 +104,11 @@ namespace Resolve.Controllers
                 ViewData["Approved"] = "Reopened";
             }
             else
+                if (approved == 3)
+            {
+                ViewData["Approved"] = "AttachDeleted";
+            }
+            else
                 if (approved == -1)
             {
                 ViewData["Approved"] = "RejectSuccess";

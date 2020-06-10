@@ -100,8 +100,8 @@ namespace Resolve.Controllers
                     
                     await _context.SaveChangesAsync();
                 }
-                
-                return RedirectToAction(nameof(Index));
+                int cid = id;
+                return RedirectToAction("Details", "Cases", new { id = cid });
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", model.CaseID);
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", caseAttachment.LocalUserID);
@@ -254,6 +254,27 @@ namespace Resolve.Controllers
             var filepath = $"wwwroot/Attachments/{filename}";
             byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             return File(fileBytes, "application/x-msdownload", filename);
+        }
+
+        [HttpPost, ActionName("QuickDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> QuickDelete()
+        {
+            var s_cid = HttpContext.Request.Form["CID"];
+            int cid = Convert.ToInt32(s_cid);
+            var s_caid = HttpContext.Request.Form["CAID"];
+            int caid = Convert.ToInt32(s_caid);
+            var caseAttachment = await _context.CaseAttachment.FindAsync(caid);
+            var filename = caseAttachment.FilePath;
+            string fullPath = $"wwwroot/Attachments/{filename}";
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+                _context.CaseAttachment.Remove(caseAttachment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Cases", new { id = cid, approved = 3 });
+            }            
+            return RedirectToAction("Details", "Cases", new { id = cid, approved = 0});
         }
     }
 }
