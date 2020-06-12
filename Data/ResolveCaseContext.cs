@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Resolve.Models;
 
+
 namespace Resolve.Data
 {
     public class ResolveCaseContext : DbContext
@@ -25,6 +26,9 @@ namespace Resolve.Data
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
         public DbSet<Sample2> Sample2 { get; set; }
         public DbSet<SAR4> SAR4 { get; set; }
+        public DbSet<HRServiceStaff> HRServiceStaff { get; set; }
+        public DbSet<HRServiceFaculty> HRServiceFaculty { get; set; }
+        public DbSet<HRServiceGradStudent> HRServiceGradStudent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
