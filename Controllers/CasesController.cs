@@ -147,7 +147,7 @@ namespace Resolve.Controllers
         public IActionResult Create()
         {          
             //ViewData["LocalUserID"] = LUserID[0];
-            ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
+            ViewData["CaseTypeTitle"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle");
             //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
                        
             return View();
@@ -159,8 +159,12 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
+        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp")] Case @case)
         {
+            string CTypeTitle = HttpContext.Request.Form["CTypeTitle"].ToString();
+            var CTypeMiddle = _context.CaseType.Single(p => p.CaseTypeTitle == CTypeTitle);
+            int CTypeID = CTypeMiddle.CaseTypeID;
+            @case.CaseTypeID = CTypeID;
 
             if (ModelState.IsValid)
             {                
