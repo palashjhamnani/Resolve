@@ -3,10 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>Case</h4>
+<h3>Create Case</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,16 +12,19 @@
             <div class="form-group">
                 <input type="hidden" asp-for="LocalUserID" value=@User.Identity.Name />
             </div>
-            <div class="form-group">
-                <label asp-for="OnBehalfOf" class="control-label"></label>
-                <input asp-for="OnBehalfOf" class="form-control" />
-                <span asp-validation-for="OnBehalfOf" class="text-danger"></span>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="OnBehalfOf" /> @Html.DisplayNameFor(model => model.OnBehalfOf)
+                </label>
             </div>
-            <div class="form-group">
-                <label asp-for="CaseStatus" class="control-label"></label>
-                <input asp-for="CaseStatus" class="form-control" />
-                <span asp-validation-for="CaseStatus" class="text-danger"></span>
+
+            <div class="hidden">
+                <h6>Select User (On whose behalf the request is being created):</h6>
+                <select id="title1" class="form-control" name="OnBehalfUser" asp-items="ViewBag.OnBehalfUser"></select>
+                Don't see the User? <a asp-controller="LocalUsers" asp-action="Create">Create</a>
             </div>
+
             <div class="form-group">
                 <label class="control-label">Case Type</label>
                 <select class="form-control" name="CTypeTitle" asp-items="ViewBag.CaseTypeTitle"></select>
@@ -41,5 +41,19 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+    <script>
+        function evaluate() {
+            var item = $(this);
+            var relatedItem = $("#" + item.attr("data-related-item")).parent();
+
+            if (item.is(":checked")) {
+                relatedItem.fadeIn();
+            } else {
+                relatedItem.fadeOut();
+            }
+        }
+
+        $('input[type="checkbox"]').click(evaluate).each(evaluate);
+    </script>
 }

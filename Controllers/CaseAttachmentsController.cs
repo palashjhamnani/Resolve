@@ -77,10 +77,17 @@ namespace Resolve.Controllers
                 string uniqueFileName = null;
                 if (model.Attachments != null && model.Attachments.Count > 0)
                 {
+                    string uFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
+                    //if (!Directory.Exists(uFolder))
+                    //{
+                    //    Directory.CreateDirectory(uFolder);
+                    //}
+
                     foreach (IFormFile Attachment in model.Attachments)
                     {
                         string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
                         uniqueFileName = Guid.NewGuid().ToString() + "_" + Attachment.FileName;
+                        //uniqueFileName = Attachment.FileName;
                         string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                         // Use CopyTo() method provided by IFormFile interface to
                         // copy the file to wwwroot/images folder
@@ -266,14 +273,16 @@ namespace Resolve.Controllers
             int caid = Convert.ToInt32(s_caid);
             var caseAttachment = await _context.CaseAttachment.FindAsync(caid);
             var filename = caseAttachment.FilePath;
-            string fullPath = $"wwwroot/Attachments/{filename}";
+            //string uFolder = Path.Combine(hostingEnvironment.WebRootPath, "Attachments");
+            //string fullPath = Path.Combine(uFolder, filename).Replace(@"\\", @"\\\\");
+            var fullPath = $"wwwroot/Attachments/{filename}";
             if (System.IO.File.Exists(fullPath))
             {
                 System.IO.File.Delete(fullPath);
                 _context.CaseAttachment.Remove(caseAttachment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Cases", new { id = cid, approved = 3 });
-            }            
+            }
             return RedirectToAction("Details", "Cases", new { id = cid, approved = 0});
         }
     }

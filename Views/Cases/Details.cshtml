@@ -596,17 +596,25 @@
                     <div class="chart-area" style="overflow: auto; height: 200px;">
                         <dl class="row">
                             <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => model.LocalUser)
+                                Created By
                             </dt>
                             <dd class="col-sm-8">
                                 @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
-                            </dd>
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => model.OnBehalfOf)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => model.OnBehalfOf)
-                            </dd>
+                            </dd>                           
+                            @{
+                                if (Model.OnBehalfOf == true)
+                                {
+                                    foreach (var item in Model.OnBehalves)
+                                    {
+                                        <dt class="col-sm-4">
+                                            On Behalf of
+                                        </dt>
+                                        <dd class="col-sm-8">
+                                            @item.LocalUser.FirstName @item.LocalUser.LastName
+                                        </dd>
+                                    }
+                                }
+                            }
                             <dt class="col-sm-4">
                                 @Html.DisplayNameFor(model => model.CaseStatus)
                             </dt>

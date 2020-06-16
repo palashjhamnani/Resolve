@@ -18,7 +18,7 @@ namespace Resolve.Models
         public LocalUser LocalUser { get; set; }
 
         // Case can be on behalf of someone who doesn't yet exist in User table, below is a flag      
-        public int OnBehalfOf { get; set; }
+        public bool OnBehalfOf { get; set; }
 
         [Display(Name = "Case Status")]
         public string CaseStatus { get; set; }
@@ -33,6 +33,7 @@ namespace Resolve.Models
         // Below are the properties of a Case made accessible
 
         public ICollection<CaseComment> CaseComments { get; set; }
+        public ICollection<OnBehalf> OnBehalves { get; set; }
         public ICollection<CaseAudit> CaseAudits { get; set; }
         public ICollection<Approver> Approvers { get; set; }
         public ICollection<GroupAssignment> GroupAssignments { get; set; }

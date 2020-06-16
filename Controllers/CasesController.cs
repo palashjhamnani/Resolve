@@ -131,6 +131,7 @@ namespace Resolve.Controllers
                 .Include(a => a.CaseAttachments).ThenInclude(e => e.LocalUser)
                 .Include(a => a.GroupAssignments).ThenInclude(e => e.LocalGroup)
                 .Include(a => a.Approvers).ThenInclude(e => e.LocalUser)
+                .Include(a => a.OnBehalves).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.Sample2)
                 .Include(p => p.SAR4)
@@ -152,7 +153,7 @@ namespace Resolve.Controllers
         {          
             //ViewData["LocalUserID"] = LUserID[0];
             ViewData["CaseTypeTitle"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle");
-            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
+            ViewData["OnBehalfUser"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
                        
             return View();
         }
@@ -163,18 +164,26 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp")] Case @case)
+        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseCreationTimestamp")] Case @case)
         {
-            string CTypeTitle = HttpContext.Request.Form["CTypeTitle"].ToString();
+            string CTypeTitle = HttpContext.Request.Form["CTypeTitle"].ToString();            
             var CTypeMiddle = _context.CaseType.Single(p => p.CaseTypeTitle == CTypeTitle);
             int CTypeID = CTypeMiddle.CaseTypeID;
             @case.CaseTypeID = CTypeID;
+            @case.CaseStatus = "Open";
 
             if (ModelState.IsValid)
             {                
                 _context.Add(@case);
                 await _context.SaveChangesAsync();
                 var cid = @case.CaseID;
+                // Adding On Behalf user
+                if (@case.OnBehalfOf == true)
+                {
+                    string OnBehalfUser = HttpContext.Request.Form["OnBehalfUser"].ToString();
+                    var behalf_add = new OnBehalf { CaseID = cid, LocalUserID = OnBehalfUser };
+                    _context.Add(behalf_add);
+                }
                 // Adding audit log
                 var audit = new CaseAudit {AuditLog = "Case Created", CaseID = cid, LocalUserID = User.Identity.Name};
                 _context.Add(audit);
@@ -201,7 +210,7 @@ namespace Resolve.Controllers
 
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle", @case.CaseTypeID);
-            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
+            ViewData["OnBehalfUser"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
             return View(@case);
         }
 
