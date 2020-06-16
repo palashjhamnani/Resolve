@@ -99,9 +99,9 @@ namespace Resolve.Models
     {
         [Display(Name = "Student")]
         Student,
-        [Display(Name = "Classified")]
+        [Display(Name = "Staff/Classified")]
         Classified,
-        [Display(Name = "Professional")]
+        [Display(Name = "Staff/Professional")]
         Professional
     }
 
@@ -129,24 +129,32 @@ namespace Resolve.Models
         [DataType(DataType.Date)]
         public DateTime EffectiveEndDate { get; set; }
 
+        [Display(Name = "Request Type"), Required]
         public virtual RequestType RequestType { get; set; }
 
+        [Display(Name = "Worker Type"), Required]
         public virtual WorkerType WorkerType{ get; set; }
 
+        [Display(Name = "Compensation Base Pay Change")]
         public virtual BasePayChange BasePayChange { get; set; }
 
+        [Display(Name = "Compensation Allowance Change")]
         public virtual AllowanceChange AllowanceChange { get; set; }
 
+        [Display(Name = "Termination Reason")]
         public virtual TerminationReason TerminationReason { get; set; }
 
         public virtual SupOrg SupOrg { get; set; }
 
         public string EmployeeEID { get; set; }
 
+        [Display(Name = "Employee Name"), Required]
         public string EmployeeName { get; set; }
 
+        [Display(Name = "Budget Numbers"), Required]
         public string BudgetNumbers { get; set; }
 
+        [MaxLength(1024)]
         public string Note { get; set; }
 
         public bool Offboarding { get; set; }

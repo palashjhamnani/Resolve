@@ -3,6 +3,43 @@
 @{
     ViewData["Title"] = "Create Specific Details";
 }
+@section Scripts {
+    <script type="text/javascript">
+
+        jQuery(document).ready(function ($) {
+            $("#RequestType").change(function () {
+                if ($(this).find(':selected').text() == "Compensation Base Pay Change")
+                {
+                    $("#BasePayChange").show();
+                    $("#AllowanceChange").hide();
+                    $("#TerminationReason").hide();
+
+                } else if ($(this).find(':selected').text() == "Compensation Allowance Change")
+                {                  
+                    $("#AllowanceChange").show();
+                    $("#BasePayChange").hide();
+                    $("#TerminationReason").hide();
+
+                }
+                else if ($(this).find(':selected').text() == "Termination") {
+                    $("#AllowanceChange").hide();
+                    $("#BasePayChange").hide();
+                    $("#TerminationReason").show();
+
+                }
+                else
+                {
+                    $("#AllowanceChange").hide();
+                    $("#BasePayChange").hide();
+                    $("#TerminationReason").hide();
+                }
+            });
+        });
+
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
 
 <h1>Create</h1>
 
@@ -12,22 +49,54 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="RequestType" class="control-label"></label>
-                <input asp-for="RequestType" class="form-control" />
-                <span asp-validation-for="RequestType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group" id="WorkerType">
                 <label asp-for="WorkerType" class="control-label"></label>
-                <input asp-for="WorkerType" class="form-control" />
+                <select asp-for="WorkerType" asp-items="Html.GetEnumSelectList<WorkerType>()" class="form-control"></select>
                 <span asp-validation-for="WorkerType" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="RequestType" class="control-label"></label>
+                <select asp-for="RequestType" asp-items="Html.GetEnumSelectList<RequestType>()" class="form-control"></select>
+                <span asp-validation-for="RequestType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="BasePayChange">
+                <label asp-for="BasePayChange" class="control-label"></label>
+                <select asp-for="BasePayChange" asp-items="Html.GetEnumSelectList<BasePayChange>()" class="form-control"></select>
+                <span asp-validation-for="BasePayChange" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="AllowanceChange">
+                <label asp-for="AllowanceChange" class="control-label"></label>
+                <select asp-for="AllowanceChange" asp-items="Html.GetEnumSelectList<AllowanceChange>()" class="form-control"></select>
+                <span asp-validation-for="AllowanceChange" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="TerminationReason">
+                <label asp-for="TerminationReason" class="control-label"></label>
+                <select asp-for="TerminationReason" asp-items="Html.GetEnumSelectList<TerminationReason>()" class="form-control"></select>
+                <span asp-validation-for="TerminationReason" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="SupOrg" class="control-label"></label>
-                <input asp-for="SupOrg" class="form-control" />
+                <select asp-for="SupOrg" asp-items="Html.GetEnumSelectList<SupOrg>()" class="form-control"></select>
                 <span asp-validation-for="SupOrg" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="EmployeeName" class="control-label"></label>
+                <input asp-for="EmployeeName" class="form-control" />
+                <span asp-validation-for="EmployeeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeEID" class="control-label"></label>
+                <input asp-for="EmployeeEID" class="form-control" />
+                <span asp-validation-for="EmployeeEID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BudgetNumbers" class="control-label"></label>
+                <input asp-for="BudgetNumbers" class="form-control" />
+                <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="EffectiveStartDate" class="control-label"></label>
                 <input asp-for="EffectiveStartDate" class="form-control" />
@@ -40,8 +109,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -54,6 +128,4 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+

@@ -71,21 +71,23 @@ namespace Resolve.Models
         [DataType(DataType.Date)]
         public DateTime EffectiveEndDate { get; set; }
 
-        public virtual GradRequestType GradRequestType { get; set; }
+        [Display(Name = "Request Type"), Required]
+        public GradRequestType GradRequestType { get; set; }
 
+        [Display(Name = "Job Profile"), Required]
         public virtual GradJobProfile GradJobProfile { get; set; }
 
         public virtual Department Department { get; set; }
 
-        public string Name { get; set; }
-
-        public string EmployeeName { get; set; }
+        [Display(Name = "Student Name"), Required]
+        public string StudentName { get; set; }
 
         [Display(Name = "Step/Stipend/Allowance")]
         public string StepStipendAllowance { get; set; }
 
         public string BudgetNumbers { get; set; }
 
+        [MaxLength(1024)]
         public string Note { get; set; }
     }
 }

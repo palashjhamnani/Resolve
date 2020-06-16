@@ -12,12 +12,12 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 {
     [Area("CaseSpecificDetails")]
     //[Route(nameof(CaseTypes) + "/[controller]")]
-    public class HRServiceStaffController : Controller
+    public class HRServiceFacultyController : Controller
     {
 
         private readonly ResolveCaseContext _context;
 
-        public HRServiceStaffController(ResolveCaseContext context)
+        public HRServiceFacultyController(ResolveCaseContext context)
         {
             _context = context;
         }
@@ -34,22 +34,21 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, HRServiceStaff hrStaff)
+        public async Task<IActionResult> Create(int id, HRServiceFaculty hrFaculty)
         {
             if (ModelState.IsValid)
             {
-                HRServiceStaff newCase = new HRServiceStaff
+                HRServiceFaculty newCase = new HRServiceFaculty
                 {
                     CaseID = id,
-                    Description = hrStaff.Description,
-                    EmployeeName = hrStaff.EmployeeName,
-                    RequestType = hrStaff.RequestType,
-                    WorkerType = hrStaff.WorkerType,
-                    EffectiveStartDate = hrStaff.EffectiveStartDate,
-                    EffectiveEndDate = hrStaff.EffectiveEndDate,
-                    SupOrg = hrStaff.SupOrg,
-                    EmployeeEID = hrStaff.EmployeeEID,
-                    BudgetNumbers = hrStaff.BudgetNumbers
+                    Description = hrFaculty.Description,
+                    EmployeeName = hrFaculty.EmployeeName,
+                    FacRequestType = hrFaculty.FacRequestType,
+                    EffectiveStartDate = hrFaculty.EffectiveStartDate,
+                    EffectiveEndDate = hrFaculty.EffectiveEndDate,
+                    SupOrg = hrFaculty.SupOrg,
+                    EmployeeEID = hrFaculty.EmployeeEID,
+                    BudgetNumbers = hrFaculty.BudgetNumbers
                 };
                 _context.Add(newCase);
                 await _context.SaveChangesAsync();
@@ -57,7 +56,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 return RedirectToAction("Details", "Cases", new { id = cid, area = "" });
                 //return RedirectToAction("Index", "Home");
             }
-            return View(hrStaff);
+            return View(hrFaculty);
         }
 
     }

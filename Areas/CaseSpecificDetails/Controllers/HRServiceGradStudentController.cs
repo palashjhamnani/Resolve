@@ -12,12 +12,12 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 {
     [Area("CaseSpecificDetails")]
     //[Route(nameof(CaseTypes) + "/[controller]")]
-    public class HRServiceStaffController : Controller
+    public class HRServiceGradStudentController : Controller
     {
 
         private readonly ResolveCaseContext _context;
 
-        public HRServiceStaffController(ResolveCaseContext context)
+        public HRServiceGradStudentController(ResolveCaseContext context)
         {
             _context = context;
         }
@@ -34,22 +34,23 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, HRServiceStaff hrStaff)
+        public async Task<IActionResult> Create(int id, HRServiceGradStudent hrGradStudent)
         {
             if (ModelState.IsValid)
             {
-                HRServiceStaff newCase = new HRServiceStaff
+                HRServiceGradStudent newCase = new HRServiceGradStudent
                 {
                     CaseID = id,
-                    Description = hrStaff.Description,
-                    EmployeeName = hrStaff.EmployeeName,
-                    RequestType = hrStaff.RequestType,
-                    WorkerType = hrStaff.WorkerType,
-                    EffectiveStartDate = hrStaff.EffectiveStartDate,
-                    EffectiveEndDate = hrStaff.EffectiveEndDate,
-                    SupOrg = hrStaff.SupOrg,
-                    EmployeeEID = hrStaff.EmployeeEID,
-                    BudgetNumbers = hrStaff.BudgetNumbers
+                    Description = hrGradStudent.Description,
+                    StudentName = hrGradStudent.StudentName,
+                    GradRequestType = hrGradStudent.GradRequestType,
+                    GradJobProfile = hrGradStudent.GradJobProfile,
+                    EffectiveStartDate = hrGradStudent.EffectiveStartDate,
+                    EffectiveEndDate = hrGradStudent.EffectiveEndDate,
+                    Department = hrGradStudent.Department,
+                    StepStipendAllowance= hrGradStudent.StepStipendAllowance,
+                    BudgetNumbers = hrGradStudent.BudgetNumbers,
+                    Note = hrGradStudent.Note,
                 };
                 _context.Add(newCase);
                 await _context.SaveChangesAsync();
@@ -57,7 +58,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 return RedirectToAction("Details", "Cases", new { id = cid, area = "" });
                 //return RedirectToAction("Index", "Home");
             }
-            return View(hrStaff);
+            return View(hrGradStudent);
         }
 
     }

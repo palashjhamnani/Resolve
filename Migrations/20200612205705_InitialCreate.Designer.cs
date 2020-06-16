@@ -10,7 +10,7 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200612150528_InitialCreate")]
+    [Migration("20200612205705_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,7 +235,22 @@ namespace Resolve.Migrations
                     b.ToTable("CaseTypeGroup");
                 });
 
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceFaculty", b =>
+            modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
+                {
+                    b.Property<int>("CaseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocalGroupID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CaseID", "LocalGroupID");
+
+                    b.HasIndex("LocalGroupID");
+
+                    b.ToTable("GroupAssignment");
+                });
+
+            modelBuilder.Entity("Resolve.Models.HRServiceFaculty", b =>
                 {
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
@@ -268,6 +283,9 @@ namespace Resolve.Migrations
                     b.Property<string>("EmployeeName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FacRequestType")
+                        .HasColumnType("int");
+
                     b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(max)");
 
@@ -283,9 +301,6 @@ namespace Resolve.Migrations
                     b.Property<string>("ProposedFTE")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RequestType")
-                        .HasColumnType("int");
-
                     b.Property<string>("Salary")
                         .HasColumnType("nvarchar(max)");
 
@@ -295,25 +310,20 @@ namespace Resolve.Migrations
                     b.Property<int>("TerminationReason")
                         .HasColumnType("int");
 
-                    b.Property<int>("WorkerType")
-                        .HasColumnType("int");
-
                     b.HasKey("CaseID");
 
                     b.ToTable("HRServiceFaculty");
 
                     b.HasCheckConstraint("CK_HRServiceFaculty_Department_Enum_Constraint", "[Department] IN(0, 1, 2, 3, 4, 5, 6, 7)");
 
-                    b.HasCheckConstraint("CK_HRServiceFaculty_RequestType_Enum_Constraint", "[RequestType] IN(0, 1, 2, 3, 4, 5, 6, 7)");
+                    b.HasCheckConstraint("CK_HRServiceFaculty_FacRequestType_Enum_Constraint", "[FacRequestType] IN(0, 1, 2, 3, 4, 5, 6, 7, 8)");
 
                     b.HasCheckConstraint("CK_HRServiceFaculty_SupOrg_Enum_Constraint", "[SupOrg] IN(0, 1, 2, 3)");
 
                     b.HasCheckConstraint("CK_HRServiceFaculty_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
-
-                    b.HasCheckConstraint("CK_HRServiceFaculty_WorkerType_Enum_Constraint", "[WorkerType] IN(0, 1, 2)");
                 });
 
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceGradStudent", b =>
+            modelBuilder.Entity("Resolve.Models.HRServiceGradStudent", b =>
                 {
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
@@ -363,7 +373,7 @@ namespace Resolve.Migrations
                     b.HasCheckConstraint("CK_HRServiceGradStudent_GradRequestType_Enum_Constraint", "[GradRequestType] IN(0, 1, 2, 3)");
                 });
 
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceStaff", b =>
+            modelBuilder.Entity("Resolve.Models.HRServiceStaff", b =>
                 {
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
@@ -400,7 +410,8 @@ namespace Resolve.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1024)")
+                        .HasMaxLength(1024);
 
                     b.Property<bool>("Offboarding")
                         .HasColumnType("bit");
@@ -432,21 +443,6 @@ namespace Resolve.Migrations
                     b.HasCheckConstraint("CK_HRServiceStaff_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
 
                     b.HasCheckConstraint("CK_HRServiceStaff_WorkerType_Enum_Constraint", "[WorkerType] IN(0, 1, 2)");
-                });
-
-            modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
-                {
-                    b.Property<int>("CaseID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocalGroupID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("CaseID", "LocalGroupID");
-
-                    b.HasIndex("LocalGroupID");
-
-                    b.ToTable("GroupAssignment");
                 });
 
             modelBuilder.Entity("Resolve.Models.LocalGroup", b =>
@@ -678,33 +674,6 @@ namespace Resolve.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceFaculty", b =>
-                {
-                    b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany("HRServiceFaculty")
-                        .HasForeignKey("CaseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceGradStudent", b =>
-                {
-                    b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany("HRServiceGradStudent")
-                        .HasForeignKey("CaseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Resolve.Models.CaseTypeModels.HRServiceStaff", b =>
-                {
-                    b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany("HRServiceStaff")
-                        .HasForeignKey("CaseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Resolve.Models.GroupAssignment", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
@@ -716,6 +685,33 @@ namespace Resolve.Migrations
                     b.HasOne("Resolve.Models.LocalGroup", "LocalGroup")
                         .WithMany("GroupCases")
                         .HasForeignKey("LocalGroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.HRServiceFaculty", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany("HRServiceFaculty")
+                        .HasForeignKey("CaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.HRServiceGradStudent", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany("HRServiceGradStudent")
+                        .HasForeignKey("CaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.HRServiceStaff", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany("HRServiceStaff")
+                        .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

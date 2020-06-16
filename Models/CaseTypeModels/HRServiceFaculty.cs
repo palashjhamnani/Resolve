@@ -101,9 +101,8 @@ namespace Resolve.Models
         [DataType(DataType.Date)]
         public DateTime EffectiveEndDate { get; set; }
 
-        public virtual RequestType RequestType { get; set; }
-
-        public virtual WorkerType WorkerType { get; set; }
+        [Display(Name = "Request Type"), Required]
+        public FacRequestType FacRequestType { get; set; }
 
         public virtual SupOrg SupOrg { get; set; }
 
@@ -113,6 +112,7 @@ namespace Resolve.Models
 
         public string EmployeeEID { get; set; }
 
+        [Display(Name = "Employee Name"), Required]
         public string EmployeeName { get; set; }
 
         public string JobTitle { get; set; }
@@ -121,6 +121,7 @@ namespace Resolve.Models
 
         public string ProposedFTE { get; set; }
 
+        [Display(Name = "Budget Numbers"), Required]
         public string BudgetNumbers { get; set; }
 
         public string Note { get; set; }

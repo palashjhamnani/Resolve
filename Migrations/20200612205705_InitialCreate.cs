@@ -286,8 +286,7 @@ namespace Resolve.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EffectiveStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EffectiveEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RequestType = table.Column<int>(type: "int", nullable: false),
-                    WorkerType = table.Column<int>(type: "int", nullable: false),
+                    FacRequestType = table.Column<int>(type: "int", nullable: false),
                     SupOrg = table.Column<int>(type: "int", nullable: false),
                     Department = table.Column<int>(type: "int", nullable: false),
                     TerminationReason = table.Column<int>(type: "int", nullable: false),
@@ -307,10 +306,9 @@ namespace Resolve.Migrations
                 {
                     table.PrimaryKey("PK_HRServiceFaculty", x => x.CaseID);
                     table.CheckConstraint("CK_HRServiceFaculty_Department_Enum_Constraint", "[Department] IN(0, 1, 2, 3, 4, 5, 6, 7)");
-                    table.CheckConstraint("CK_HRServiceFaculty_RequestType_Enum_Constraint", "[RequestType] IN(0, 1, 2, 3, 4, 5, 6, 7)");
+                    table.CheckConstraint("CK_HRServiceFaculty_FacRequestType_Enum_Constraint", "[FacRequestType] IN(0, 1, 2, 3, 4, 5, 6, 7, 8)");
                     table.CheckConstraint("CK_HRServiceFaculty_SupOrg_Enum_Constraint", "[SupOrg] IN(0, 1, 2, 3)");
                     table.CheckConstraint("CK_HRServiceFaculty_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
-                    table.CheckConstraint("CK_HRServiceFaculty_WorkerType_Enum_Constraint", "[WorkerType] IN(0, 1, 2)");
                     table.ForeignKey(
                         name: "FK_HRServiceFaculty_Case_CaseID",
                         column: x => x.CaseID,
@@ -367,7 +365,7 @@ namespace Resolve.Migrations
                     EmployeeEID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
                     Offboarding = table.Column<bool>(type: "bit", nullable: false),
                     ClosePosition = table.Column<bool>(type: "bit", nullable: false),
                     LeaveWA = table.Column<bool>(type: "bit", nullable: false)
