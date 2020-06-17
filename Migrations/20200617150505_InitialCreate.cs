@@ -97,7 +97,7 @@ namespace Resolve.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaseCID = table.Column<string>(type: "nvarchar(max)", nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)"),
                     LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    OnBehalfOf = table.Column<int>(type: "int", nullable: false),
+                    OnBehalfOf = table.Column<bool>(type: "bit", nullable: false),
                     CaseStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CaseCreationTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     CaseTypeID = table.Column<int>(type: "int", nullable: false),
@@ -290,22 +290,25 @@ namespace Resolve.Migrations
                     SupOrg = table.Column<int>(type: "int", nullable: false),
                     Department = table.Column<int>(type: "int", nullable: false),
                     TerminationReason = table.Column<int>(type: "int", nullable: false),
+                    FacAllowanceChange = table.Column<int>(type: "int", nullable: false),
                     EmployeeEID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CurrentFTE = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProposedFTE = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Offboarding = table.Column<bool>(type: "bit", nullable: false),
                     ClosePosition = table.Column<bool>(type: "bit", nullable: false),
                     LeaveWA = table.Column<bool>(type: "bit", nullable: false),
-                    Salary = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Salary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Amount = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HRServiceFaculty", x => x.CaseID);
                     table.CheckConstraint("CK_HRServiceFaculty_Department_Enum_Constraint", "[Department] IN(0, 1, 2, 3, 4, 5, 6, 7)");
+                    table.CheckConstraint("CK_HRServiceFaculty_FacAllowanceChange_Enum_Constraint", "[FacAllowanceChange] IN(0, 1, 2, 3, 4)");
                     table.CheckConstraint("CK_HRServiceFaculty_FacRequestType_Enum_Constraint", "[FacRequestType] IN(0, 1, 2, 3, 4, 5, 6, 7, 8)");
                     table.CheckConstraint("CK_HRServiceFaculty_SupOrg_Enum_Constraint", "[SupOrg] IN(0, 1, 2, 3)");
                     table.CheckConstraint("CK_HRServiceFaculty_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
@@ -328,11 +331,10 @@ namespace Resolve.Migrations
                     GradRequestType = table.Column<int>(type: "int", nullable: false),
                     GradJobProfile = table.Column<int>(type: "int", nullable: false),
                     Department = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StepStipendAllowance = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -363,8 +365,9 @@ namespace Resolve.Migrations
                     TerminationReason = table.Column<int>(type: "int", nullable: false),
                     SupOrg = table.Column<int>(type: "int", nullable: false),
                     EmployeeEID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BudgetNumbers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
                     Offboarding = table.Column<bool>(type: "bit", nullable: false),
                     ClosePosition = table.Column<bool>(type: "bit", nullable: false),
@@ -416,11 +419,14 @@ namespace Resolve.Migrations
                 columns: table => new
                 {
                     CaseID = table.Column<int>(type: "int", nullable: false),
-                    SampleDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SampleDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WorkerType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sample2", x => x.CaseID);
+                    table.CheckConstraint("CK_Sample2_WorkerType_Enum_Constraint", "[WorkerType] IN(0, 1, 2)");
                     table.ForeignKey(
                         name: "FK_Sample2_Case_CaseID",
                         column: x => x.CaseID,

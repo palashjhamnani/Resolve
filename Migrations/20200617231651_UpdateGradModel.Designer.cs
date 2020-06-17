@@ -10,8 +10,8 @@ using Resolve.Data;
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    [Migration("20200615180243_UpdatedGradStudentModel")]
-    partial class UpdatedGradStudentModel
+    [Migration("20200617231651_UpdateGradModel")]
+    partial class UpdateGradModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,8 +72,8 @@ namespace Resolve.Migrations
                     b.Property<string>("LocalUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("OnBehalfOf")
-                        .HasColumnType("int");
+                    b.Property<bool>("OnBehalfOf")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("Processed")
                         .ValueGeneratedOnAdd()
@@ -255,11 +255,17 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BudgetNumbers")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("ClosePosition")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("CurrentFTE")
                         .HasColumnType("nvarchar(max)");
@@ -271,7 +277,7 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EffectiveEndDate")
+                    b.Property<DateTime?>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -281,7 +287,11 @@ namespace Resolve.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FacAllowanceChange")
+                        .HasColumnType("int");
 
                     b.Property<int>("FacRequestType")
                         .HasColumnType("int");
@@ -290,13 +300,17 @@ namespace Resolve.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LeaveWA")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Offboarding")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ProposedFTE")
                         .HasColumnType("nvarchar(max)");
@@ -304,10 +318,10 @@ namespace Resolve.Migrations
                     b.Property<string>("Salary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SupOrg")
+                    b.Property<int?>("SupOrg")
                         .HasColumnType("int");
 
-                    b.Property<int>("TerminationReason")
+                    b.Property<int?>("TerminationReason")
                         .HasColumnType("int");
 
                     b.HasKey("CaseID");
@@ -317,10 +331,6 @@ namespace Resolve.Migrations
                     b.HasCheckConstraint("CK_HRServiceFaculty_Department_Enum_Constraint", "[Department] IN(0, 1, 2, 3, 4, 5, 6, 7)");
 
                     b.HasCheckConstraint("CK_HRServiceFaculty_FacRequestType_Enum_Constraint", "[FacRequestType] IN(0, 1, 2, 3, 4, 5, 6, 7, 8)");
-
-                    b.HasCheckConstraint("CK_HRServiceFaculty_SupOrg_Enum_Constraint", "[SupOrg] IN(0, 1, 2, 3)");
-
-                    b.HasCheckConstraint("CK_HRServiceFaculty_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
                 });
 
             modelBuilder.Entity("Resolve.Models.HRServiceGradStudent", b =>
@@ -338,7 +348,7 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EffectiveEndDate")
+                    b.Property<DateTime?>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -358,6 +368,7 @@ namespace Resolve.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CaseID");
@@ -376,23 +387,28 @@ namespace Resolve.Migrations
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("AllowanceChange")
+                    b.Property<int?>("AllowanceChange")
                         .HasColumnType("int");
 
-                    b.Property<int>("BasePayChange")
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BasePayChange")
                         .HasColumnType("int");
 
                     b.Property<string>("BudgetNumbers")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("ClosePosition")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EffectiveEndDate")
+                    b.Property<DateTime?>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -402,25 +418,30 @@ namespace Resolve.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LeaveWA")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<bool>("Offboarding")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("RequestType")
                         .HasColumnType("int");
 
-                    b.Property<int>("SupOrg")
+                    b.Property<int?>("SupOrg")
                         .HasColumnType("int");
 
-                    b.Property<int>("TerminationReason")
+                    b.Property<int?>("TerminationReason")
                         .HasColumnType("int");
 
                     b.Property<int>("WorkerType")
@@ -430,15 +451,7 @@ namespace Resolve.Migrations
 
                     b.ToTable("HRServiceStaff");
 
-                    b.HasCheckConstraint("CK_HRServiceStaff_AllowanceChange_Enum_Constraint", "[AllowanceChange] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)");
-
-                    b.HasCheckConstraint("CK_HRServiceStaff_BasePayChange_Enum_Constraint", "[BasePayChange] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)");
-
                     b.HasCheckConstraint("CK_HRServiceStaff_RequestType_Enum_Constraint", "[RequestType] IN(0, 1, 2, 3, 4, 5, 6, 7)");
-
-                    b.HasCheckConstraint("CK_HRServiceStaff_SupOrg_Enum_Constraint", "[SupOrg] IN(0, 1, 2, 3)");
-
-                    b.HasCheckConstraint("CK_HRServiceStaff_TerminationReason_Enum_Constraint", "[TerminationReason] IN(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)");
 
                     b.HasCheckConstraint("CK_HRServiceStaff_WorkerType_Enum_Constraint", "[WorkerType] IN(0, 1, 2)");
                 });
@@ -501,52 +514,20 @@ namespace Resolve.Migrations
                     b.ToTable("OnBehalf");
                 });
 
-            modelBuilder.Entity("Resolve.Models.SAR4", b =>
-                {
-                    b.Property<int>("CaseID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AbsenceDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AbsenceReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AbsenceRequested")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GradYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MakeupPlan")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Quarter")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequestEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RequestStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Student")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CaseID");
-
-                    b.ToTable("SAR4");
-                });
-
             modelBuilder.Entity("Resolve.Models.Sample2", b =>
                 {
                     b.Property<int>("CaseID")
                         .HasColumnType("int");
 
+                    b.Property<string>("EmployeeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SampleDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("WorkerType")
+                        .HasColumnType("int");
 
                     b.HasKey("CaseID");
 
@@ -724,7 +705,7 @@ namespace Resolve.Migrations
             modelBuilder.Entity("Resolve.Models.OnBehalf", b =>
                 {
                     b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany()
+                        .WithMany("OnBehalves")
                         .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -732,15 +713,6 @@ namespace Resolve.Migrations
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
                         .HasForeignKey("LocalUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Resolve.Models.SAR4", b =>
-                {
-                    b.HasOne("Resolve.Models.Case", "Case")
-                        .WithMany("SAR4")
-                        .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

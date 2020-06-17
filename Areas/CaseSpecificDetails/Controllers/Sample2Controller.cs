@@ -41,7 +41,9 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 Sample2 newCase = new Sample2
                 {
                     CaseID = id,
-                    SampleDescription = sample2.SampleDescription
+                    SampleDescription = sample2.SampleDescription,
+                    EmployeeName = sample2.EmployeeName,
+                    WorkerType = sample2.WorkerType
                 };
                 _context.Add(newCase);
                 await _context.SaveChangesAsync();

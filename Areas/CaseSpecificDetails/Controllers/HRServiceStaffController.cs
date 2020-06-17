@@ -44,6 +44,8 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                     Description = hrStaff.Description,
                     EmployeeName = hrStaff.EmployeeName,
                     RequestType = hrStaff.RequestType,
+                    BasePayChange=hrStaff.BasePayChange,
+                    Amount = hrStaff.Amount,
                     WorkerType = hrStaff.WorkerType,
                     EffectiveStartDate = hrStaff.EffectiveStartDate,
                     EffectiveEndDate = hrStaff.EffectiveEndDate,

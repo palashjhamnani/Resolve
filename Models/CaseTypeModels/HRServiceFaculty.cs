@@ -81,7 +81,19 @@ namespace Resolve.Models
 
       
     }
-
+    public enum FacAllowanceChange
+    {
+        [Display(Name = "Administrative Suppliment")]
+        AdminSupp,
+        [Display(Name = "Endowed Supplement")]
+        EndowedSupp,
+        [Display(Name = "Lump Sum Moving Allowance")]
+        LumpSumMoving,
+        [Display(Name = "Lump Sum Relocation Payment")]
+        LumpSumReloc,
+        [Display(Name = "Other")]
+        Other
+    }
 
     public class HRServiceFaculty
     {
@@ -99,26 +111,33 @@ namespace Resolve.Models
 
         [Display(Name = "Effective End/Termination Date")]
         [DataType(DataType.Date)]
-        public DateTime EffectiveEndDate { get; set; }
+        public DateTime? EffectiveEndDate { get; set; }
 
         [Display(Name = "Request Type"), Required]
         public FacRequestType FacRequestType { get; set; }
 
-        public virtual SupOrg SupOrg { get; set; }
+        public virtual SupOrg? SupOrg { get; set; }
 
         public virtual Department Department { get; set; }
 
-        public virtual TerminationReason TerminationReason { get; set; }
+        [Display(Name = "Termination Reason")]
+        public virtual TerminationReason? TerminationReason { get; set; }
+
+        [Display(Name = "Allowance Change")]
+        public virtual FacAllowanceChange? FacAllowanceChange { get; set; }
 
         public string EmployeeEID { get; set; }
 
         [Display(Name = "Employee Name"), Required]
         public string EmployeeName { get; set; }
 
+        [Display(Name = "Job Title")]
         public string JobTitle { get; set; }
 
+        [Display(Name = "Current FTE")]
         public string CurrentFTE { get; set; }
 
+        [Display(Name = "Proposed FTE")]
         public string ProposedFTE { get; set; }
 
         [Display(Name = "Budget Numbers"), Required]
@@ -126,13 +145,19 @@ namespace Resolve.Models
 
         public string Note { get; set; }
 
+        [Display(Name = "Offboarding?")]
         public bool Offboarding { get; set; }
 
+        [Display(Name = "Close Position?")]
         public bool ClosePosition { get; set; }
-       
+
+        [Display(Name = "Leave WA?")]
         public bool LeaveWA { get; set; }
 
         [Display(Name = "Salary/Pay Rate")]
         public string Salary { get; set; }
+
+        [Display(Name = "Amount/Percent/Step Increase")]
+        public string Amount { get; set; }
     }
 }

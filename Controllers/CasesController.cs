@@ -134,7 +134,6 @@ namespace Resolve.Controllers
                 .Include(a => a.OnBehalves).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.Sample2)
-                .Include(p => p.SAR4)
                 .Include(p => p.HRServiceStaff)
                 .Include(p => p.HRServiceGradStudent)
                 .Include(p => p.HRServiceFaculty)

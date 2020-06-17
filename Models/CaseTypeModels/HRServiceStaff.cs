@@ -127,7 +127,7 @@ namespace Resolve.Models
 
         [Display(Name = "Effective End/Termination Date")]
         [DataType(DataType.Date)]
-        public DateTime EffectiveEndDate { get; set; }
+        public DateTime? EffectiveEndDate { get; set; }
 
         [Display(Name = "Request Type"), Required]
         public virtual RequestType RequestType { get; set; }
@@ -136,31 +136,38 @@ namespace Resolve.Models
         public virtual WorkerType WorkerType{ get; set; }
 
         [Display(Name = "Compensation Base Pay Change")]
-        public virtual BasePayChange BasePayChange { get; set; }
+        public virtual BasePayChange? BasePayChange { get; set; }
 
         [Display(Name = "Compensation Allowance Change")]
-        public virtual AllowanceChange AllowanceChange { get; set; }
+        public virtual AllowanceChange? AllowanceChange { get; set; }
 
         [Display(Name = "Termination Reason")]
-        public virtual TerminationReason TerminationReason { get; set; }
+        public virtual TerminationReason? TerminationReason { get; set; }
 
-        public virtual SupOrg SupOrg { get; set; }
+        public virtual SupOrg? SupOrg { get; set; }
 
         public string EmployeeEID { get; set; }
 
         [Display(Name = "Employee Name"), Required]
         public string EmployeeName { get; set; }
 
-        [Display(Name = "Budget Numbers"), Required]
+        [Display(Name = "Budget Numbers")]
         public string BudgetNumbers { get; set; }
+
+        [Display(Name = "Amount/Percent/Step Increase")]
+        public string Amount { get; set; }
+
 
         [MaxLength(1024)]
         public string Note { get; set; }
 
+        [Display(Name = "Offboarding?")]
         public bool Offboarding { get; set; }
 
+        [Display(Name = "Close Position?")]
         public bool ClosePosition { get; set; }
 
+        [Display(Name = "Leave WA?")]
         public bool LeaveWA { get; set; }
     }
 }

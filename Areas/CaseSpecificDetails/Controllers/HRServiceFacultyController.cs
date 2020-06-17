@@ -44,11 +44,23 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                     Description = hrFaculty.Description,
                     EmployeeName = hrFaculty.EmployeeName,
                     FacRequestType = hrFaculty.FacRequestType,
+                    FacAllowanceChange = hrFaculty.FacAllowanceChange,
                     EffectiveStartDate = hrFaculty.EffectiveStartDate,
                     EffectiveEndDate = hrFaculty.EffectiveEndDate,
                     SupOrg = hrFaculty.SupOrg,
+                    Department = hrFaculty.Department,
+                    Salary = hrFaculty.Salary,
+                    Amount = hrFaculty.Amount,
+                    CurrentFTE = hrFaculty.CurrentFTE,
+                    ProposedFTE = hrFaculty.ProposedFTE,
+                    TerminationReason = hrFaculty.TerminationReason,
+                    Offboarding = hrFaculty.Offboarding,
+                    ClosePosition = hrFaculty.ClosePosition,
+                    LeaveWA = hrFaculty.LeaveWA,
                     EmployeeEID = hrFaculty.EmployeeEID,
-                    BudgetNumbers = hrFaculty.BudgetNumbers
+                    BudgetNumbers = hrFaculty.BudgetNumbers,
+                    JobTitle = hrFaculty.JobTitle,
+                    Note = hrFaculty.Note
                 };
                 _context.Add(newCase);
                 await _context.SaveChangesAsync();

@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create Specific Details";
 }
 
-<h1>Create</h1>
-
-<h4>HR Service GradStudent Details</h4>
+<h3>Create HR Service Request</h3>
+<h4>Graduate Student</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,17 +14,23 @@
 
             <div class="form-group">
                 <label asp-for="GradRequestType" class="control-label"></label>
-                <select asp-for="GradRequestType" asp-items="Html.GetEnumSelectList<GradRequestType>()" class="form-control"></select>
+                <select asp-for="GradRequestType" asp-items="Html.GetEnumSelectList<GradRequestType>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
                 <span asp-validation-for="GradRequestType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GradJobProfile" class="control-label"></label>
-                <select asp-for="GradJobProfile" asp-items="Html.GetEnumSelectList<GradJobProfile>()" class="form-control"></select>
+                <select asp-for="GradJobProfile" asp-items="Html.GetEnumSelectList<GradJobProfile>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
                 <span asp-validation-for="GradJobProfile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Department" class="control-label"></label>
-                <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control"></select>
+                <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
                 <span asp-validation-for="Department" class="text-danger"></span>
             </div>
             <div class="form-group">

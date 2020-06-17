@@ -17,5 +17,11 @@ namespace Resolve.Models
         [Display(Name = "Sample Field"), Required]
         public string SampleDescription { get; set; }
 
+        [Display(Name = "Employee Name")]
+        public string EmployeeName { get; set; }
+
+        [Display(Name = "Worker Type")]
+        public virtual WorkerType? WorkerType { get; set; }
+
     }
 }

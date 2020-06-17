@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resolve.Data;
 
 namespace Resolve.Migrations
 {
     [DbContext(typeof(ResolveCaseContext))]
-    partial class ResolveCaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200617154104_AllowNullEnums2")]
+    partial class AllowNullEnums2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,10 +262,8 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("ClosePosition")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("ClosePosition")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CurrentFTE")
                         .HasColumnType("nvarchar(max)");
@@ -275,7 +275,7 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EffectiveEndDate")
+                    b.Property<DateTime>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -297,18 +297,14 @@ namespace Resolve.Migrations
                     b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("LeaveWA")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("LeaveWA")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Offboarding")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("Offboarding")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ProposedFTE")
                         .HasColumnType("nvarchar(max)");
@@ -346,7 +342,7 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EffectiveEndDate")
+                    b.Property<DateTime>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -397,16 +393,14 @@ namespace Resolve.Migrations
                     b.Property<string>("BudgetNumbers")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("ClosePosition")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("ClosePosition")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EffectiveEndDate")
+                    b.Property<DateTime>("EffectiveEndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EffectiveStartDate")
@@ -419,19 +413,15 @@ namespace Resolve.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("LeaveWA")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("LeaveWA")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
-                    b.Property<bool>("Offboarding")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<bool?>("Offboarding")
+                        .HasColumnType("bit");
 
                     b.Property<int>("RequestType")
                         .HasColumnType("int");
@@ -510,6 +500,44 @@ namespace Resolve.Migrations
                     b.HasIndex("LocalUserID");
 
                     b.ToTable("OnBehalf");
+                });
+
+            modelBuilder.Entity("Resolve.Models.SAR4", b =>
+                {
+                    b.Property<int>("CaseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AbsenceDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AbsenceReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AbsenceRequested")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MakeupPlan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Quarter")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RequestEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Student")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CaseID");
+
+                    b.ToTable("SAR4");
                 });
 
             modelBuilder.Entity("Resolve.Models.Sample2", b =>
@@ -711,6 +739,15 @@ namespace Resolve.Migrations
                     b.HasOne("Resolve.Models.LocalUser", "LocalUser")
                         .WithMany()
                         .HasForeignKey("LocalUserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Resolve.Models.SAR4", b =>
+                {
+                    b.HasOne("Resolve.Models.Case", "Case")
+                        .WithMany("SAR4")
+                        .HasForeignKey("CaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

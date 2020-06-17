@@ -25,7 +25,6 @@ namespace Resolve.Data
         public DbSet<Resolve.Models.OnBehalf> OnBehalf { get; set; }
         public DbSet<SampleCaseType> SampleCaseType { get; set; }
         public DbSet<Sample2> Sample2 { get; set; }
-        public DbSet<SAR4> SAR4 { get; set; }
         public DbSet<HRServiceStaff> HRServiceStaff { get; set; }
         public DbSet<HRServiceFaculty> HRServiceFaculty { get; set; }
         public DbSet<HRServiceGradStudent> HRServiceGradStudent { get; set; }
@@ -94,6 +93,27 @@ namespace Resolve.Data
             modelBuilder.Entity<CaseAttachment>()
             .Property(b => b.AttachmentTimestamp)
             .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<HRServiceStaff>()
+               .Property(h => h.Offboarding)
+               .HasDefaultValue(0);
+
+            modelBuilder.Entity<HRServiceStaff>()
+                .Property(h => h.ClosePosition)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<HRServiceStaff>()
+                .Property(h => h.LeaveWA)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<HRServiceFaculty>()
+              .Property(i => i.Offboarding)
+              .HasDefaultValue(0);
+
+            modelBuilder.Entity<HRServiceFaculty>()
+                .Property(i => i.ClosePosition)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<HRServiceFaculty>()
+                .Property(i => i.LeaveWA)
+                .HasDefaultValue(0);
 
 
         }

@@ -69,7 +69,7 @@ namespace Resolve.Models
 
         [Display(Name = "Effective End Date")]
         [DataType(DataType.Date)]
-        public DateTime EffectiveEndDate { get; set; }
+        public DateTime? EffectiveEndDate { get; set; }
 
         [Display(Name = "Request Type"), Required]
         public GradRequestType GradRequestType { get; set; }
