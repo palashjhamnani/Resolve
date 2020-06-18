@@ -43,6 +43,7 @@ namespace Resolve.Models
 
         public ICollection<SampleCaseType> SampleCaseType { get; set; }
         public ICollection<Sample2> Sample2 { get; set; }
+        public ICollection<SAR4> SAR4 { get; set; }
 
     }  
 

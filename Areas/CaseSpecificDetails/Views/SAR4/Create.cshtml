@@ -1,0 +1,73 @@
+﻿@model Resolve.Models.SAR4
+
+@{
+    ViewData["Title"] = "Create Specific Details";
+}
+
+<h1>Create</h1>
+
+<h4>SAR4 Case Type Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AbsenceDescription" class="control-label"></label>
+                <input asp-for="AbsenceDescription" class="form-control" />
+                <span asp-validation-for="AbsenceDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestStartDate" class="control-label"></label>
+                <input asp-for="RequestStartDate" class="form-control" />
+                <span asp-validation-for="RequestStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestEndDate" class="control-label"></label>
+                <input asp-for="RequestEndDate" class="form-control" />
+                <span asp-validation-for="RequestEndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MakeupPlan" class="control-label"></label>
+                <input asp-for="MakeupPlan" class="form-control" />
+                <span asp-validation-for="MakeupPlan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AbsenceRequested" class="control-label"></label>
+                <input asp-for="AbsenceRequested" class="form-control" />
+                <span asp-validation-for="AbsenceRequested" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Student" class="control-label"></label>
+                <input asp-for="Student" class="form-control" />
+                <span asp-validation-for="Student" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradYear" class="control-label"></label>
+                <input asp-for="GradYear" class="form-control" />
+                <span asp-validation-for="GradYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quarter" class="control-label"></label>
+                <input asp-for="Quarter" class="form-control" />
+                <span asp-validation-for="Quarter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AbsenceReason" class="control-label"></label>
+                <input asp-for="AbsenceReason" class="form-control" />
+                <span asp-validation-for="AbsenceReason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
