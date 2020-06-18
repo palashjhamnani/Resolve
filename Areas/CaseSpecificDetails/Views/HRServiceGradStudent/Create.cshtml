@@ -1,0 +1,85 @@
+﻿@model Resolve.Models.HRServiceGradStudent
+
+@{
+    ViewData["Title"] = "Create Specific Details";
+}
+
+<h3>Create HR Service Request</h3>
+<h4>Graduate Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="GradRequestType" class="control-label"></label>
+                <select asp-for="GradRequestType" asp-items="Html.GetEnumSelectList<GradRequestType>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+                <span asp-validation-for="GradRequestType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradJobProfile" class="control-label"></label>
+                <select asp-for="GradJobProfile" asp-items="Html.GetEnumSelectList<GradJobProfile>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+                <span asp-validation-for="GradJobProfile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department" class="control-label"></label>
+                <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentName" class="control-label"></label>
+                <input asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BudgetNumbers" class="control-label"></label>
+                <input asp-for="BudgetNumbers" class="form-control" />
+                <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StepStipendAllowance" class="control-label"></label>
+                <input asp-for="StepStipendAllowance" class="form-control" />
+                <span asp-validation-for="StepStipendAllowance" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EffectiveStartDate" class="control-label"></label>
+                <input asp-for="EffectiveStartDate" class="form-control" />
+                <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EffectiveEndDate" class="control-label"></label>
+                <input asp-for="EffectiveEndDate" class="form-control" />
+                <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

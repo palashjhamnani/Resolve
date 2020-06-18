@@ -135,6 +135,9 @@ namespace Resolve.Controllers
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.Sample2)
                 .Include(p => p.SAR4)
+                .Include(p => p.HRServiceFaculty)
+                .Include(p => p.HRServiceGradStudent)
+                .Include(p => p.HRServiceStaff)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {
