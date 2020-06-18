@@ -56,8 +56,7 @@
                 </select>
                 <span asp-validation-for="WorkerType" class="text-danger"></span>
             </div>
-        </div>
-        <div class="col-md-4">
+        
             <div class="form-group">
                 <label asp-for="RequestType" class="control-label"></label>
                 <select asp-for="RequestType" asp-items="Html.GetEnumSelectList<RequestType>()" class="form-control">
@@ -66,7 +65,7 @@
                 <span asp-validation-for="RequestType" class="text-danger"></span>
             </div>
         </div>
-    </div>
+     </div>
     <div id="BasePayChange">
         <div class="row">
 
@@ -107,46 +106,45 @@
         </div>
     </div>
     <div id="TerminationReason">
-         <div class="row">
-
-                <div class="col-md-4">
-
-                    <div class="form-group">
-                        <label asp-for="TerminationReason" class="control-label"></label>
-                        <select asp-for="TerminationReason" asp-items="Html.GetEnumSelectList<TerminationReason>()" class="form-control">
-                            <option selected="selected" value="">Please select</option>
-                        </select>
-                        <span asp-validation-for="TerminationReason" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <label asp-for="Offboarding" class="control-label"></label>
-                        <input type="checkbox" asp-for="Offboarding" class="form-control" />
-                        <span asp-validation-for="Offboarding" class="text-danger"></span>
-                    </div>
-                </div>
-            
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label asp-for="ClosePosition" class="control-label"></label>
-                        <input type="checkbox" asp-for="ClosePosition" class="form-control" />
-                        <span asp-validation-for="ClosePosition" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <label asp-for="LeaveWA" class="control-label"></label>
-                        <input type="checkbox" asp-for="LeaveWA" class="form-control" />
-                        <span asp-validation-for="LeaveWA" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
+
             <div class="col-md-4">
                 <div class="form-group">
+                    <label asp-for="TerminationReason" class="control-label"></label>
+                    <select asp-for="TerminationReason" asp-items="Html.GetEnumSelectList<TerminationReason>()" class="form-control">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="TerminationReason" class="text-danger"></span>
+                </div>
+           
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="Offboarding" /> @Html.DisplayNameFor(model => model.Offboarding)
+                    </label>
+                    <span asp-validation-for="ClosePosition" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="ClosePosition" /> @Html.DisplayNameFor(model => model.ClosePosition)
+                    </label>
+                    <span asp-validation-for="Offboarding" class="text-danger"></span>
+                </div>
+            
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="LeaveWA" /> @Html.DisplayNameFor(model => model.LeaveWA)
+                    </label>
+                    <span asp-validation-for="LeaveWA" class="text-danger"></span>
+                </div>
+                
+            </div>
+        </div>
+     </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
                     <label asp-for="SupOrg" class="control-label"></label>
                     <select asp-for="SupOrg" asp-items="Html.GetEnumSelectList<SupOrg>()" class="form-control">
                         <option selected="selected" value="">Please select</option>
