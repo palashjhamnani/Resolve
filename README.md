@@ -21,6 +21,16 @@ Before you run the application, you would need to create an "appsettings.json" f
       "Microsoft.Hosting.Lifetime": "Information"
     }
   },
+  "Smtp": {
+    "FromAddress": "abc@example.com",
+    "Server": "smtp.example.com",
+    "Password": "",
+    "Port": ##
+  },
+  "Launch": {
+    "Host_Name": "localhost or hostname",
+    "Host_Port":  443/80/etc
+  },
   "AllowedHosts": "*",
   "GraphApiUrl": "https://graph.microsoft.com/beta",
   "ConnectionStrings": {
