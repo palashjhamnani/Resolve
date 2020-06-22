@@ -34,6 +34,7 @@ namespace Resolve.Controllers
             }
 
             var localUser = await _context.LocalUser
+                .Include(p => p.EmailPreference)
                 .FirstOrDefaultAsync(m => m.LocalUserID == id);
             if (localUser == null)
             {
@@ -59,6 +60,16 @@ namespace Resolve.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(localUser);
+                EmailPreference e_pref = new EmailPreference
+                {
+                    LocalUserID = localUser.LocalUserID,
+                    CaseCreation = true,
+                    CaseAssignment = true,
+                    CommentCreation = true,
+                    AttachmentCreation = true,
+                    CaseProcessed = true
+                };
+                _context.Add(e_pref);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -11,25 +11,61 @@
     <h4>LocalUser</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EmailID)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EmailID)
         </dd>
     </dl>
+
+    <h4>Email Preference</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailPreference.CaseCreation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailPreference.CaseCreation)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailPreference.CaseAssignment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailPreference.CaseAssignment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailPreference.CommentCreation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailPreference.CommentCreation)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailPreference.AttachmentCreation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailPreference.AttachmentCreation)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailPreference.CaseProcessed)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailPreference.CaseProcessed)
+        </dd>
+    </dl>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.LocalUserID">Edit</a> |

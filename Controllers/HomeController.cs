@@ -105,6 +105,16 @@ namespace Resolve.Controllers
                 EmailID = LocalUserAttributes["NetID"]
                 };
                 _context.Add(CreateUser);
+                EmailPreference e_pref = new EmailPreference
+                {
+                    LocalUserID = CreateUser.LocalUserID,
+                    CaseCreation = true,
+                    CaseAssignment = true,
+                    CommentCreation = true,
+                    AttachmentCreation = true,
+                    CaseProcessed = true
+                };
+                _context.Add(e_pref);
                 await _context.SaveChangesAsync();
                 /*
                 Console.WriteLine("Created");
@@ -324,9 +334,5 @@ namespace Resolve.Controllers
             return File(fileBytes, "application/x-msdownload", filename);
         }
 
-        public IActionResult Preferences()
-        {
-            return View();
-        }
     }
 }

@@ -48,7 +48,8 @@ namespace Resolve.Helpers
             .Replace("{Resolve_Hostname}", host_add)
             .Replace("{Resolve_Port}", host_port)
             .Replace("{Resolve_CASEID}", case_id)
-            .Replace("{Resolve_CASECID}", case_cid);
+            .Replace("{Resolve_CASECID}", case_cid)
+            .Replace("{Resolve_UserID}", luser.LocalUserID);
             bodyBuilder.HtmlBody = body;
             //bodyBuilder.TextBody = "Hello World!";
             message.Body = bodyBuilder.ToMessageBody();

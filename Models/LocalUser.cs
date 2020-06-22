@@ -15,9 +15,11 @@ namespace Resolve.Models
         public string LocalUserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [Required]
         public string EmailID { get; set; }
         public ICollection<Case> Cases { get; set; }
         public ICollection<Approver> CasesforApproval { get; set; }
         public ICollection<UserGroup> UserGroups { get; set; }
+        public EmailPreference EmailPreference { get; set; }
     }
 }

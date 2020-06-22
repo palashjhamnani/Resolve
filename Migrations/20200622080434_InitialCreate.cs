@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Resolve.Migrations
 {
-    public partial class V1 : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,24 +11,47 @@ namespace Resolve.Migrations
                 name: "LocalUser",
                 columns: table => new
                 {
-                    LocalUserID = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    EmailID = table.Column<string>(nullable: true)
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LocalUser", x => x.LocalUserID);
+                    table.UniqueConstraint("AK_LocalUser_EmailID", x => x.EmailID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailPreference",
+                columns: table => new
+                {
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CaseCreation = table.Column<bool>(type: "bit", nullable: false),
+                    CaseAssignment = table.Column<bool>(type: "bit", nullable: false),
+                    CommentCreation = table.Column<bool>(type: "bit", nullable: false),
+                    AttachmentCreation = table.Column<bool>(type: "bit", nullable: false),
+                    CaseProcessed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailPreference", x => x.LocalUserID);
+                    table.ForeignKey(
+                        name: "FK_EmailPreference_LocalUser_LocalUserID",
+                        column: x => x.LocalUserID,
+                        principalTable: "LocalUser",
+                        principalColumn: "LocalUserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "LocalGroup",
                 columns: table => new
                 {
-                    LocalGroupID = table.Column<string>(nullable: false),
-                    GroupName = table.Column<string>(nullable: false),
-                    GroupDescription = table.Column<string>(nullable: true),
-                    LocalUserID = table.Column<string>(nullable: true)
+                    LocalGroupID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GroupName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GroupDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,12 +69,12 @@ namespace Resolve.Migrations
                 name: "CaseType",
                 columns: table => new
                 {
-                    CaseTypeID = table.Column<int>(nullable: false)
+                    CaseTypeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseTypeTitle = table.Column<string>(nullable: false),
-                    LongDescription = table.Column<string>(nullable: true),
-                    LocalGroupID = table.Column<string>(nullable: true),
-                    GroupNumber = table.Column<int>(nullable: true, defaultValue: 1)
+                    CaseTypeTitle = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LongDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocalGroupID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GroupNumber = table.Column<int>(type: "int", nullable: true, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -69,8 +92,8 @@ namespace Resolve.Migrations
                 name: "UserGroup",
                 columns: table => new
                 {
-                    LocalUserID = table.Column<string>(nullable: false),
-                    LocalGroupID = table.Column<string>(nullable: false)
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LocalGroupID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,15 +116,15 @@ namespace Resolve.Migrations
                 name: "Case",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false)
+                    CaseID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseCID = table.Column<string>(nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)"),
-                    LocalUserID = table.Column<string>(nullable: true),
-                    OnBehalfOf = table.Column<int>(nullable: false),
-                    CaseStatus = table.Column<string>(nullable: true),
-                    CaseCreationTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    CaseTypeID = table.Column<int>(nullable: false),
-                    Processed = table.Column<int>(nullable: true, defaultValue: 0)
+                    CaseCID = table.Column<string>(type: "nvarchar(max)", nullable: true, computedColumnSql: "'CASE' + CONVERT([nvarchar](23),[CaseID]+10000000)"),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    OnBehalfOf = table.Column<bool>(type: "bit", nullable: false),
+                    CaseStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CaseCreationTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    CaseTypeID = table.Column<int>(type: "int", nullable: false),
+                    Processed = table.Column<int>(type: "int", nullable: true, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -122,9 +145,9 @@ namespace Resolve.Migrations
                 name: "CaseTypeGroup",
                 columns: table => new
                 {
-                    CaseTypeID = table.Column<int>(nullable: false),
-                    LocalGroupID = table.Column<string>(nullable: false),
-                    Order = table.Column<int>(nullable: true, defaultValue: 1)
+                    CaseTypeID = table.Column<int>(type: "int", nullable: false),
+                    LocalGroupID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: true, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -147,10 +170,10 @@ namespace Resolve.Migrations
                 name: "Approver",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<string>(nullable: false),
-                    Approved = table.Column<int>(nullable: false, defaultValue: 0),
-                    Order = table.Column<int>(nullable: false, defaultValue: 1)
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Approved = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Order = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -173,13 +196,13 @@ namespace Resolve.Migrations
                 name: "CaseAttachment",
                 columns: table => new
                 {
-                    CaseAttachmentID = table.Column<int>(nullable: false)
+                    CaseAttachmentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<string>(nullable: true),
-                    FilePath = table.Column<string>(nullable: true),
-                    FileName = table.Column<string>(nullable: true),
-                    AttachmentTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()")
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -202,12 +225,12 @@ namespace Resolve.Migrations
                 name: "CaseAudit",
                 columns: table => new
                 {
-                    CaseAuditID = table.Column<int>(nullable: false)
+                    CaseAuditID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AuditTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    AuditLog = table.Column<string>(nullable: false),
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<string>(nullable: true)
+                    AuditTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    AuditLog = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,12 +253,12 @@ namespace Resolve.Migrations
                 name: "CaseComment",
                 columns: table => new
                 {
-                    CaseCommentID = table.Column<int>(nullable: false)
+                    CaseCommentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(nullable: false),
-                    CommentTimestamp = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<string>(nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommentTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -258,8 +281,8 @@ namespace Resolve.Migrations
                 name: "GroupAssignment",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalGroupID = table.Column<string>(nullable: false)
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalGroupID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -282,8 +305,8 @@ namespace Resolve.Migrations
                 name: "OnBehalf",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false),
-                    LocalUserID = table.Column<string>(nullable: false)
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    LocalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -303,29 +326,11 @@ namespace Resolve.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sample2",
-                columns: table => new
-                {
-                    CaseID = table.Column<int>(nullable: false),
-                    SampleDescription = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sample2", x => x.CaseID);
-                    table.ForeignKey(
-                        name: "FK_Sample2_Case_CaseID",
-                        column: x => x.CaseID,
-                        principalTable: "Case",
-                        principalColumn: "CaseID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SampleCaseType",
                 columns: table => new
                 {
-                    CaseID = table.Column<int>(nullable: false),
-                    CaseDescription = table.Column<string>(nullable: false)
+                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    CaseDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -432,13 +437,13 @@ namespace Resolve.Migrations
                 name: "CaseTypeGroup");
 
             migrationBuilder.DropTable(
+                name: "EmailPreference");
+
+            migrationBuilder.DropTable(
                 name: "GroupAssignment");
 
             migrationBuilder.DropTable(
                 name: "OnBehalf");
-
-            migrationBuilder.DropTable(
-                name: "Sample2");
 
             migrationBuilder.DropTable(
                 name: "SampleCaseType");

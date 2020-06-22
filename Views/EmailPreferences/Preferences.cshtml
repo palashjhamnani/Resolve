@@ -1,0 +1,54 @@
+﻿@model Resolve.Models.EmailPreference
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Email Preference</h4>
+<hr />
+<p>You could set your emailing preferences here on this page, you could also unsubscribe from various categories of emails</p>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Preferences">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LocalUserID" />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CaseCreation" /> @Html.DisplayNameFor(model => model.CaseCreation)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CaseAssignment" /> @Html.DisplayNameFor(model => model.CaseAssignment)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CommentCreation" /> @Html.DisplayNameFor(model => model.CommentCreation)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="AttachmentCreation" /> @Html.DisplayNameFor(model => model.AttachmentCreation)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CaseProcessed" /> @Html.DisplayNameFor(model => model.CaseProcessed)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
