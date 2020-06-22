@@ -7,24 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Resolve.Data;
+using Resolve.Helpers;
 using Resolve.Models;
 using Resolve.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Web;
+using Microsoft.Extensions.Configuration;
 
 namespace Resolve.Controllers
 {
     public class CasesController : Controller
     {
+        private readonly IConfiguration _config;
         private readonly ResolveCaseContext _context;
         private readonly IHostingEnvironment hostingEnvironment;
 
-        public CasesController(ResolveCaseContext context, IHostingEnvironment hostingEnvironment)
+        public CasesController(ResolveCaseContext context, IHostingEnvironment hostingEnvironment, IConfiguration config)
         {
             _context = context;
             this.hostingEnvironment = hostingEnvironment;
+            _config = config;
         }
 
         
@@ -133,7 +137,6 @@ namespace Resolve.Controllers
                 .Include(a => a.Approvers).ThenInclude(e => e.LocalUser)
                 .Include(a => a.OnBehalves).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
-                .Include(p => p.Sample2)
                 .Include(p => p.SAR4)
                 .Include(p => p.HRServiceFaculty)
                 .Include(p => p.HRServiceGradStudent)
@@ -196,18 +199,19 @@ namespace Resolve.Controllers
                 {                    
                     var app = _context.LocalGroup
                         .Single(b => b.LocalGroupID == item.LocalGroupID);
+                    var approver_luser = _context.LocalUser
+                        .Single(b => b.LocalUserID == app.LocalUserID);
                     var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
                     _context.Add(app_add);
+                    //Send Notification                
+                    var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser);
                     var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
                     _context.Add(grp_add);
                 }
-
-
                 await _context.SaveChangesAsync();
-                
+
                 var redirectFunctionName = CType.CaseTypeTitle;
                 return RedirectToAction("Create", redirectFunctionName, new { id = cid, area = "CaseSpecificDetails" });
-
             }
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle", @case.CaseTypeID);
             ViewData["OnBehalfUser"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");

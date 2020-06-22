@@ -323,5 +323,10 @@ namespace Resolve.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             return File(fileBytes, "application/x-msdownload", filename);
         }
+
+        public IActionResult Preferences()
+        {
+            return View();
+        }
     }
 }
