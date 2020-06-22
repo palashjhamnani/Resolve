@@ -197,10 +197,15 @@ namespace Resolve.Controllers
                         .Single(b => b.LocalGroupID == item.LocalGroupID);
                     var approver_luser = _context.LocalUser
                         .Single(b => b.LocalUserID == app.LocalUserID);
+                    var approver_preferences = _context.EmailPreference
+                        .Single(b => b.LocalUserID == app.LocalUserID);
                     var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
                     _context.Add(app_add);
-                    //Send Notification                
-                    var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser);
+                    //Send Notification
+                    if (approver_preferences.CaseAssignment == true)
+                    {
+                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser);
+                    }                    
                     var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
                     _context.Add(grp_add);
                 }
@@ -324,6 +329,7 @@ namespace Resolve.Controllers
             }
             var cid = HttpContext.Request.Form["CaseID"];
             var process_value = HttpContext.Request.Form["ProcessValue"];
+            var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
             int details_arg = 0;
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
@@ -340,6 +346,12 @@ namespace Resolve.Controllers
                     _context.Update(caseForApproval);
                     var audit = new CaseAudit { AuditLog = "Case Approved", CaseID = int_cid, LocalUserID = User.Identity.Name };
                     _context.Add(audit);
+                    // Adding final approval comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Approval Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }                    
                     await _context.SaveChangesAsync();
                     details_arg = 1;
                 }
@@ -352,7 +364,13 @@ namespace Resolve.Controllers
                     _context.Add(audit);
                     // Mark Case as Not-Processed                    
                     caseProcessed.Processed = 0;
-                    _context.Update(caseProcessed);                    
+                    _context.Update(caseProcessed);
+                    // Adding final reopen comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Reopen Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
                     await _context.SaveChangesAsync();
                     details_arg = 2;
                 }
@@ -365,6 +383,12 @@ namespace Resolve.Controllers
                     _context.Update(caseProcessed);
                     var audit = new CaseAudit { AuditLog = "Case Rejected", CaseID = int_cid, LocalUserID = User.Identity.Name };
                     _context.Add(audit);
+                    // Adding final rejection comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Rejection Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
                     await _context.SaveChangesAsync();
                     details_arg = -1;
                 }

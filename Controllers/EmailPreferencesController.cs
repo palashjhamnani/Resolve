@@ -50,7 +50,6 @@ namespace Resolve.Controllers
             }
             if (ModelState.IsValid)
             {
-                Console.WriteLine("valid");
                 try
                 {                    
                     _context.Update(pref);
@@ -69,8 +68,6 @@ namespace Resolve.Controllers
                 }
                 return RedirectToAction("Details", "LocalUsers", new { id = User.Identity.Name });
             }
-            //ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", localGroup.LocalUserID);
-            Console.WriteLine("invalid");
             return View(pref);
         }
 
