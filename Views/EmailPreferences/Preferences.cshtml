@@ -5,37 +5,40 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Email Preference</h4>
+<h5>Email Preferences</h5>
 <hr />
-<p>You could set your emailing preferences here on this page, you could also unsubscribe from various categories of emails</p>
+<p>Below are the categories to which you are currently subscribed, to recieve email notifications. To unsubscribe, uncheck the appropriate categories below.</p>
+<br />
+<h6>Receive Email Notifications:</h6>
+<br />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Preferences">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="LocalUserID" />
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CaseCreation" /> @Html.DisplayNameFor(model => model.CaseCreation)
+                    <input class="form-check-input" asp-for="CaseCreation" /> When you create a new case, or a case is created on your behalf
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CaseAssignment" /> @Html.DisplayNameFor(model => model.CaseAssignment)
+                    <input class="form-check-input" asp-for="CaseAssignment" /> When a case is assigned to you (Pending for your action)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CommentCreation" /> @Html.DisplayNameFor(model => model.CommentCreation)
+                    <input class="form-check-input" asp-for="CommentCreation" /> When a comment is added to a case (For cases created by you or assigned to you)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="AttachmentCreation" /> @Html.DisplayNameFor(model => model.AttachmentCreation)
+                    <input class="form-check-input" asp-for="AttachmentCreation" /> When an attachment is added to a case (For cases created by you or assigned to you)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CaseProcessed" /> @Html.DisplayNameFor(model => model.CaseProcessed)
+                    <input class="form-check-input" asp-for="CaseProcessed" /> When a case created by you, or on behalf of you is marked as processed (Approved/Rejected)
                 </label>
             </div>
             <div class="form-group">
@@ -43,10 +46,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
