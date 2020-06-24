@@ -341,3 +341,4 @@ healthchecksdb
 
 wwwroot/Attachments/
 appsettings.json
+/Areas/CaseSpecificDetails/Views/HRServiceFaculty/Details2.cshtml
