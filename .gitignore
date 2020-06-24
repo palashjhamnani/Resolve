@@ -341,3 +341,4 @@ healthchecksdb
 
 wwwroot/Attachments/
 appsettings.json
+Migrations/
