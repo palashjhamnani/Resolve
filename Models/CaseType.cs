@@ -17,9 +17,8 @@ namespace Resolve.Models
 
         [Display(Name = "Description")]
         public string? LongDescription { get; set; }
-        public string LocalGroupID { get; set; }
-        public LocalGroup LocalGroup { get; set; }
         public int? GroupNumber { get; set; }
+        public bool Hierarchical_Approval { get; set; }
         public ICollection<Case> Cases { get; set; }
         public ICollection<CaseTypeGroup> CaseTypeGroups { get; set; }
     }

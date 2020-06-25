@@ -57,15 +57,56 @@ namespace Resolve.Controllers
                 {
                     _context.Add(caseComment);
                     await _context.SaveChangesAsync();
+                    try
+                    {
+                        var case_c = _context.Case
+                        .Single(a => a.CaseID == caseComment.CaseID);
+                        var luser = _context.LocalUser
+                        .Single(a => a.LocalUserID == caseComment.LocalUserID);
+                        //Send Notification
+                        var approvers = _context.Approver
+                        .Where(b => b.CaseID == caseComment.CaseID)
+                        .Include(c => c.LocalUser)
+                        .ToList();
+                        List<LocalUser> to_addresses = new List<LocalUser>();
+                        foreach (var item in approvers)
+                        {
+                            to_addresses.Add(item.LocalUser);
+                        }
+                        to_addresses.Add(caseComment.LocalUser);
+                        var on_behalf = _context.OnBehalf
+                            .Where(b => b.CaseID == caseComment.CaseID)
+                            .ToList();
+                        if (on_behalf.Count != 0)
+                        {
+                            to_addresses.Add(on_behalf[0].LocalUser);
+                        }
+                        ICollection<LocalUser> withoutDuplicates = new HashSet<LocalUser>(to_addresses);
+                        foreach (var item in withoutDuplicates)
+                        {
+                            // Not sending notif to comment creator
+                            if (item.LocalUserID != caseComment.LocalUserID)
+                            {
+                                // Check if the email recievers have subscribed to alerts
+                                var u_pref = _context.EmailPreference
+                                .Single(b => b.LocalUserID == item.LocalUserID);
+                                if (u_pref.CommentCreation == true)
+                                {
+                                    var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(), case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Could not send notification!");
+                    }
                     var cid = HttpContext.Request.Form["CaseID"];
                     return RedirectToAction("Details", new { id = cid });
-                    //return RedirectToAction(nameof(Details));
-
                 }
             }
             catch (Exception)
             {
-
                 Console.WriteLine("Error!");
             }
 
@@ -208,7 +249,11 @@ namespace Resolve.Controllers
                     //Send Notification
                     if (approver_preferences.CaseAssignment == true)
                     {
-                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser);
+                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
+                        if (notif_result != "Sent")
+                        {
+                            Console.WriteLine("Could not send assignment notification!");
+                        }
                     }                    
                     var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
                     _context.Add(grp_add);

@@ -48,7 +48,17 @@ namespace Resolve.Controllers
 
         // GET: CaseTypeGroups/Create
         public IActionResult Create(int? id, int? cid)
-        {
+        {            
+            var hierarchy = _context.CaseType
+                .Single(a => a.CaseTypeID == cid);
+            if (hierarchy.Hierarchical_Approval == true)
+            {
+                ViewData["hierarchical"] = "ordered";
+            }
+            else
+            {
+                ViewData["hierarchical"] = "unordered";
+            }
             ViewData["NumberOfGroups"] = id;
             ViewData["CTypeID"] = cid;
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");

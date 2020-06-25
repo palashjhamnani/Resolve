@@ -20,10 +20,10 @@
                 @Html.DisplayNameFor(model => model.LongDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LocalGroup)
+                @Html.DisplayNameFor(model => model.GroupNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GroupNumber)
+                @Html.DisplayNameFor(model => model.Hierarchical_Approval)
             </th>
             <th></th>
         </tr>
@@ -38,10 +38,10 @@
                 @Html.DisplayFor(modelItem => item.LongDescription)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
+                @Html.DisplayFor(modelItem => item.GroupNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GroupNumber)
+                @Html.DisplayFor(modelItem => item.Hierarchical_Approval)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CaseTypeID">Edit</a> |

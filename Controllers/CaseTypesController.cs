@@ -22,7 +22,7 @@ namespace Resolve.Controllers
         // GET: CaseTypes
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.CaseType.Include(c => c.LocalGroup);
+            var resolveCaseContext = _context.CaseType;
             return View(await resolveCaseContext.ToListAsync());
         }
 
@@ -36,7 +36,6 @@ namespace Resolve.Controllers
 
             var caseType = await _context.CaseType
                 .Include(c => c.CaseTypeGroups).ThenInclude(p => p.LocalGroup).ThenInclude(p => p.LocalUser)
-                .Include(c => c.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {
@@ -48,8 +47,7 @@ namespace Resolve.Controllers
 
         // GET: CaseTypes/Create
         public IActionResult Create()
-        {
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID");
+        {            
             return View();
         }
 
@@ -58,7 +56,7 @@ namespace Resolve.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID,GroupNumber")] CaseType caseType)
+        public async Task<IActionResult> Create([Bind("CaseTypeID,CaseTypeTitle,LongDescription,GroupNumber,Hierarchical_Approval")] CaseType caseType)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +66,6 @@ namespace Resolve.Controllers
                 return RedirectToAction("Create", "CaseTypeGroups", new { id = caseType.GroupNumber, cid = ctypeid });
                 //return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
             return View(caseType);
         }
 
@@ -85,7 +82,6 @@ namespace Resolve.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
             return View(caseType);
         }
 
@@ -94,7 +90,7 @@ namespace Resolve.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,LocalGroupID,GroupNumber")] CaseType caseType)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseTypeID,CaseTypeTitle,LongDescription,GroupNumber,Hierarchical_Approval")] CaseType caseType)
         {
             if (id != caseType.CaseTypeID)
             {
@@ -121,7 +117,6 @@ namespace Resolve.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseType.LocalGroupID);
             return View(caseType);
         }
 
@@ -134,7 +129,6 @@ namespace Resolve.Controllers
             }
 
             var caseType = await _context.CaseType
-                .Include(c => c.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseTypeID == id);
             if (caseType == null)
             {

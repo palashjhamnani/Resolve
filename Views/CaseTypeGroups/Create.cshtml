@@ -7,8 +7,9 @@
 
 <h1>Create</h1>
 
-<h4>CaseTypeGroup</h4>
+<h4>Groups attached to the Case Type</h4>
 <hr />
+<br />
 <div class="row">
     <div class="col-md-10">
         <form asp-action="Create">
@@ -23,6 +24,14 @@
                     {
                         num_groups = Convert.ToInt32(ViewData["NumberOfGroups"]);
                     }
+                    @if (ViewData["hierarchical"].ToString() == "ordered")
+                    {
+                        <p>Please enter the order number for the selected groups starting from 1 to @num_groups</p>
+                    }
+                    else
+                    {
+                        <p>Since the Case Type doesn't require hierarchichal approval, leave the order for groups to be empty</p>
+                    }
                     for (int i = 0; i < num_groups; i++)
                     {
                         string num = i.ToString();
@@ -33,7 +42,7 @@
                         {
                             int cid = Convert.ToInt32(ViewData["CTypeID"]);
                             <div class="form-group col-md-3">
-                                <input type="hidden" value="@cid" name=@casetype asp-for="CaseTypeID" class="form-control" />                            
+                                <input type="hidden" value="@cid" name=@casetype asp-for="CaseTypeID" class="form-control" />
                             </div>
                         }
                         else
