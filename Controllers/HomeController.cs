@@ -192,7 +192,7 @@ namespace Resolve.Controllers
             var UCases = await _context.LocalUser
                 .Include(s => s.Cases.Where(p => p.Processed == 0))
                     .ThenInclude(w => w.CaseType)
-                .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0))
+                .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
                     .ThenInclude(q => q.Case)
                     .ThenInclude(q => q.CaseType)
                 .Include(e => e.UserGroups)
