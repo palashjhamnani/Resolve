@@ -56,6 +56,9 @@ namespace Resolve.Controllers
                 if (ModelState.IsValid)
                 {
                     _context.Add(caseComment);
+                    // Adding audit log
+                    //var audit = new CaseAudit { AuditLog = "Comment Created", CaseID = caseComment.CaseID, LocalUserID = User.Identity.Name };
+                    //_context.Add(audit);
                     await _context.SaveChangesAsync();
                     try
                     {
@@ -86,13 +89,20 @@ namespace Resolve.Controllers
                         {
                             // Not sending notif to comment creator
                             if (item.LocalUserID != caseComment.LocalUserID)
-                            {
-                                // Check if the email recievers have subscribed to alerts
+                            {                                
                                 var u_pref = _context.EmailPreference
                                 .Single(b => b.LocalUserID == item.LocalUserID);
+                                var processed_by_user = _context.Approver
+                                .Single(a => a.CaseID == caseComment.CaseID && a.LocalUserID == item.LocalUserID).Approved;
+                                // Check if the email recievers have subscribed to alerts
                                 if (u_pref.CommentCreation == true)
                                 {
-                                    var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(), case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser);
+                                    // Check if the case has already been processed by this user, if yes, no need to notify
+                                    if (processed_by_user == 0)
+                                    {
+                                        var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(), 
+                                            case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser, comment_on_case: caseComment.Comment);
+                                    }
                                 }
                             }
                         }
@@ -101,7 +111,7 @@ namespace Resolve.Controllers
                     {
                         Console.WriteLine("Could not send notification!");
                     }
-                    var cid = HttpContext.Request.Form["CaseID"];
+                    var cid = HttpContext.Request.Form["CaseID"];                    
                     return RedirectToAction("Details", new { id = cid });
                 }
             }

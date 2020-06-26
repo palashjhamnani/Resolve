@@ -23,7 +23,7 @@ namespace Resolve.Helpers
             _config = config;
         }
 
-        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null)
+        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null, string comment_on_case = null)
         {
             try
             {
@@ -71,7 +71,8 @@ namespace Resolve.Helpers
                     .Replace("{Resolve_CASECID}", case_cid)
                     .Replace("{Resolve_UserID}", luser.LocalUserID)
                     .Replace("{commenter_fname}", comment_by.FirstName)
-                    .Replace("{commenter_lname}", comment_by.LastName);
+                    .Replace("{commenter_lname}", comment_by.LastName)
+                    .Replace("{comment_on_case}", comment_on_case);
                     bodyBuilder.HtmlBody = body;
                     //bodyBuilder.TextBody = "Hello World!";
                     message.Body = bodyBuilder.ToMessageBody();
