@@ -66,17 +66,27 @@ namespace Resolve.Controllers
                         .Single(a => a.CaseID == caseComment.CaseID);
                         var luser = _context.LocalUser
                         .Single(a => a.LocalUserID == caseComment.LocalUserID);
+                        var case_creator =_context.LocalUser
+                        .Single(a => a.LocalUserID == case_c.LocalUserID);
                         //Send Notification
+                        //Collect all current approvers
                         var approvers = _context.Approver
                         .Where(b => b.CaseID == caseComment.CaseID)
                         .Include(c => c.LocalUser)
                         .ToList();
+                        //Add them to a list
                         List<LocalUser> to_addresses = new List<LocalUser>();
                         foreach (var item in approvers)
                         {
-                            to_addresses.Add(item.LocalUser);
+                            // If the user is an approver, check if the case has already been processed by this user, if yes, no need to notify
+                            if (item.Approved == 0)
+                            {
+                                to_addresses.Add(item.LocalUser);
+                            }                            
                         }
-                        to_addresses.Add(caseComment.LocalUser);
+                        // Add the Case Creator to the list as well
+                        to_addresses.Add(case_creator);
+                        // If case is on behalf of someone, add that user as well
                         var on_behalf = _context.OnBehalf
                             .Where(b => b.CaseID == caseComment.CaseID)
                             .ToList();
@@ -84,6 +94,7 @@ namespace Resolve.Controllers
                         {
                             to_addresses.Add(on_behalf[0].LocalUser);
                         }
+                        // Remove all duplicate users from the to_addresses list
                         ICollection<LocalUser> withoutDuplicates = new HashSet<LocalUser>(to_addresses);
                         foreach (var item in withoutDuplicates)
                         {
@@ -92,18 +103,12 @@ namespace Resolve.Controllers
                             {                                
                                 var u_pref = _context.EmailPreference
                                 .Single(b => b.LocalUserID == item.LocalUserID);
-                                var processed_by_user = _context.Approver
-                                .Single(a => a.CaseID == caseComment.CaseID && a.LocalUserID == item.LocalUserID).Approved;
                                 // Check if the email recievers have subscribed to alerts
                                 if (u_pref.CommentCreation == true)
                                 {
-                                    // Check if the case has already been processed by this user, if yes, no need to notify
-                                    if (processed_by_user == 0)
-                                    {
-                                        var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(), 
-                                            case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser, comment_on_case: caseComment.Comment);
-                                    }
-                                }
+                                    var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(),
+                                        case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser, comment_on_case: caseComment.Comment);                                                                   
+                                }                                                                
                             }
                         }
                     }
@@ -111,7 +116,7 @@ namespace Resolve.Controllers
                     {
                         Console.WriteLine("Could not send notification!");
                     }
-                    var cid = HttpContext.Request.Form["CaseID"];                    
+                    var cid = HttpContext.Request.Form["CaseID"];
                     return RedirectToAction("Details", new { id = cid });
                 }
             }

@@ -287,7 +287,7 @@ namespace Resolve.Controllers
         public async Task<IActionResult> ToYou(string? cases)
         {
             var PastCases = await _context.LocalUser
-            .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 1))
+            .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 1 || p.Approved != 0))
                 .ThenInclude(q => q.Case)
                 .ThenInclude(q => q.CaseType)
             .AsNoTracking()
