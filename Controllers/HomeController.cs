@@ -188,13 +188,16 @@ namespace Resolve.Controllers
             }
             await _context.SaveChangesAsync();
 
-            // Cases created by the User, assigned to the User, and assigned to the groups to which the User belongs to
+            // Cases created by the User(or on behalf of user), assigned to the User, and assigned to the groups to which the User belongs to
             var UCases = await _context.LocalUser
                 .Include(s => s.Cases.Where(p => p.Processed == 0))
                     .ThenInclude(w => w.CaseType)
+                .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 0))
+                    .ThenInclude(s => s.Case)
+                    .ThenInclude(s => s.CaseType)
                 .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
                     .ThenInclude(q => q.Case)
-                    .ThenInclude(q => q.CaseType)
+                    .ThenInclude(q => q.LocalUser)
                 .Include(e => e.UserGroups)
                         .ThenInclude(e => e.LocalGroup)
                         .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
@@ -279,6 +282,8 @@ namespace Resolve.Controllers
             var PastCases = await _context.LocalUser
             .Include(s => s.Cases.Where(p => p.Processed == 1))
                 .ThenInclude(w => w.CaseType)
+            .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 1))
+                .ThenInclude(w => w.Case).ThenInclude(q => q.CaseType)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == User.Identity.Name);
             return View(PastCases);          

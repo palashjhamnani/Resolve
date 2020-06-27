@@ -20,6 +20,7 @@ namespace Resolve.Models
         public ICollection<Case> Cases { get; set; }
         public ICollection<Approver> CasesforApproval { get; set; }
         public ICollection<UserGroup> UserGroups { get; set; }
+        public ICollection<OnBehalf> OnBehalves { get; set; }
         public EmailPreference EmailPreference { get; set; }
     }
 }

@@ -20,7 +20,7 @@
 
         @foreach (var item in Model.Cases)
         {
-            
+
             string shortDate = item.CaseCreationTimestamp.ToShortDateString();
             <tr>
                 <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseCID)</a></td>
@@ -29,5 +29,16 @@
                 <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
             </tr>
         }
-        </tbody>
+        @foreach (var item in Model.OnBehalves)
+        {
+
+            string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+            <tr>
+                <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.Case.CaseCID)</a></td>
+                <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                <td>@Html.DisplayFor(modelItem => shortDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
+            </tr>
+        }
+    </tbody>
     </table>
