@@ -190,19 +190,31 @@ namespace Resolve.Controllers
 
             // Cases created by the User(or on behalf of user), assigned to the User, and assigned to the groups to which the User belongs to
             var UCases = await _context.LocalUser
+                // Created by the User
                 .Include(s => s.Cases.Where(p => p.Processed == 0))
-                    .ThenInclude(w => w.CaseType)
-                .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 0))
-                    .ThenInclude(s => s.Case)
-                    .ThenInclude(s => s.CaseType)
+                    .ThenInclude(w => w.CaseType)                    
+                    // Created on behalf of the User
+                    .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 0))
+                        .ThenInclude(s => s.Case)
+                        .ThenInclude(s => s.CaseType)
+                // Assigned to the User
                 .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
                     .ThenInclude(q => q.Case)
-                    .ThenInclude(q => q.LocalUser)
+                    .ThenInclude(q => q.CaseType)
+                .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
+                    .ThenInclude(q => q.Case)
+                    .ThenInclude(q => q.LocalUser)                
+                // Assigned to the Groups to which the user belongs to
                 .Include(e => e.UserGroups)
                         .ThenInclude(e => e.LocalGroup)
                         .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
                         .ThenInclude(e => e.Case)
-                        .ThenInclude(e => e.CaseType)                        
+                        .ThenInclude(e => e.CaseType)
+                .Include(e => e.UserGroups)
+                        .ThenInclude(e => e.LocalGroup)
+                        .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
+                        .ThenInclude(e => e.Case)
+                        .ThenInclude(e => e.LocalUser)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
 

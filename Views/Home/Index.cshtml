@@ -131,6 +131,7 @@
                                 <tr>
                                     <th scope="col">Group</th>
                                     <th scope="col">Case ID</th>
+                                    <th>Created By</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Created</th>
                                     <th scope="col">Case Type</th>
@@ -141,11 +142,13 @@
                                 {
                                     @foreach (var c in item.LocalGroup.GroupCases)
                                     {
+                                        string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
                                         <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
                                             <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
+                                            <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
+                                            <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
                                     }
