@@ -62,7 +62,7 @@ namespace Resolve.Controllers
             ViewData["NumberOfGroups"] = id;
             ViewData["CTypeID"] = cid;
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID");
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID");
+            ViewData["GroupName"] = new SelectList(_context.LocalGroup, "GroupName", "GroupName");
             return View();
         }
 
@@ -88,7 +88,8 @@ namespace Resolve.Controllers
                     string OrderName = "Order" + num;
                     int CTypeID = Convert.ToInt32(HttpContext.Request.Form[CTypeName]);
                     CType = CTypeID;
-                    string LGroupID = HttpContext.Request.Form[LGroupName].ToString();
+                    string LGroupN = HttpContext.Request.Form[LGroupName].ToString();
+                    var LGroupID = _context.LocalGroup.Single(p => p.GroupName == LGroupN).LocalGroupID;
                     int Order = 1;
                     if (HttpContext.Request.Form[OrderName] != "")
                     {
@@ -109,7 +110,7 @@ namespace Resolve.Controllers
             }
             
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", caseTypeGroup.CaseTypeID);
-            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", caseTypeGroup.LocalGroupID);
+            ViewData["GroupName"] = new SelectList(_context.LocalGroup, "GroupName", "GroupName", caseTypeGroup.LocalGroupID);
             return View(caseTypeGroup);
         }
 

@@ -29,10 +29,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CaseType.CaseTypeID)
+                @Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
+                @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Order)
