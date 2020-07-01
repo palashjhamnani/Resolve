@@ -251,30 +251,60 @@ namespace Resolve.Controllers
                     .Single(b => b.CaseTypeID == @case.CaseTypeID);
                 var CTypeGroups = _context.CaseTypeGroup
                     .Where(b => b.CaseTypeID == @case.CaseTypeID);
-                foreach (var item in CTypeGroups)
-                {                    
-                    var app = _context.LocalGroup
-                        .Single(b => b.LocalGroupID == item.LocalGroupID);
-                    var approver_luser = _context.LocalUser
-                        .Single(b => b.LocalUserID == app.LocalUserID);
-                    var approver_preferences = _context.EmailPreference
-                        .Single(b => b.LocalUserID == app.LocalUserID);
-                    var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
-                    _context.Add(app_add);
+                // Ordered processing by approvers as per designated order
+                if (CType.Hierarchical_Approval == true)
+                {
+                    // Assigning the first approver and group
+                    var CTypeGroup = _context.CaseTypeGroup
+                    .Single(b => b.CaseTypeID == @case.CaseTypeID && b.Order == 1);
+                    var app_group = _context.LocalGroup
+                            .Single(b => b.LocalGroupID == CTypeGroup.LocalGroupID);
+                    var app_luser = _context.LocalUser
+                        .Single(b => b.LocalUserID == app_group.LocalUserID);
+                    var approver_preference = _context.EmailPreference
+                        .Single(b => b.LocalUserID == app_group.LocalUserID);
+                    var appr_add = new Approver { CaseID = cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = 1 };
+                    _context.Add(appr_add);
                     //Send Notification
-                    if (approver_preferences.CaseAssignment == true)
+                    if (approver_preference.CaseAssignment == true)
                     {
-                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
+                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: app_luser, template: "assignment");
                         if (notif_result != "Sent")
                         {
                             Console.WriteLine("Could not send assignment notification!");
                         }
-                    }                    
-                    var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
+                    }
+                    var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = CTypeGroup.LocalGroupID };
                     _context.Add(grp_add);
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
-
+                // Parallel processing by all approvers
+                else
+                {
+                    foreach (var item in CTypeGroups)
+                    {
+                        var app = _context.LocalGroup
+                            .Single(b => b.LocalGroupID == item.LocalGroupID);
+                        var approver_luser = _context.LocalUser
+                            .Single(b => b.LocalUserID == app.LocalUserID);
+                        var approver_preferences = _context.EmailPreference
+                            .Single(b => b.LocalUserID == app.LocalUserID);
+                        var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
+                        _context.Add(app_add);
+                        //Send Notification
+                        if (approver_preferences.CaseAssignment == true)
+                        {
+                            var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
+                            if (notif_result != "Sent")
+                            {
+                                Console.WriteLine("Could not send assignment notification!");
+                            }
+                        }
+                        var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
+                        _context.Add(grp_add);
+                    }
+                    await _context.SaveChangesAsync();
+                }
                 var redirectFunctionName = CType.CaseTypeTitle;
                 return RedirectToAction("Create", redirectFunctionName, new { id = cid, area = "CaseSpecificDetails" });
             }
@@ -398,6 +428,9 @@ namespace Resolve.Controllers
             int details_arg = 0;
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
             var caseProcessed = await _context.Case.FindAsync(int_cid);
+            var CType = await _context.CaseType.FindAsync(caseProcessed.CaseTypeID);
+            //var CTypeGroups = _context.CaseTypeGroup
+            //       .Where(b => b.CaseTypeID == CType.CaseTypeID);
             if (caseForApproval == null)
             {
                 return NotFound();
@@ -415,8 +448,47 @@ namespace Resolve.Controllers
                     {
                         var f_comment = new CaseComment { Comment = "Approval Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
                         _context.Add(f_comment);
-                    }                    
+                    }
                     await _context.SaveChangesAsync();
+                    // Add next approver if Case Type is hierarchical
+                    if (CType.Hierarchical_Approval == true)
+                    {
+                        // Check if next approver exists
+                        var CTGroup = await _context.CaseTypeGroup
+                            .Where(b => b.CaseTypeID == CType.CaseTypeID && b.Order == caseForApproval.Order + 1)
+                            .ToListAsync();
+                        if (CTGroup.Count != 0)
+                        {
+                            // Check if this new approver is not already assigned to the case (managing reopen scenario)
+                            var NextApproverForCase = await _context.Approver
+                            .Where(p => p.CaseID == int_cid && p.Order == caseForApproval.Order + 1)
+                            .ToListAsync();
+                            // If approver not already assigned, only then assign it
+                            if (NextApproverForCase.Count == 0)
+                            {
+                                var app_group = _context.LocalGroup
+                                    .Single(b => b.LocalGroupID == CTGroup[0].LocalGroupID);
+                                var app_luser = _context.LocalUser
+                                    .Single(b => b.LocalUserID == app_group.LocalUserID);
+                                var approver_preference = _context.EmailPreference
+                                    .Single(b => b.LocalUserID == app_group.LocalUserID);
+                                var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order) };
+                                _context.Add(appr_add);
+                                //Send Notification
+                                if (approver_preference.CaseAssignment == true)
+                                {
+                                    var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
+                                    if (notif_result != "Sent")
+                                    {
+                                        Console.WriteLine("Could not send assignment notification!");
+                                    }
+                                }
+                                var grp_add = new GroupAssignment { CaseID = int_cid, LocalGroupID = CTGroup[0].LocalGroupID };
+                                _context.Add(grp_add);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                    }                    
                     details_arg = 1;
                 }
                 else

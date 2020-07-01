@@ -112,394 +112,194 @@
                             </div>
                         }
                     }
-                    <div class="dropdown no-arrow">
-                        @{
-                            int approved = 2;
-                            List<string> approvers = new List<string>();
-                            //List<int> approved_all = new List<int>();
-                            foreach (var item in Model.Approvers)
+                <div class="dropdown no-arrow">
+                    @{
+                        int approved = 2;
+                        List<string> approvers = new List<string>();
+                        //List<int> approved_all = new List<int>();
+                        foreach (var item in Model.Approvers)
+                        {
+                            approvers.Add(item.LocalUserID);
+                            //approved_all.Add(item.Approved);
+                            if (item.LocalUserID == User.GetDisplayName())
                             {
-                                approvers.Add(item.LocalUserID);
-                                //approved_all.Add(item.Approved);
-                                if (item.LocalUserID == User.GetDisplayName())
-                                {
-                                    approved = item.Approved;
-                                }
+                                approved = item.Approved;
                             }
                         }
+                    }
 
+                    @if (user_is_admin)
+                    {
+                        <button class="btn-sm btn btn-outline-secondary dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Admin Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Approve for all</a>
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Reject for all</a>
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Reopen for all</a>
+                        </div>
+                    }
 
-                        @if (approvers.Contains(User.GetDisplayName()) || user_is_admin)
+                    @if (approvers.Contains(User.GetDisplayName()))
+                    {
+                        if (approved == 1 || approved == -1)
                         {
-                            if (approvers.Contains(User.GetDisplayName()) && user_is_admin)
-                            {
-                                if (approvals_remaining == 0)
-                                {
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn1Reopen">
-                                        Reopen
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="Cdn1Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Reopen">
+                                Reopen
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Reopen Case</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form asp-action="Process">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
                                                 </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
-                                                        <button class="btn btn-warning" type="submit">Reopen</button>
-                                                    </div>
-                                                </form>                                            
                                             </div>
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn1Approve">
-                                        Approve
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn1Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Approve" name="ProcessValue" />
-                                                        <button class="btn btn-success" type="submit">Approve</button>
-                                                    </div>
-                                                </form>                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                <input type="hidden" value="Reopen" name="ProcessValue" />
+                                                <button class="btn btn-warning" type="submit">Reopen</button>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        if (approved == 0)
+                        {
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#Approve">
+                                Approve
+                            </button>
 
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn1Reject">
-                                        Reject
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn1Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                            <div class="modal fade" id="Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Approve Case</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form asp-action="Process">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
                                                 </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reject" name="ProcessValue" />
-                                                        <button class="btn btn-danger" type="submit">Reject</button>
-                                                    </div>
-                                                </form>                                            
                                             </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                                if (user_is_admin)
-                            {
-                                if (approvals_remaining == 0)
-                                {
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn2Reopen">
-                                        Reopen
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="Cdn2Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
-                                                        <button class="btn btn-warning" type="submit">Reopen</button>
-                                                    </div>
-                                                </form>                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                <input type="hidden" value="Approve" name="ProcessValue" />
+                                                <button class="btn btn-success" type="submit">Approve</button>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn2Approve">
-                                        Approve
-                                    </button>
+                                </div>
+                            </div>
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn2Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Approve" name="ProcessValue" />
-                                                        <button class="btn btn-success" type="submit">Approve</button>
-                                                    </div>
-                                                </form>
-                                            </div>                                            
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Reject">
+                                Reject
+                            </button>
+                            <div class="modal fade" id="Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Reject Case</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn2Reject">
-                                        Reject
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn2Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case for all</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                        <form asp-action="Process">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
                                                 </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reject" name="ProcessValue" />
-                                                        <button class="btn btn-danger" type="submit">Reject</button>
-                                                    </div>
-                                                </form>                                            
                                             </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                                if (approvers.Contains(User.GetDisplayName()))
-                            {
-                                if (approved == 1 || approved == -1)
-                                {
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Cdn3Reopen">
-                                        Reopen
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="Cdn3Reopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reopen for Self</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reopen" name="ProcessValue" />
-                                                        <button class="btn btn-warning" type="submit">Reopen</button>
-                                                    </div>
-                                                </form>                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                <input type="hidden" value="Reject" name="ProcessValue" />
+                                                <button class="btn btn-danger" type="submit">Reject</button>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                }
-                                else
-                                    if (approved == 0)
-                                {
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#cdn3Approve">
-                                        Approve
-                                    </button>
+                                </div>
+                            </div>
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn3Approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Approve Case?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Approve" name="ProcessValue" />
-                                                        <button class="btn btn-success" type="submit">Approve</button>
-                                                    </div>
-                                                </form>                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cdn3Reject">
-                                        Reject
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="cdn3Reject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Reject Case?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form asp-action="Process">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                                        <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                        <input type="hidden" value="Reject" name="ProcessValue" />
-                                                        <button class="btn btn-danger" type="submit">Reject</button>
-                                                    </div>
-                                                </form>                                            
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
+                        }
+                    }
+                    else
+                    {
+                        if (approvals_remaining == 0)
+                        {
+                            <button type="button" class="btn btn-warning btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                Reopen
+                            </button>
                         }
                         else
                         {
-                            if (approvals_remaining == 0)
-                            {
-                                <button type="button" class="btn btn-warning btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
-                                    Reopen
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="button" class="btn btn-success btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
-                                    Approve
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
-                                    Reject
-                                </button>
-                            }
+                            <button type="button" class="btn btn-success btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                Approve
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm" disabled data-toggle="tooltip" data-placement="top" title="This section is enabled only for Approvers and Admins">
+                                Reject
+                            </button>
                         }
+                    }
 
 
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg">
-                            Audit
-                        </button>
-                        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Case Audit Details</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table class="table table-sm">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg">
+                        Audit
+                    </button>
+                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Case Audit Details</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Audit Log</th>
+                                            <th>Action By</th>
+                                        </tr>
+                                        @foreach (var item in Model.CaseAudits)
+                                        {
                                             <tr>
-                                                <th>Timestamp</th>
-                                                <th>Audit Log</th>
-                                                <th>Action By</th>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AuditLog)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.LocalUserID)
+                                                </td>
                                             </tr>
-                                            @foreach (var item in Model.CaseAudits)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.AuditTimestamp)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.AuditLog)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.LocalUserID)
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                        
-                                    </div>
+                                        }
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

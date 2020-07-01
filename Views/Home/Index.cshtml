@@ -38,7 +38,7 @@
                                     <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                         <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                                         <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
-                                        <td>@Html.DisplayFor(modelItem => shortDate)</td>
+                                        <td data-toggle="tooltip" title="@item.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                         <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
                                     </tr>
                                 }
@@ -48,7 +48,7 @@
                                     <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
-                                        <td>@Html.DisplayFor(modelItem => shortDate)</td>
+                                        <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                     </tr>
                                 }
