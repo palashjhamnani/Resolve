@@ -134,9 +134,84 @@
                             Admin Actions
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Approve for all</a>
-                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Reject for all</a>
-                            <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">Reopen for all</a>
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" data-toggle="modal" data-target="#AdminApprove">Approve for all</a>
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" data-toggle="modal" data-target="#AdminReject">Reject for all</a>
+                            <a class="dropdown-item btn-sm btn btn-outline-secondary" data-toggle="modal" data-target="#AdminReopen">Reopen for all</a>
+                        </div>
+                        <div class="modal fade" id="AdminApprove" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Approve for all</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form asp-action="AdminProcess">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                            <input type="hidden" value="Approve" name="ProcessValue" />
+                                            <button class="btn btn-success" type="submit">Approve</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="AdminReject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Reject for all</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form asp-action="AdminProcess">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                            <input type="hidden" value="Reject" name="ProcessValue" />
+                                            <button class="btn btn-danger" type="submit">Reject</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="AdminReopen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Reopen for all</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form asp-action="AdminProcess">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Final Comments..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                            <input type="hidden" value="Reopen" name="ProcessValue" />
+                                            <button class="btn btn-warning" type="submit">Reopen</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     }
 
@@ -262,7 +337,7 @@
                         Audit
                     </button>
                     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog mw-100 w-75">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">Case Audit Details</h5>

@@ -558,7 +558,7 @@ namespace Resolve.Controllers
                     _context.Update(caseProcessed);
                     caseProcessed.Processed = 1;
                     _context.Update(caseProcessed);
-                    var audit = new CaseAudit { AuditLog = "Case Processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    var audit = new CaseAudit { AuditLog = "Case marked as processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
                     _context.Add(audit);
                     await _context.SaveChangesAsync();
                 }        
@@ -570,7 +570,7 @@ namespace Resolve.Controllers
                         _context.Update(caseProcessed);
                         caseProcessed.Processed = 1;
                         _context.Update(caseProcessed);
-                        var audit = new CaseAudit { AuditLog = "Case Processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        var audit = new CaseAudit { AuditLog = "Case marked as processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
                         _context.Add(audit);
                         await _context.SaveChangesAsync();
                 }
@@ -599,7 +599,110 @@ namespace Resolve.Controllers
             return RedirectToAction("Details", new { id = cid, approved = 0 });
         }
 
-        
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdminProcess(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var cid = HttpContext.Request.Form["CaseID"];
+            var process_value = HttpContext.Request.Form["ProcessValue"];
+            var final_comment = HttpContext.Request.Form["FinalComment"];
+            int int_cid = Convert.ToInt32(cid);
+            int details_arg = 0;
+            var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
+            var CaseToProcess = await _context.Case.FindAsync(int_cid);
+            var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
+            try
+            {
+                foreach (var item in all_approvers)
+                {
+                    if (process_value == "Approve")
+                    {
+                        item.Approved = 1;
+                        _context.Update(item);
+                    }
+                    else
+                        if (process_value == "Reopen")
+                    {
+                        item.Approved = 0;
+                        _context.Update(item);
+                    }
+                    else
+                        if (process_value == "Reject")
+                    {
+                        item.Approved = -1;
+                        _context.Update(item);
+                    }
+                }
+                await _context.SaveChangesAsync();
+                if (process_value == "Approve")
+                {
+                    // Mark Case as Approved
+                    CaseToProcess.CaseStatus = "Approved";
+                    CaseToProcess.Processed = 1;
+                    _context.Update(CaseToProcess);
+                    var audit = new CaseAudit { AuditLog = "Case Approved by Admin. Case marked as processed.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    // Adding final approval comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Approval Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
+                    await _context.SaveChangesAsync();
+                    details_arg = 1;
+                }
+                else
+                    if (process_value == "Reopen")
+                {
+                    // Mark Case in Pending
+                    CaseToProcess.CaseStatus = "Pending";
+                    CaseToProcess.Processed = 0;
+                    _context.Update(CaseToProcess);
+                    var audit = new CaseAudit { AuditLog = "Case Reopened by Admin. Case still in Pending status.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    // Adding final reopening comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Reopening Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
+                    await _context.SaveChangesAsync();
+                    details_arg = 2;
+                }
+                else
+                    if (process_value == "Reject")
+                {
+                    CaseToProcess.CaseStatus = "Rejected";
+                    CaseToProcess.Processed = 1;
+                    _context.Update(CaseToProcess);
+                    var audit = new CaseAudit { AuditLog = "Case Rejected by Admin. Case marked as processed.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    // Adding final rejection comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Rejection Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
+                    await _context.SaveChangesAsync();
+                    details_arg = -1;
+                }
+                ViewData["Approved"] = "Success";
+                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+            }
+            catch (Exception)
+            {
+                ViewData["Approved"] = "Error";
+            }
+
+            return RedirectToAction("Details", new { id = cid, approved = 0 });
+        }
 
 
     }
