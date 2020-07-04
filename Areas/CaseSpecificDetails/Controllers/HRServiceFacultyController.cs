@@ -70,6 +70,35 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             }
             return View(hrFaculty);
         }
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            HRServiceFaculty editCase = _context.HRServiceFaculty.Find(id);
+            if (editCase == null)
+            {
+                return NotFound();
+            }
+            return View(editCase);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,FacRequestType,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
+
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Entry(hrFaculty).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                var cid = id;
+                return RedirectToAction("Details", "Cases", new { id = cid, area = "" });
+                //return RedirectToAction("Index", "Home");
+            }
+            return View(hrFaculty);
+        }
 
     }
 }
