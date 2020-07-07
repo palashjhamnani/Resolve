@@ -458,35 +458,29 @@ namespace Resolve.Controllers
                             .Where(b => b.CaseTypeID == CType.CaseTypeID && b.Order == caseForApproval.Order + 1)
                             .ToListAsync();
                         if (CTGroup.Count != 0)
-                        {
-                            // Check if this new approver is not already assigned to the case (managing reopen scenario)
-                            var NextApproverForCase = await _context.Approver
-                            .Where(p => p.CaseID == int_cid && p.Order == caseForApproval.Order + 1)
-                            .ToListAsync();
-                            // If approver not already assigned, only then assign it
-                            if (NextApproverForCase.Count == 0)
+                        {                            
+                            var app_group = _context.LocalGroup
+                                .Single(b => b.LocalGroupID == CTGroup[0].LocalGroupID);
+                            var app_luser = _context.LocalUser
+                                .Single(b => b.LocalUserID == app_group.LocalUserID);
+                            var approver_preference = _context.EmailPreference
+                                .Single(b => b.LocalUserID == app_group.LocalUserID);
+                            var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order) };
+                            _context.Add(appr_add);
+                            var audit_log = new CaseAudit { AuditLog = "Case has been assigned to "+app_luser.FirstName+" "+app_luser.LastName+" as the next approver in hierarchy.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                            _context.Add(audit_log);
+                            //Send Notification
+                            if (approver_preference.CaseAssignment == true)
                             {
-                                var app_group = _context.LocalGroup
-                                    .Single(b => b.LocalGroupID == CTGroup[0].LocalGroupID);
-                                var app_luser = _context.LocalUser
-                                    .Single(b => b.LocalUserID == app_group.LocalUserID);
-                                var approver_preference = _context.EmailPreference
-                                    .Single(b => b.LocalUserID == app_group.LocalUserID);
-                                var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order) };
-                                _context.Add(appr_add);
-                                //Send Notification
-                                if (approver_preference.CaseAssignment == true)
+                                var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
+                                if (notif_result != "Sent")
                                 {
-                                    var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
-                                    if (notif_result != "Sent")
-                                    {
-                                        Console.WriteLine("Could not send assignment notification!");
-                                    }
+                                    Console.WriteLine("Could not send assignment notification!");
                                 }
-                                var grp_add = new GroupAssignment { CaseID = int_cid, LocalGroupID = CTGroup[0].LocalGroupID };
-                                _context.Add(grp_add);
-                                await _context.SaveChangesAsync();
                             }
+                            var grp_add = new GroupAssignment { CaseID = int_cid, LocalGroupID = CTGroup[0].LocalGroupID };
+                            _context.Add(grp_add);
+                            await _context.SaveChangesAsync();                            
                         }
                     }                    
                     details_arg = 1;
@@ -494,11 +488,35 @@ namespace Resolve.Controllers
                 else
                     if (process_value == "Reopen")
                 {
+                    // Manage the hierarchical scenario, i.e. remove all approvers ahead of the current approver who reopened the case
+                    if (CType.Hierarchical_Approval == true)
+                    {
+                        // Collect all approvers ahead of current approver
+                        var approvers_ahead = await _context.Approver
+                            .Where(p => p.CaseID == int_cid && p.Order > caseForApproval.Order).ToListAsync();
+                        var groups_ahead = await _context.CaseTypeGroup
+                            .Where(p => p.CaseTypeID == CType.CaseTypeID && p.Order > caseForApproval.Order).ToListAsync();
+                        if (approvers_ahead.Count != 0 || groups_ahead.Count != 0)
+                        {
+                            foreach (var item in approvers_ahead)
+                            {
+                                _context.Approver.Remove(item);
+                            }
+                            foreach (var item in groups_ahead)
+                            {
+                                var @group = await _context.GroupAssignment.FindAsync(int_cid, item.LocalGroupID);
+                                _context.GroupAssignment.Remove(@group);
+                            }
+                            await _context.SaveChangesAsync();
+                            var audit_remove = new CaseAudit { AuditLog = "Groups and Approvers ahead of current approver in hierarchy have been removed.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                            _context.Add(audit_remove);
+                        }                        
+                    }
                     caseForApproval.Approved = 0;
                     _context.Update(caseForApproval);
                     var audit = new CaseAudit { AuditLog = "Case Reopened and marked as not-processed. Case put in pending status.", CaseID = int_cid, LocalUserID = User.Identity.Name };
                     _context.Add(audit);
-                    // Mark Case as Not-Processed                    
+                    // Mark Case as Not-Processed
                     caseProcessed.Processed = 0;
                     _context.Update(caseProcessed);
                     // Adding final reopen comment
