@@ -12,6 +12,12 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            UW NetID
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailID)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
         <dd class="col-sm-10">
@@ -27,7 +33,7 @@
             @Html.DisplayNameFor(model => model.EmailID)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EmailID)
+            @Html.DisplayFor(model => model.LocalUserID)
         </dd>
     </dl>
 
