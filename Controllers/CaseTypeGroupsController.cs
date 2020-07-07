@@ -46,6 +46,36 @@ namespace Resolve.Controllers
             return View(caseTypeGroup);
         }
 
+
+        public IActionResult OldCreate()
+        {
+            ViewData["CaseTypeTitle"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle");
+            ViewData["GroupName"] = new SelectList(_context.LocalGroup, "GroupName", "GroupName");
+            return View();
+        }
+
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OldCreate([Bind("Order")] CaseTypeGroup caseTypeGroup)
+        {
+            var GName = HttpContext.Request.Form["GroupName"].ToString();
+            var CTypeTitle = HttpContext.Request.Form["CaseTypeTitle"].ToString();
+            var LGroup = _context.LocalGroup.Single(p => p.GroupName == GName);
+            caseTypeGroup.LocalGroupID = LGroup.LocalGroupID;
+            var CType = _context.CaseType.Single(p => p.CaseTypeTitle == CTypeTitle);
+            caseTypeGroup.CaseTypeID = CType.CaseTypeID;
+            if (ModelState.IsValid)
+            {
+                _context.Add(caseTypeGroup);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CaseTypeTitle"] = new SelectList(_context.CaseType, "CaseTypeTitle", "CaseTypeTitle");
+            ViewData["GroupName"] = new SelectList(_context.LocalGroup, "GroupName", "GroupName");
+            return View(caseTypeGroup);
+        }
+
         // GET: CaseTypeGroups/Create
         public IActionResult Create(int? id, int? cid)
         {            
