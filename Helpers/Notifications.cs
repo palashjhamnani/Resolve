@@ -94,6 +94,23 @@ namespace Resolve.Helpers
                     //bodyBuilder.TextBody = "Hello World!";
                     message.Body = bodyBuilder.ToMessageBody();
                 }
+                else
+                    if (template == "rejected")
+                {
+                    var fileName = $"Helpers/email_templates/case_rejection.html";
+                    message.Subject = "Case Rejected - [" + case_cid + "]";
+                    var body = File.ReadAllText(fileName);
+                    body = body.Replace("{first_name}", luser.FirstName)
+                    .Replace("{last_name}", luser.LastName)
+                    .Replace("{Resolve_Hostname}", host_add)
+                    .Replace("{Resolve_Port}", host_port)
+                    .Replace("{Resolve_CASEID}", case_id)
+                    .Replace("{Resolve_CASECID}", case_cid)
+                    .Replace("{Resolve_UserID}", luser.LocalUserID);
+                    bodyBuilder.HtmlBody = body;
+                    //bodyBuilder.TextBody = "Hello World!";
+                    message.Body = bodyBuilder.ToMessageBody();
+                }
 
                 SmtpClient client = new SmtpClient();
                 client.Connect(server_add, email_port, false);

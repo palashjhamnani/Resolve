@@ -587,24 +587,23 @@ namespace Resolve.Controllers
                         var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "approved");
                         if (notif_result != "Sent")
                         {
-                            Console.WriteLine("Could not send approval notification to the case creator!");                            
+                            Console.WriteLine("Could not send approval notification to the case creator!");
                         }
                     }
                     // Sending notification to On Behalf user if it exists
-                    if (caseProcessed.OnBehalfOf == true)
-                    {                        
-                        var CaseOnBehalf = caseProcessed.OnBehalves.ToList();
-                        if (CaseOnBehalf.Count != 0)
+                    var on_behalf = _context.OnBehalf
+                        .Where(b => b.CaseID == int_cid)
+                        .ToList();
+                    if (on_behalf.Count != 0)
+                    {
+                        var behalf_user = _context.LocalUser.Single(p => p.LocalUserID == on_behalf[0].LocalUserID);
+                        var behalf_pref = _context.EmailPreference.Single(p => p.LocalUserID == behalf_user.LocalUserID);
+                        if (behalf_pref.CaseProcessed == true)
                         {
-                            var behalf_user = _context.LocalUser.Single(p => p.LocalUserID == CaseOnBehalf[0].LocalUserID);
-                            var behalf_pref = _context.EmailPreference.Single(p => p.LocalUserID == behalf_user.LocalUserID);
-                            if (behalf_pref.CaseProcessed == true)
+                            var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "approved");
+                            if (notif_result != "Sent")
                             {
-                                var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "approved");
-                                if (notif_result != "Sent")
-                                {
-                                    Console.WriteLine("Could not send approval notification to the user on whose behalf the case was created!");
-                                }
+                                Console.WriteLine("Could not send approval notification to the user on whose behalf the case was created!");
                             }
                         }
                     }
@@ -620,6 +619,33 @@ namespace Resolve.Controllers
                         var audit = new CaseAudit { AuditLog = "Case marked as processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
                         _context.Add(audit);
                         await _context.SaveChangesAsync();
+                        // Send notification of Case Rejection
+                        var pref = _context.EmailPreference.Single(p => p.LocalUserID == caseCreator.LocalUserID);
+                        if (pref.CaseProcessed == true)
+                        {
+                            var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "rejected");
+                            if (notif_result != "Sent")
+                            {
+                                Console.WriteLine("Could not send rejection notification to the case creator!");
+                            }
+                        }
+                        // Sending notification to On Behalf user if it exists                    
+                        var on_behalf = _context.OnBehalf
+                        .Where(b => b.CaseID == int_cid)
+                        .ToList();
+                        if (on_behalf.Count != 0)
+                        {
+                            var behalf_user = _context.LocalUser.Single(p => p.LocalUserID == on_behalf[0].LocalUserID);
+                            var behalf_pref = _context.EmailPreference.Single(p => p.LocalUserID == behalf_user.LocalUserID);
+                            if (behalf_pref.CaseProcessed == true)
+                            {
+                                var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "rejected");
+                                if (notif_result != "Sent")
+                                {
+                                    Console.WriteLine("Could not send rejection notification to the user on whose behalf the case was created!");
+                                }
+                            }
+                        }
                 }
                 else
                 {
@@ -630,9 +656,6 @@ namespace Resolve.Controllers
                     _context.Add(audit);
                     await _context.SaveChangesAsync();
                 }
-                        
-
-
                 ViewData["Approved"] = "Success";
                 //var cid = HttpContext.Request.Form["CaseID"];
                 return RedirectToAction("Details", new { id = cid, approved = details_arg });
