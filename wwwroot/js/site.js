@@ -7,3 +7,11 @@ jQuery(document).ready(function ($) {
         window.location = $(this).data("href");
     });
 });
+
+function validateForm() {
+    var x = document.forms["CommentForm"]["Comment"].value;
+    if (x == "" || x == null || x == " ") {
+        alert("Comment must be filled out!");
+        return false;
+    }
+}

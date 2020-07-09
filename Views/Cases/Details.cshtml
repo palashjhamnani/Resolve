@@ -565,12 +565,12 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <form asp-action="CreateComment">
+                <div class="card-footer">                    
+                    <form name="CommentForm" asp-action="CreateComment" onsubmit="return validateForm()">
                         <input type="hidden" value="@User.Identity.Name" name="LocalUserID" />
                         <input type="hidden" value="@Model.CaseID" name="CaseID" />
                         <div class="input-group mb-3">
-                            <input id="Comment" name="Comment" type="text" class="form-control input-group-sm" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
+                            <input id="CaseComment" name="Comment" type="text" class="form-control input-group-sm" placeholder="Comment..." aria-label="Comment..." aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-primary" type="submit">Post</button>
                             </div>
