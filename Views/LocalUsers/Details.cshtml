@@ -5,11 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
+<h1>User Details</h1>
+<hr />
 <div>
     <h4>LocalUser</h4>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             UW NetID
@@ -36,9 +35,8 @@
             @Html.DisplayFor(model => model.LocalUserID)
         </dd>
     </dl>
-
-    <h4>Email Preference</h4>
     <hr />
+    <h4>Email Preferences</h4>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EmailPreference.CaseCreation)
@@ -71,9 +69,26 @@
             @Html.DisplayFor(model => model.EmailPreference.CaseProcessed)
         </dd>
     </dl>
-
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.LocalUserID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <hr />
+    <h4>Homepage Default Style</h4>
+    <dl class="row">
+        <dt class="col-sm-5">
+            Show Cases Created by User
+        </dt>
+        <dd class="col-sm-7">
+            @Html.DisplayFor(model => model.EmailPreference.CasesCreatedByUser)
+        </dd>
+        <dt class="col-sm-5">
+            Show Cases Assigned to User
+        </dt>
+        <dd class="col-sm-7">
+            @Html.DisplayFor(model => model.EmailPreference.CasesAssignedToUser)
+        </dd>
+        <dt class="col-sm-5">
+            Show Cases Assigned to User's Groups
+        </dt>
+        <dd class="col-sm-7">
+            @Html.DisplayFor(model => model.EmailPreference.CasesAssignedToUsersGroups)
+        </dd>        
+    </dl>
 </div>

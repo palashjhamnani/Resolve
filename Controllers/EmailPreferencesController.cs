@@ -41,7 +41,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Preferences(string id, [Bind("LocalUserID,CaseCreation,CaseAssignment,CommentCreation,AttachmentCreation,CaseProcessed")] EmailPreference pref)
+        public async Task<IActionResult> Preferences(string id, [Bind("LocalUserID,CaseCreation,CaseAssignment,CommentCreation,AttachmentCreation,CaseProcessed,CasesCreatedByUser,CasesAssignedToUser,CasesAssignedToUsersGroups")] EmailPreference pref)
         {
             //pref.LocalUserID = User.Identity.Name;
             if (id != pref.LocalUserID)

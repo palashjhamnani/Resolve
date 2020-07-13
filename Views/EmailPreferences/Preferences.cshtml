@@ -41,6 +41,24 @@
                     <input class="form-check-input" asp-for="CaseProcessed" /> When a case created by you, or on behalf of you is marked as processed (Approved/Rejected)
                 </label>
             </div>
+            <hr>
+            <h5>Customize the way your homepage looks, by choosing which sections to expand on launch:</h5>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CasesCreatedByUser" /> Keep <b>Cases Created by You</b> section expanded
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CasesAssignedToUser" /> Keep <b>Cases Assigned to You</b> section expanded
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CasesAssignedToUsersGroups" /> Keep <b>Cases Assigned to Your Groups</b> section expanded
+                </label>
+            </div>
+            <hr>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

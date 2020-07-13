@@ -2,165 +2,256 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var CasesCreatedByUser = "collapse";
+    var CasesAssignedToUser = "collapse";
+    var CasesAssignedToUsersGroups = "collapse";
+    var sectionone = "fa-plus-circle";
+    var sectiontwo = "fa-plus-circle";
+    var sectionthree = "fa-plus-circle";
+    if (Model.EmailPreference.CasesCreatedByUser == true)
+    {
+        CasesCreatedByUser = "collapse show";
+        sectionone = "fa-minus-circle";
+    }
+    if (Model.EmailPreference.CasesAssignedToUser == true)
+    {
+        CasesAssignedToUser = "collapse show";
+        sectiontwo = "fa-minus-circle";
+    }
+    if (Model.EmailPreference.CasesAssignedToUsersGroups == true)
+    {
+        CasesAssignedToUsersGroups = "collapse show";
+        sectionthree = "fa-minus-circle";
+    }
 }
+    <div class="container-fluid">
 
-<div class="container-fluid">
-    <div class="row">
 
-        <!-- Area Chart -->
-        <div class="col-xl-6 col-lg-7">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                    <h6 class="m-0 font-weight-bold text-primary">Cases Created by You</h6>
+
+        <div id="accordion" class="panel-group">
+            <div class="card">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingOne" style="height: 50px;">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <i class="more-less fa @sectionone"></i>
+                    </button>
+                    @{
+                        var cases_count = Model.Cases.Count;
+                        if (cases_count == 0)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Created by You</h6>
+                        }
+                        else
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Created by You <span class="badge badge-pill badge-danger">@cases_count</span></h6>
+                        }
+                    }
                     <div class="dropdown no-arrow">
                         <a class="btn btn-primary btn-sm" asp-action="ByYou">Past Cases</a>
-                        <a class="btn btn-primary btn-sm" asp-controller="Cases" asp-action="Create">New Case</a>
                     </div>
                 </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 25vh;">
-                        <table class="table table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Case ID</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Created</th>
-                                    <th scope="col">Case Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach (var item in Model.Cases)
-                                {
-                                    string shortDate = item.CaseCreationTimestamp.ToShortDateString();
-                                    <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
-                                        <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
-                                        <td data-toggle="tooltip" title="@item.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
+                <div id="collapseOne" class="@CasesCreatedByUser" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="chart-area" style="overflow: auto; height: 55vh;">
+                            <table id="dt-filter-select" class="table table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="th-sm">Case ID</th>
+                                        <th class="th-sm">Status</th>
+                                        <th class="th-sm">Created</th>
+                                        <th class="th-sm">Case Type</th>
                                     </tr>
-                                }
-                                @foreach (var item in Model.OnBehalves)
-                                {
-                                    string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
-                                    <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
-                                        <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                </thead>
+                                <tbody>
 
-
-        <div class="col-xl-6 col-lg-7">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                    <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to You</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYou">Past Cases</a>         
-                    </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 25vh;">
-                        <table class="table table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Case ID</th>
-                                    <th>Created By</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Created</th>
-                                    <th scope="col">Case Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.CasesforApproval)
-                                {
-                                    string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
-                                    <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
-                                        <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-     </div>
-
-    <div class="row">
-
-
-        <div class="col-xl-12 col-lg-12">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
-                    <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups</h6>                               
-                        <div class="dropdown no-arrow">                              
-                                <button class="btn-sm btn btn-outline-secondary dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    All Groups
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    @foreach (var item in Model.UserGroups)
+                                    @foreach (var item in Model.Cases)
                                     {
-                                        <a class="dropdown-item btn-sm btn btn-outline-secondary" asp-area="" asp-controller="LocalGroups" asp-action="Index">@item.LocalGroup.GroupName</a>
-                                    }
-                                </div>
-                            <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYourGroups">Past Cases</a>
-                        </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-area" style="overflow: auto; height: 25vh;">
-                        <table class="table table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Group</th>
-                                    <th scope="col">Case ID</th>
-                                    <th>Created By</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Created</th>
-                                    <th scope="col">Case Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.UserGroups)
-                                {
-                                    @foreach (var c in item.LocalGroup.GroupCases)
-                                    {
-                                        string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
-                                        <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
-                                            <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
-                                            <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
-                                            <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
+                                        string shortDate = item.CaseCreationTimestamp.ToShortDateString();
+                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                            <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
+                                            <td data-toggle="tooltip" title="@item.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
                                         </tr>
                                     }
-                                }
-                            </tbody>
-                        </table>
+                                    @foreach (var item in Model.OnBehalves)
+                                    {
+                                        string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            Case ID
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Created
+                                        </th>
+                                        <th>
+                                            Case Type
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingTwo" style="height: 50px;">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <i class="more-less fa @sectiontwo"></i>
+                    </button>
+                    @{
+                        var cases_forapproval_count = Model.CasesforApproval.Count;
+                        if (cases_forapproval_count == 0)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to You</h6>
+                        }
+                        else
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to You <span class="badge badge-pill badge-danger">@cases_forapproval_count</span></h6>
+                        }
+                    }                    
+                    <div class="dropdown no-arrow">
+                        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYou">Past Cases</a>
+                    </div>
+                </div>
+                <div id="collapseTwo" class="@CasesAssignedToUser" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="chart-area" style="overflow: auto; height: 55vh;">
+                            <table id="dt-filter-select2" class="table table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Case ID</th>
+                                        <th>Created By</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Created</th>
+                                        <th scope="col">Case Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CasesforApproval)
+                                    {
+                                        string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            Case ID
+                                        </th>
+                                        <th>
+                                            Created By
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Created
+                                        </th>
+                                        <th>
+                                            Case Type
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingThree" style="height: 50px;">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <i class="more-less fa @sectionthree"></i>
+                    </button>
+                    @{
+                        int group_cases_count = Convert.ToInt32(ViewData["group_case_count"]);                        
+                        if (group_cases_count == 0)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups</h6>
+                        }
+                        else
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups <span class="badge badge-pill badge-danger">@group_cases_count</span></h6>
+                        }
+                    }                    
+                    <div class="dropdown no-arrow">
+                        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYourGroups">Past Cases</a>
+                    </div>
+                </div>
+                <div id="collapseThree" class="@CasesAssignedToUsersGroups" aria-labelledby="headingThree" data-parent="#accordion">        
+                    <div class="card-body">
+                        <div class="chart-area" style="overflow: auto; height: 55vh;">
+                            <table id="dt-filter-select3" class="table table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Group</th>
+                                        <th scope="col">Case ID</th>
+                                        <th>Created By</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Created</th>
+                                        <th scope="col">Case Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.UserGroups)
+                                    {
+                                        @foreach (var c in item.LocalGroup.GroupCases)
+                                        {
+                                            string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
+                                            <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
+                                                <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
+                                                <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
+                                                <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
+                                                <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
+                                                <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                                <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            Group
+                                        </th>
+                                        <th>
+                                            Case ID
+                                        </th>
+                                        <th>
+                                            Created By
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Created
+                                        </th>
+                                        <th>
+                                            Case Type
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-                       
     </div>
-</div>
-
-

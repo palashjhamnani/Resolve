@@ -112,7 +112,10 @@ namespace Resolve.Controllers
                     CaseAssignment = true,
                     CommentCreation = true,
                     AttachmentCreation = true,
-                    CaseProcessed = true
+                    CaseProcessed = true,
+                    CasesCreatedByUser = true,
+                    CasesAssignedToUser = false,
+                    CasesAssignedToUsersGroups = false
                 };
                 _context.Add(e_pref);
                 await _context.SaveChangesAsync();
@@ -215,9 +218,18 @@ namespace Resolve.Controllers
                         .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
                         .ThenInclude(e => e.Case)
                         .ThenInclude(e => e.LocalUser)
+                .Include(e => e.EmailPreference)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
-
+            int group_case_count = 0;
+            foreach (var item in UCases.UserGroups)
+            {
+                foreach (var item2 in item.LocalGroup.GroupCases)
+                {
+                    group_case_count += 1;
+                }
+            }
+            ViewData["group_case_count"] = group_case_count;
             return View(UCases);
         }
 
