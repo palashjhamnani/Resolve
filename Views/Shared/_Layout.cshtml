@@ -7,28 +7,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Resolve</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/mdb/css/addons/datatables2.min.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Resolve</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Resolve</a>                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>                
+                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
                     {
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-outline-secondary dropdown-toggle m-1" type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="false">
                                 Admin Menu
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-area="" asp-controller="LocalUsers" asp-action="Index">Users</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="LocalGroups" asp-action="Index">Groups</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="UserGroups" asp-action="Index">Group Memberships</a>
@@ -51,12 +53,10 @@
                                 <button class="btn btn-outline-secondary mr-1" type="submit">Search</button>
                             </div>
                         </div>
-                    </form>                   
+                    </form>
+                    <a class="btn btn-outline-secondary mr-1" role="button" aria-haspopup="true" asp-controller="Cases" asp-action="Create">New Case <i class="fas fa-pen"></i></a>
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <!--
-                               <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            -->
+                        <li>
                         </li>
                     </ul>
                 </div>
@@ -82,10 +82,12 @@
                     <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="dg"><i class="fa fa-download"></i> Developer Guide</a>
                 </div>
             </div>
-        </div>        
+        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="~/mdb/js/mdb.min.js"></script>
+    <script type="text/javascript" src="~/mdb/js/addons/datatables2.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

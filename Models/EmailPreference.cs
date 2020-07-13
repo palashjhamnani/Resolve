@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Resolve.Models
 {
+    // This class should have been called User Preferences
     public class EmailPreference
     {
         [Required, Key, ForeignKey("LocalUser")]
@@ -18,6 +19,10 @@ namespace Resolve.Models
         public bool CommentCreation { get; set; }
         public bool AttachmentCreation { get; set; }
         public bool CaseProcessed { get; set; }
+        // Preferences for home page styling
+        public bool CasesCreatedByUser { get; set; }
+        public bool CasesAssignedToUser { get; set; }
+        public bool CasesAssignedToUsersGroups { get; set; }
 
     }
 }

@@ -67,7 +67,10 @@ namespace Resolve.Controllers
                     CaseAssignment = true,
                     CommentCreation = true,
                     AttachmentCreation = true,
-                    CaseProcessed = true
+                    CaseProcessed = true,
+                    CasesCreatedByUser = true,
+                    CasesAssignedToUser = false,
+                    CasesAssignedToUsersGroups = false
                 };
                 _context.Add(e_pref);
                 await _context.SaveChangesAsync();
