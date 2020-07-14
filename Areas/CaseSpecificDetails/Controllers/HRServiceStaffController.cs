@@ -84,10 +84,29 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,RequestType,BasePayChange,AllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,WorkerType,Amount,SupOrg,EmployeeEID,BudgetNumbers")] HRServiceStaff hrStaff)
-           
+
         {
+            string strAudit = "Case Edited. Values updated: ";
+                       
+            IQueryable<HRServiceStaff> beforeCases = _context.HRServiceStaff.Where(c => c.CaseID == id).AsNoTracking<HRServiceStaff>();
+            HRServiceStaff beforeCase = beforeCases.FirstOrDefault();
+            if (beforeCase == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
+                if (beforeCase.EmployeeName != hrStaff.EmployeeName)
+                {
+                    strAudit += " " + beforeCase.EmployeeName + ":" + hrStaff.EmployeeName;
+                }
+
+                if (beforeCase.RequestType.ToString() != hrStaff.RequestType.ToString())
+                {
+                    strAudit += " " + beforeCase.RequestType.ToString() + ":" + hrStaff.RequestType.ToString();
+                }
+                var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
                 _context.Entry(hrStaff).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 var cid = id;
