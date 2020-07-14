@@ -27,8 +27,8 @@
                     @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
                     {
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle m-1" type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="false">
-                                Admin Menu
+                            <button class="btn btn-outline-secondary dropdown m-1" type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="false">
+                                Admin Menu <i class="fas fa-caret-down"></i>
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-area="" asp-controller="LocalUsers" asp-action="Index">Users</a>
@@ -73,8 +73,8 @@
         <div class="container-fluid align-middle">
             &copy; 2020 - Resolve - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             <div class="btn-group dropup btn-sm">
-                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Guides
+                <button type="button" class="btn btn-outline-secondary btn-sm dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Guides <i class="fas fa-caret-up"></i>
                 </button>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ug"><i class="fa fa-download"></i> User Guide</a>
