@@ -5,8 +5,8 @@
     {
         <li class="nav-item">
             <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @User.GetDisplayName()
+                <button class="btn btn-outline-secondary dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @User.GetDisplayName() <i class="fas fa-caret-down"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" asp-area="" asp-controller="EmailPreferences" asp-action="Preferences" asp-route-id="@User.Identity.Name">Preferences</a>
