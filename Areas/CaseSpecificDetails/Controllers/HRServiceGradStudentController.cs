@@ -61,5 +61,34 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             return View(hrGradStudent);
         }
 
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            HRServiceGradStudent editCase = _context.HRServiceGradStudent.Find(id);
+            if (editCase == null)
+            {
+                return NotFound();
+            }
+            return View(editCase);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,StudentName,GradRequestType,GradJobProfile,EffectiveStartDate,EffectiveEndDate,StepStipendAllowance,Department,Note,BudgetNumbers")] HRServiceGradStudent hrGradStudent)
+
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Entry(hrGradStudent).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                var cid = id;
+                return RedirectToAction("Details", "Cases", new { id = cid, area = "" });
+                //return RedirectToAction("Index", "Home");
+            }
+            return View(hrGradStudent);
+        }
     }
 }

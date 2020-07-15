@@ -35,6 +35,8 @@ html {
   }
 }
 
+h1 {font-size:1.3em;}
+
 .border-top {
   border-top: 1px solid #e5e5e5;
 }

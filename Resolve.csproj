@@ -6,59 +6,6 @@
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20200325050502_v1.cs" />
-    <Compile Remove="Migrations\20200325050502_v1.Designer.cs" />
-    <Compile Remove="Migrations\20200404000737_UserChange.cs" />
-    <Compile Remove="Migrations\20200404000737_UserChange.Designer.cs" />
-    <Compile Remove="Migrations\20200404001308_v1.cs" />
-    <Compile Remove="Migrations\20200404001308_v1.Designer.cs" />
-    <Compile Remove="Migrations\20200404050701_v1.cs" />
-    <Compile Remove="Migrations\20200404050701_v1.Designer.cs" />
-    <Compile Remove="Migrations\20200404192040_V1.cs" />
-    <Compile Remove="Migrations\20200404192040_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200404192629_V1.cs" />
-    <Compile Remove="Migrations\20200404192629_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200404195820_V1.cs" />
-    <Compile Remove="Migrations\20200404195820_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200410184003_V1.cs" />
-    <Compile Remove="Migrations\20200410184003_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200410202405_V1.cs" />
-    <Compile Remove="Migrations\20200410202405_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200410204937_V2.cs" />
-    <Compile Remove="Migrations\20200410204937_V2.Designer.cs" />
-    <Compile Remove="Migrations\20200410205035_V1.cs" />
-    <Compile Remove="Migrations\20200410205035_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200410205248_V1.cs" />
-    <Compile Remove="Migrations\20200410205248_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200412001008_V1.cs" />
-    <Compile Remove="Migrations\20200412001008_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200412002200_V1.cs" />
-    <Compile Remove="Migrations\20200412002200_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200413235146_V1.cs" />
-    <Compile Remove="Migrations\20200413235146_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200414072034_V1.cs" />
-    <Compile Remove="Migrations\20200414072034_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200419055119_V1.cs" />
-    <Compile Remove="Migrations\20200419055119_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200419060439_V1.cs" />
-    <Compile Remove="Migrations\20200419060439_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200424221339_V1.cs" />
-    <Compile Remove="Migrations\20200424221339_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200426005249_V2.cs" />
-    <Compile Remove="Migrations\20200426005249_V2.Designer.cs" />
-    <Compile Remove="Migrations\20200426022852_V1.cs" />
-    <Compile Remove="Migrations\20200426022852_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200513215841_V1.cs" />
-    <Compile Remove="Migrations\20200513215841_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200513224323_V1.cs" />
-    <Compile Remove="Migrations\20200513224323_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200514014852_V1.cs" />
-    <Compile Remove="Migrations\20200514014852_V1.Designer.cs" />
-    <Compile Remove="Migrations\20200520071515_V1.cs" />
-    <Compile Remove="Migrations\20200520071515_V1.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="FormFactory" Version="5.0.67" />
