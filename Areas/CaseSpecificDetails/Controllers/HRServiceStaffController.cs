@@ -86,8 +86,10 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,RequestType,BasePayChange,AllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,WorkerType,Amount,SupOrg,EmployeeEID,BudgetNumbers")] HRServiceStaff hrStaff)
 
         {
-            string strAudit = "Case Edited. Values updated: ";
-                       
+            /** First check important fields to see if values have changed and if so add to audit log **/
+
+            string strAudit = "Case Edited. Values updated (old,new). ";
+
             IQueryable<HRServiceStaff> beforeCases = _context.HRServiceStaff.Where(c => c.CaseID == id).AsNoTracking<HRServiceStaff>();
             HRServiceStaff beforeCase = beforeCases.FirstOrDefault();
             if (beforeCase == null)
@@ -99,12 +101,47 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 if (beforeCase.EmployeeName != hrStaff.EmployeeName)
                 {
                     strAudit += " " + beforeCase.EmployeeName + ":" + hrStaff.EmployeeName;
+                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrStaff.EmployeeName + "),";
+                }
+                if (beforeCase.WorkerType.ToString() != hrStaff.WorkerType.ToString())
+                {
+                    strAudit += "WorkerType: (" + beforeCase.WorkerType.ToString() + "," + hrStaff.WorkerType.ToString() + "),";
                 }
 
                 if (beforeCase.RequestType.ToString() != hrStaff.RequestType.ToString())
                 {
                     strAudit += " " + beforeCase.RequestType.ToString() + ":" + hrStaff.RequestType.ToString();
+                    strAudit += "RequestType: (" + beforeCase.RequestType.ToString() + "," + hrStaff.RequestType.ToString() + "),";
                 }
+                if (beforeCase.EffectiveStartDate.ToShortDateString() != hrStaff.EffectiveStartDate.ToShortDateString())
+                {
+                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrStaff.EffectiveStartDate.ToShortDateString() + "),";
+                }
+                if (beforeCase.EffectiveEndDate.ToString() != hrStaff.EffectiveEndDate.ToString())
+                {
+                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrStaff.EffectiveEndDate.ToString() + "),";
+                }
+                if (beforeCase.SupOrg.ToString() != hrStaff.SupOrg.ToString())
+                {
+                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrStaff.SupOrg.ToString() + "),";
+                }
+                if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrStaff.Amount))
+                {
+                    if (beforeCase.Amount.ToString() != hrStaff.Amount.ToString())
+                    {
+                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrStaff.Amount.ToString() + "),";
+                    }
+                }
+
+                if (beforeCase.EmployeeEID.ToString() != hrStaff.EmployeeEID.ToString())
+                {
+                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrStaff.EmployeeEID.ToString() + "),";
+                }
+                if (beforeCase.BudgetNumbers.ToString() != hrStaff.BudgetNumbers.ToString())
+                {
+                    strAudit += "Budgets: (" + beforeCase.BudgetNumbers.ToString() + "," + hrStaff.BudgetNumbers.ToString() + "),";
+                }
+
                 var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };
                 _context.Add(audit);
                 _context.Entry(hrStaff).State = EntityState.Modified;
