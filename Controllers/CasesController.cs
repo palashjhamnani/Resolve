@@ -173,6 +173,11 @@ namespace Resolve.Controllers
             {
                 ViewData["Approved"] = "RejectSuccess";
             }
+            else
+                if (approved == 5)
+            {
+                ViewData["Approved"] = "OperationSuccess";
+            }
             bool is_user_admin = false;
             var user_name = User.GetDisplayName();
             string u_name = user_name.ToString();
@@ -762,6 +767,62 @@ namespace Resolve.Controllers
                     }
                     await _context.SaveChangesAsync();
                     details_arg = -1;
+                }
+                ViewData["Approved"] = "Success";
+                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+            }
+            catch (Exception)
+            {
+                ViewData["Approved"] = "Error";
+            }
+
+            return RedirectToAction("Details", new { id = cid, approved = 0 });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelCase(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var cid = HttpContext.Request.Form["CaseID"];
+            var process_value = HttpContext.Request.Form["ProcessValue"];
+            var final_comment = HttpContext.Request.Form["FinalComment"];
+            int int_cid = Convert.ToInt32(cid);
+            int details_arg = 0;
+            var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
+            var CaseToProcess = await _context.Case.FindAsync(int_cid);
+            var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
+            try
+            {
+                foreach (var item in all_approvers)
+                {
+                    if (process_value == "Cancel")
+                    {
+                        item.Approved = 3;
+                        _context.Update(item);
+                    }                    
+                }
+                await _context.SaveChangesAsync();
+                if (process_value == "Cancel")
+                {
+                    // Mark Case as Cancelled
+                    CaseToProcess.CaseStatus = "Cancelled";
+                    CaseToProcess.Processed = 1;
+                    _context.Update(CaseToProcess);
+                    var audit = new CaseAudit { AuditLog = "Case has been marked as Cancelled.", CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(audit);
+                    // Adding final approval comment
+                    if (final_comment != "")
+                    {
+                        var f_comment = new CaseComment { Comment = "Cancellation Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                        _context.Add(f_comment);
+                    }
+                    await _context.SaveChangesAsync();
+                    details_arg = 5;
                 }
                 ViewData["Approved"] = "Success";
                 return RedirectToAction("Details", new { id = cid, approved = details_arg });
