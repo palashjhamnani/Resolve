@@ -100,7 +100,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             {
                 if (beforeCase.EmployeeName != hrStaff.EmployeeName)
                 {
-                    strAudit += " " + beforeCase.EmployeeName + ":" + hrStaff.EmployeeName;
+                   
                     strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrStaff.EmployeeName + "),";
                 }
                 if (beforeCase.WorkerType.ToString() != hrStaff.WorkerType.ToString())
@@ -110,7 +110,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
                 if (beforeCase.RequestType.ToString() != hrStaff.RequestType.ToString())
                 {
-                    strAudit += " " + beforeCase.RequestType.ToString() + ":" + hrStaff.RequestType.ToString();
+                   
                     strAudit += "RequestType: (" + beforeCase.RequestType.ToString() + "," + hrStaff.RequestType.ToString() + "),";
                 }
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrStaff.EffectiveStartDate.ToShortDateString())
@@ -137,9 +137,12 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrStaff.EmployeeEID.ToString() + "),";
                 }
-                if (beforeCase.BudgetNumbers.ToString() != hrStaff.BudgetNumbers.ToString())
+                if (!String.IsNullOrEmpty(beforeCase.BudgetNumbers) && !String.IsNullOrEmpty(hrStaff.BudgetNumbers))
                 {
-                    strAudit += "Budgets: (" + beforeCase.BudgetNumbers.ToString() + "," + hrStaff.BudgetNumbers.ToString() + "),";
+                    if (beforeCase.BudgetNumbers.ToString() != hrStaff.BudgetNumbers.ToString())
+                    {
+                        strAudit += "Budgets: (" + beforeCase.BudgetNumbers.ToString() + "," + hrStaff.BudgetNumbers.ToString() + "),";
+                    }
                 }
 
                 var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };
