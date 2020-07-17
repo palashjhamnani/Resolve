@@ -45,8 +45,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Cases Created by You <span class="badge badge-pill badge-danger">@cases_count</span></h6>
                         }
                     }
-                    <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-action="ByYou">Past Cases</a>
+                    <div class="dropdown no-arrow">                        
                     </div>
                 </div>
                 <div id="collapseOne" class="@CasesCreatedByUser" aria-labelledby="headingOne" data-parent="#accordion">
@@ -137,8 +136,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to You <span class="badge badge-pill badge-danger">@cases_forapproval_count</span></h6>
                         }
                     }                    
-                    <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYou">Past Cases</a>
+                    <div class="dropdown no-arrow">                        
                     </div>
                 </div>
                 <div id="collapseTwo" class="@CasesAssignedToUser" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -217,8 +215,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups <span class="badge badge-pill badge-danger">@group_cases_count</span></h6>
                         }
                     }                    
-                    <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="ToYourGroups">Past Cases</a>
+                    <div class="dropdown no-arrow">                        
                     </div>
                 </div>
                 <div id="collapseThree" class="@CasesAssignedToUsersGroups" aria-labelledby="headingThree" data-parent="#accordion">        
