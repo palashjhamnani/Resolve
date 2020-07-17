@@ -228,7 +228,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseCreationTimestamp")] Case @case)
+        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,OnBehalfOf,CaseCreationTimestamp,Description")] Case @case)
         {
             string CTypeTitle = HttpContext.Request.Form["CTypeTitle"].ToString();            
             var CTypeMiddle = _context.CaseType.Single(p => p.CaseTypeTitle == CTypeTitle);
@@ -342,7 +342,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID")] Case @case)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID,Description")] Case @case)
         {
             if (id != @case.CaseID)
             {
