@@ -557,7 +557,7 @@
                             </dt>
                             <dd class="col-sm-8">
                                 @Html.DisplayFor(model => model.LocalUser.FirstName) @Html.DisplayFor(model => model.LocalUser.LastName)
-                            </dd>                           
+                            </dd>
                             @{
                                 if (Model.OnBehalfOf == true)
                                 {
@@ -589,6 +589,12 @@
                             </dt>
                             <dd class="col-sm-8">
                                 @Html.DisplayFor(model => model.CaseType.CaseTypeTitle)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.Description)
                             </dd>
                         </dl>
                     </div>

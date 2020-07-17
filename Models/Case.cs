@@ -30,8 +30,8 @@ namespace Resolve.Models
         public CaseType CaseType { get; set; }
 
         public int? Processed { get; set; }
+        public string Description { get; set; }
         // Below are the properties of a Case made accessible
-
         public ICollection<CaseComment> CaseComments { get; set; }
         public ICollection<OnBehalf> OnBehalves { get; set; }
         public ICollection<CaseAudit> CaseAudits { get; set; }

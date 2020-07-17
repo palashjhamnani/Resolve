@@ -30,7 +30,7 @@
 
         <div id="accordion" class="panel-group">
             <div class="card">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingOne" style="height: 50px;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseOne" id="headingOne" style="height: 50px; cursor: pointer;">
                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         <i class="more-less fa @sectionone"></i>
                     </button>
@@ -55,10 +55,11 @@
                             <table id="dt-filter-select" class="table table-hover table-sm">
                                 <thead>
                                     <tr>
-                                        <th class="th-sm">Case ID</th>
-                                        <th class="th-sm">Status</th>
-                                        <th class="th-sm">Created</th>
-                                        <th class="th-sm">Case Type</th>
+                                        <th class="th-sm" style="width: 20%">Case ID</th>
+                                        <th class="th-sm" style="width: 10%">Status</th>
+                                        <th class="th-sm" style="width: 40%">Description</th>
+                                        <th class="th-sm" style="width: 10%">Created</th>
+                                        <th class="th-sm" style="width: 20%">Case Type</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,9 +67,15 @@
                                     @foreach (var item in Model.Cases)
                                     {
                                         string shortDate = item.CaseCreationTimestamp.ToShortDateString();
+                                        string Desc = "";
+                                        if (item.Description != null)
+                                        {
+                                            Desc = item.Description.Substring(0, 50);
+                                        }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
+                                            <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
                                         </tr>
@@ -76,9 +83,15 @@
                                     @foreach (var item in Model.OnBehalves)
                                     {
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+                                        string Desc = "";
+                                        if (item.Case.Description != null)
+                                        {
+                                            Desc = item.Case.Description.Substring(0, 50);
+                                        }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
@@ -91,6 +104,9 @@
                                         </th>
                                         <th>
                                             Status
+                                        </th>
+                                        <th>
+                                            Description
                                         </th>
                                         <th>
                                             Created
@@ -106,7 +122,7 @@
                 </div>
             </div>
             <div class="card">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingTwo" style="height: 50px;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseTwo" id="headingTwo" style="height: 50px; cursor: pointer;">
                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                         <i class="more-less fa @sectiontwo"></i>
                     </button>
@@ -134,6 +150,7 @@
                                         <th scope="col">Case ID</th>
                                         <th>Created By</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Description</th>
                                         <th scope="col">Created</th>
                                         <th scope="col">Case Type</th>
                                     </tr>
@@ -142,10 +159,16 @@
                                     @foreach (var item in Model.CasesforApproval)
                                     {
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+                                        string Desc = "";
+                                        if (item.Case.Description != null)
+                                        {
+                                            Desc = item.Case.Description.Substring(0, 50);
+                                        }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
@@ -163,6 +186,9 @@
                                             Status
                                         </th>
                                         <th>
+                                            Description
+                                        </th>
+                                        <th>
                                             Created
                                         </th>
                                         <th>
@@ -176,7 +202,7 @@
                 </div>
             </div>
             <div class="card">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="headingThree" style="height: 50px;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" id="headingThree" style="height: 50px; cursor: pointer;">
                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                         <i class="more-less fa @sectionthree"></i>
                     </button>
@@ -201,10 +227,10 @@
                             <table id="dt-filter-select3" class="table table-hover table-sm">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Group</th>
                                         <th scope="col">Case ID</th>
                                         <th>Created By</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Description</th>
                                         <th scope="col">Created</th>
                                         <th scope="col">Case Type</th>
                                     </tr>
@@ -215,11 +241,16 @@
                                         @foreach (var c in item.LocalGroup.GroupCases)
                                         {
                                             string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
+                                            string Desc = "";
+                                            if (c.Case.Description != null)
+                                            {
+                                                Desc = c.Case.Description.Substring(0, 50);
+                                            }
                                             <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
-                                                <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
+                                                <td>@Html.DisplayFor(modelItem => Desc)</td>
                                                 <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
                                             </tr>
@@ -229,9 +260,6 @@
                                 <tfoot>
                                     <tr>
                                         <th>
-                                            Group
-                                        </th>
-                                        <th>
                                             Case ID
                                         </th>
                                         <th>
@@ -239,6 +267,9 @@
                                         </th>
                                         <th>
                                             Status
+                                        </th>
+                                        <th>
+                                            Description
                                         </th>
                                         <th>
                                             Created
