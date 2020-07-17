@@ -35,7 +35,7 @@ namespace Resolve.Helpers
                 string host_add = _config.GetValue<string>("Launch:Host_Name");
                 string host_port = _config.GetValue<int>("Launch:Host_Port").ToString();
                 MimeMessage message = new MimeMessage();
-                MailboxAddress from = new MailboxAddress("UW Resolve", from_add);
+                MailboxAddress from = new MailboxAddress("SOD RequestManager", from_add);
                 message.From.Add(from);
                 MailboxAddress to = new MailboxAddress(luser.FirstName, luser.LocalUserID);
                 message.To.Add(to);                
