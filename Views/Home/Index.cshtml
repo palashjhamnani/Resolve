@@ -205,7 +205,7 @@
                         <i class="more-less fa @sectionthree"></i>
                     </button>
                     @{
-                        int group_cases_count = Convert.ToInt32(ViewData["group_case_count"]);                        
+                        int group_cases_count = Convert.ToInt32(ViewData["group_case_count"]);                 
                         if (group_cases_count == 0)
                         {
                             <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups</h6>
@@ -215,7 +215,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Cases Assigned to Your Groups <span class="badge badge-pill badge-danger">@group_cases_count</span></h6>
                         }
                     }                    
-                    <div class="dropdown no-arrow">                        
+                    <div class="dropdown no-arrow">
                     </div>
                 </div>
                 <div id="collapseThree" class="@CasesAssignedToUsersGroups" aria-labelledby="headingThree" data-parent="#accordion">        

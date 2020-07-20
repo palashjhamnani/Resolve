@@ -32,7 +32,7 @@
 
             <div class="form-group">
                 <label class="control-label">Description</label>
-                <textarea asp-for="Description" class="form-control"></textarea>                
+                <textarea placeholder="First 50 characters of this description will be visible on homepage for easy identification..." asp-for="Description" class="form-control"></textarea>                
             </div>
             <div class="form-group">
                 <input type="submit" value="Next" class="btn btn-primary" />
@@ -42,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Cancel</a>
 </div>
 
 @section Scripts {

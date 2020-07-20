@@ -234,7 +234,7 @@ namespace Resolve.Controllers
             var CTypeMiddle = _context.CaseType.Single(p => p.CaseTypeTitle == CTypeTitle);
             int CTypeID = CTypeMiddle.CaseTypeID;
             @case.CaseTypeID = CTypeID;
-            @case.CaseStatus = "Open";
+            @case.CaseStatus = "Pending";
 
             if (ModelState.IsValid)
             {                
