@@ -80,8 +80,54 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,StudentName,GradRequestType,GradJobProfile,EffectiveStartDate,EffectiveEndDate,StepStipendAllowance,Department,Note,BudgetNumbers")] HRServiceGradStudent hrGradStudent)
 
         {
+            /** First check important fields to see if values have changed and if so add to audit log **/
+            string strAudit = "Case Edited. Values updated (old,new). ";
+
+            IQueryable<HRServiceGradStudent> beforeCases = _context.HRServiceGradStudent.Where(c => c.CaseID == id).AsNoTracking<HRServiceGradStudent>();
+            HRServiceGradStudent beforeCase = beforeCases.FirstOrDefault();
+            if (beforeCase == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
+                if (beforeCase.StudentName != hrGradStudent.StudentName)
+                {
+                    strAudit += "Student: (" + beforeCase.StudentName + "," + hrGradStudent.StudentName + "),";
+                }
+
+                if (beforeCase.GradRequestType.ToString() != hrGradStudent.GradRequestType.ToString())
+                {
+                    strAudit += "RequestType: (" + beforeCase.GradRequestType.ToString() + "," + hrGradStudent.GradRequestType.ToString() + "),";
+                }
+                if (beforeCase.GradJobProfile.ToString() != hrGradStudent.GradJobProfile.ToString())
+                {
+                    strAudit += "JobProfile: (" + beforeCase.GradJobProfile.ToString() + "," + hrGradStudent.GradJobProfile.ToString() + "),";
+                }
+                if (beforeCase.EffectiveStartDate.ToShortDateString() != hrGradStudent.EffectiveStartDate.ToShortDateString())
+                {
+                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrGradStudent.EffectiveStartDate.ToShortDateString() + "),";
+                }
+                if (beforeCase.EffectiveEndDate.ToString() != hrGradStudent.EffectiveEndDate.ToString())
+                {
+                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrGradStudent.EffectiveEndDate.ToString() + "),";
+                }
+                if (beforeCase.Department.ToString() != hrGradStudent.Department.ToString())
+                {
+                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrGradStudent.Department.ToString() + "),";
+                }
+                if (beforeCase.StepStipendAllowance.ToString() != hrGradStudent.StepStipendAllowance.ToString())
+                {
+                    strAudit += "Allowance: (" + beforeCase.StepStipendAllowance.ToString() + "," + hrGradStudent.StepStipendAllowance.ToString() + "),";
+                }
+                if (beforeCase.BudgetNumbers.ToString() != hrGradStudent.BudgetNumbers.ToString())
+                {
+                    strAudit += "BudgetNumbers: (" + beforeCase.BudgetNumbers.ToString() + "," + hrGradStudent.BudgetNumbers.ToString() + "),";
+                }
+
+
+                var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
                 _context.Entry(hrGradStudent).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 var cid = id;

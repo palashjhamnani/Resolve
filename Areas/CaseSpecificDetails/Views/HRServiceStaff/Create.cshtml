@@ -114,81 +114,90 @@
                     <span asp-validation-for="TerminationReason" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <label asp-for="Offboarding" class="control-label"></label>
-                    <input type="checkbox" asp-for="Offboarding" class="form-control" />
+        </div>
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="Offboarding" /> @Html.DisplayNameFor(model => model.Offboarding)
+                    </label>
                     <span asp-validation-for="Offboarding" class="text-danger"></span>
                 </div>
             </div>
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label asp-for="ClosePosition" class="control-label"></label>
-                    <input type="checkbox" asp-for="ClosePosition" class="form-control" />
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="ClosePosition" /> @Html.DisplayNameFor(model => model.ClosePosition)
+                    </label>
                     <span asp-validation-for="ClosePosition" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <label asp-for="LeaveWA" class="control-label"></label>
-                    <input type="checkbox" asp-for="LeaveWA" class="form-control" />
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input data-related-item="title1" class="form-check-input" asp-for="LeaveWA" /> @Html.DisplayNameFor(model => model.LeaveWA)
+                    </label>
                     <span asp-validation-for="LeaveWA" class="text-danger"></span>
                 </div>
             </div>
         </div>
-    </div>
+    </div>   
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label asp-for="SupOrg" class="control-label"></label>
-                <select asp-for="SupOrg" asp-items="Html.GetEnumSelectList<SupOrg>()" class="form-control">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="SupOrg" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeName" class="control-label"></label>
-                <input asp-for="EmployeeName" class="form-control" />
-                <span asp-validation-for="EmployeeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeEID" class="control-label"></label>
-                <input asp-for="EmployeeEID" class="form-control" />
-                <span asp-validation-for="EmployeeEID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BudgetNumbers" class="control-label"></label>
-                <input asp-for="BudgetNumbers" class="form-control" />
-                <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
-            </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="SupOrg" class="control-label"></label>
+                    <select asp-for="SupOrg" asp-items="Html.GetEnumSelectList<SupOrg>()" class="form-control">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="SupOrg" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeName" class="control-label"></label>
+                    <input asp-for="EmployeeName" class="form-control" />
+                    <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeEID" class="control-label"></label>
+                    <input asp-for="EmployeeEID" class="form-control" />
+                    <span asp-validation-for="EmployeeEID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BudgetNumbers" class="control-label"></label>
+                    <input asp-for="BudgetNumbers" class="form-control" />
+                    <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="EffectiveStartDate" class="control-label"></label>
-                <input asp-for="EffectiveStartDate" class="form-control" />
-                <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EffectiveEndDate" class="control-label"></label>
-                <input asp-for="EffectiveEndDate" class="form-control" />
-                <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Note" class="control-label"></label>
-                <textarea asp-for="Note" class="form-control"></textarea>
-                <span asp-validation-for="Note" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="form-group">
+                    <label asp-for="EffectiveStartDate" class="control-label"></label>
+                    <input asp-for="EffectiveStartDate" class="form-control" />
+                    <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EffectiveEndDate" class="control-label"></label>
+                    <input asp-for="EffectiveEndDate" class="form-control" />
+                    <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Note" class="control-label"></label>
+                    <textarea asp-for="Note" class="form-control"></textarea>
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
             </div>
         </div>
-    </div>
 </form>
 
 
