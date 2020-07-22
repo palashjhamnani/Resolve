@@ -100,7 +100,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#past_cases').dataTable({
+    $('#dt_filter_select_general').dataTable({
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;

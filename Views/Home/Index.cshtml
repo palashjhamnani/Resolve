@@ -65,33 +65,53 @@
 
                                     @foreach (var item in Model.Cases)
                                     {
+                                        string modified_date = item.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string shortDate = item.CaseCreationTimestamp.ToShortDateString();
                                         string Desc = "";
-                                        if (item.Description != null)
+                                        if (item.Description != null && item.Description.Length > 50)
                                         {
                                             Desc = item.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
-                                            <td data-toggle="tooltip" title="@item.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td data-toggle="tooltip" title="@item.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
                                         </tr>
                                     }
                                     @foreach (var item in Model.OnBehalves)
                                     {
+                                        string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
                                         string Desc = "";
-                                        if (item.Case.Description != null)
+                                        if (item.Case.Description != null && item.Case.Description.Length > 50)
                                         {
                                             Desc = item.Case.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Case.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Case.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
-                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
                                     }
@@ -157,17 +177,27 @@
                                     @foreach (var item in Model.CasesforApproval)
                                     {
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+                                        string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string Desc = "";
-                                        if (item.Case.Description != null)
+                                        if (item.Case.Description != null && item.Case.Description.Length > 50)
                                         {
                                             Desc = item.Case.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Case.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Case.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
-                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                            <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
                                     }
@@ -237,18 +267,28 @@
                                     {
                                         @foreach (var c in item.LocalGroup.GroupCases)
                                         {
+                                            string modified_date = c.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                             string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
                                             string Desc = "";
-                                            if (c.Case.Description != null)
+                                            if (c.Case.Description != null && c.Case.Description.Length > 50)
                                             {
                                                 Desc = c.Case.Description.Substring(0, 50);
+                                            }
+                                            else
+                                            if (c.Case.Description == null)
+                                            {
+                                                Desc = "";
+                                            }
+                                            else
+                                            {
+                                                Desc = c.Case.Description;
                                             }
                                             <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
                                                 <td>@Html.DisplayFor(modelItem => Desc)</td>
-                                                <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp">@Html.DisplayFor(modelItem => shortDate)</td>
+                                                <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
                                             </tr>
                                         }

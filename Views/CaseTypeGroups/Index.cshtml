@@ -10,39 +10,41 @@
 <p>
     <a asp-action="OldCreate">Create New</a>
 </p>
-<table class="table">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CaseType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LocalGroup)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order)
-            </th>
-            <th></th>
+            <th scope="col">Case Type</th>
+            <th scope="col">Attached Group</th>
+            <th scope="col">Order</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Order)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID }) |
-                @Html.ActionLink("Details", "Details", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID }) |
-                @Html.ActionLink("Delete", "Delete", new { CaseTypeid=item.CaseTypeID, LocalGroupid=item.LocalGroupID })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { CaseTypeid = item.CaseTypeID, LocalGroupid = item.LocalGroupID }) |
+                    @Html.ActionLink("Details", "Details", new { CaseTypeid = item.CaseTypeID, LocalGroupid = item.LocalGroupID }) |
+                    @Html.ActionLink("Delete", "Delete", new { CaseTypeid = item.CaseTypeID, LocalGroupid = item.LocalGroupID })
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">Case Type</th>
+            <th scope="col">Attached Group</th>
+            <th scope="col">Order</th>
+        </tr>
+    </tfoot>
 </table>

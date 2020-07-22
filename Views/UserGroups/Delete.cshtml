@@ -22,14 +22,14 @@
             @Html.DisplayNameFor(model => model.LocalGroup)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LocalGroup.LocalGroupID)
+            @Html.DisplayFor(model => model.LocalGroup.GroupDescription)
         </dd class>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="LocalUserID" />
         <input type="hidden" asp-for="LocalGroupID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Delete" class="btn btn-danger"/> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

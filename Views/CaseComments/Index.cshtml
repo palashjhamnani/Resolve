@@ -9,45 +9,51 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Comment</a>
 </p>
-<table class="table">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CommentTimestamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Case)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LocalUser)
-            </th>
-            <th></th>
+            <th scope="col">Comment (First 50 Characters Displayed)</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Case</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CommentTimestamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Case.CaseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CaseCommentID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CaseCommentID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CaseCommentID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            string comment = item.Comment;
+            if (comment.Length > 50)
+            {
+                comment = comment.Substring(0, 50);
+            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommentTimestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Case.CaseCID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CaseCommentID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CaseCommentID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CaseCommentID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">Comment</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Case</th>
+            <th scope="col">Created By</th>
+        </tr>
+    </tfoot>
 </table>

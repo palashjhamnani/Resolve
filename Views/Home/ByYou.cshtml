@@ -7,7 +7,7 @@
 <h4>Past Cases Created By You</h4>
 <br />
 
-<table id="past_cases" class="table table-hover table-sm">
+<table id="dt_filter_select_general" class="table table-hover table-sm">
     <thead>
         <tr>
             <th scope="col">Case ID</th>
@@ -19,24 +19,22 @@
     <tbody>
 
         @foreach (var item in Model.Cases)
-        {
-
-            string shortDate = item.CaseCreationTimestamp.ToShortDateString();
-            <tr>
-                <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.CaseCID)</a></td>
+        {            
+            string modified_date = item.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
+            <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
+                <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                 <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
-                <td>@Html.DisplayFor(modelItem => shortDate)</td>
+                <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)</td>
                 <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
             </tr>
         }
         @foreach (var item in Model.OnBehalves)
-        {
-
-            string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
+        {            
+            string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
             <tr>
                 <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@item.CaseID">@Html.DisplayFor(modelItem => item.Case.CaseCID)</a></td>
                 <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
-                <td>@Html.DisplayFor(modelItem => shortDate)</td>
+                <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
                 <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
             </tr>
         }
@@ -46,7 +44,7 @@
             <th scope="col">Case ID</th>
             <th scope="col">Status</th>
             <th scope="col">Created</th>
-            <th scope="col">Case Type</th>            
+            <th scope="col">Case Type</th>
         </tr>
     </tfoot>
 </table>

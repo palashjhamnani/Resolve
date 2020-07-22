@@ -27,9 +27,9 @@ namespace Resolve.Controllers
         }
 
         // GET: UserGroups/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string lid, string gid)
         {
-            if (id == null)
+            if (lid == null || gid == null)
             {
                 return NotFound();
             }
@@ -37,7 +37,7 @@ namespace Resolve.Controllers
             var userGroup = await _context.UserGroup
                 .Include(u => u.LocalGroup)
                 .Include(u => u.LocalUser)
-                .FirstOrDefaultAsync(m => m.LocalUserID == id);
+                .FirstOrDefaultAsync(m => m.LocalUserID == lid && m.LocalGroupID == gid);
             if (userGroup == null)
             {
                 return NotFound();
@@ -73,14 +73,14 @@ namespace Resolve.Controllers
         }
 
         // GET: UserGroups/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string lid, string gid)
         {
-            if (id == null)
+            if (lid == null || gid == null)
             {
                 return NotFound();
             }
 
-            var userGroup = await _context.UserGroup.FindAsync(id);
+            var userGroup = await _context.UserGroup.FindAsync(lid, gid);
             if (userGroup == null)
             {
                 return NotFound();
@@ -95,9 +95,9 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("LocalUserID,LocalGroupID")] UserGroup userGroup)
+        public async Task<IActionResult> Edit(string lid, string gid, [Bind("LocalUserID,LocalGroupID")] UserGroup userGroup)
         {
-            if (id != userGroup.LocalUserID)
+            if (lid != userGroup.LocalUserID || gid != userGroup.LocalGroupID)
             {
                 return NotFound();
             }
@@ -111,7 +111,7 @@ namespace Resolve.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserGroupExists(userGroup.LocalUserID))
+                    if (!UserGroupExists(userGroup.LocalUserID, userGroup.LocalGroupID))
                     {
                         return NotFound();
                     }
@@ -128,9 +128,9 @@ namespace Resolve.Controllers
         }
 
         // GET: UserGroups/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string lid, string gid)
         {
-            if (id == null)
+            if (lid == null || gid == null)
             {
                 return NotFound();
             }
@@ -138,7 +138,7 @@ namespace Resolve.Controllers
             var userGroup = await _context.UserGroup
                 .Include(u => u.LocalGroup)
                 .Include(u => u.LocalUser)
-                .FirstOrDefaultAsync(m => m.LocalUserID == id);
+                .FirstOrDefaultAsync(m => m.LocalUserID == lid && m.LocalGroupID == gid);
             if (userGroup == null)
             {
                 return NotFound();
@@ -150,17 +150,20 @@ namespace Resolve.Controllers
         // POST: UserGroups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string LocalUserid, string LocalGroupid)
         {
-            var userGroup = await _context.UserGroup.FindAsync(id);
+            var userGroup = await _context.UserGroup
+                .Include(u => u.LocalGroup)
+                .Include(u => u.LocalUser)
+                .FirstOrDefaultAsync(m => m.LocalUserID == LocalUserid && m.LocalGroupID == LocalGroupid);
             _context.UserGroup.Remove(userGroup);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserGroupExists(string id)
+        private bool UserGroupExists(string lid, string gid)
         {
-            return _context.UserGroup.Any(e => e.LocalUserID == id);
+            return _context.UserGroup.Any(e => e.LocalUserID == lid && e.LocalGroupID == gid);
         }
     }
 }
