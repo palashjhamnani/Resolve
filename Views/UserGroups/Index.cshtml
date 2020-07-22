@@ -10,7 +10,7 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New User Group</a>
 </p>
-Below is the list of User memberships for Azure active directory groups relevant to Resolve.
+Below is the list of User memberships for Azure active directory groups relevant to Resolve. This group is automatically managed, as users login to Resolve, thier group memberships are added/removed automatically through Azure. Make sure group memberships are managed through <a href="https://groups.uw.edu/" target="_blank">UW Groups</a> or <a href="https://portal.azure.com" target="_blank">UW Azure AD</a> 
 <table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
@@ -30,9 +30,7 @@ Below is the list of User memberships for Azure active directory groups relevant
                     @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Delete", "Delete", new { lid=item.LocalUser.LocalUserID, gid=item.LocalGroup.LocalGroupID })
                 </td>
             </tr>
         }
