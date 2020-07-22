@@ -10,45 +10,46 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Case Type</a>
 </p>
-<table class="table">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CaseTypeTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LongDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GroupNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hierarchical_Approval)
-            </th>
-            <th></th>
+            <th scope="col">Case Type Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Number of Groups</th>
+            <th scope="col">Hierarchical Approval?</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CaseTypeTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LongDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GroupNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hierarchical_Approval)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CaseTypeID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CaseTypeID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CaseTypeID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CaseTypeTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LongDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hierarchical_Approval)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CaseTypeID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CaseTypeID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CaseTypeID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">Case Type Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Number of Groups</th>
+            <th scope="col">Hierarchical Approval?</th>
+        </tr>
+    </tfoot>
 </table>
