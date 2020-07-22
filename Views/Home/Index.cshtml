@@ -68,9 +68,18 @@
                                         string modified_date = item.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string shortDate = item.CaseCreationTimestamp.ToShortDateString();
                                         string Desc = "";
-                                        if (item.Description != null)
+                                        if (item.Description != null && item.Description.Length > 50)
                                         {
                                             Desc = item.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
@@ -85,9 +94,18 @@
                                         string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
                                         string Desc = "";
-                                        if (item.Case.Description != null)
+                                        if (item.Case.Description != null && item.Case.Description.Length > 50)
                                         {
                                             Desc = item.Case.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Case.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Case.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
@@ -161,9 +179,18 @@
                                         string shortDate = item.Case.CaseCreationTimestamp.ToShortDateString();
                                         string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                         string Desc = "";
-                                        if (item.Case.Description != null)
+                                        if (item.Case.Description != null && item.Case.Description.Length > 50)
                                         {
                                             Desc = item.Case.Description.Substring(0, 50);
+                                        }
+                                        else
+                                        if (item.Case.Description == null)
+                                        {
+                                            Desc = "";
+                                        }
+                                        else
+                                        {
+                                            Desc = item.Case.Description;
                                         }
                                         <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
@@ -243,9 +270,18 @@
                                             string modified_date = c.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
                                             string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
                                             string Desc = "";
-                                            if (c.Case.Description != null)
+                                            if (c.Case.Description != null && c.Case.Description.Length > 50)
                                             {
                                                 Desc = c.Case.Description.Substring(0, 50);
+                                            }
+                                            else
+                                            if (c.Case.Description == null)
+                                            {
+                                                Desc = "";
+                                            }
+                                            else
+                                            {
+                                                Desc = c.Case.Description;
                                             }
                                             <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
