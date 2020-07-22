@@ -8,7 +8,7 @@
 
 <br />
 
-<table id="past_cases" class="table table-hover table-sm">
+<table id="dt_filter_select_general" class="table table-hover table-sm">
     <thead>
         <tr>
             <th scope="col">Group</th>
@@ -24,11 +24,12 @@
         {
             @foreach (var c in item.LocalGroup.GroupCases)
             {
-                <tr>
+                string modified_date = c.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
+                <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = c.Case.CaseID }))'" style="cursor: pointer;">
                     <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
-                    <td><a asp-controller="Cases" asp-action="Details" asp-route-id="@c.Case.CaseID">@Html.DisplayFor(modelItem => c.Case.CaseCID)</a></td>
+                    <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                     <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
-                    <td>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
+                    <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
                     <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
                 </tr>
             }

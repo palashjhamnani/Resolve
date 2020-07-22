@@ -10,33 +10,37 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New User Group</a>
 </p>
-<table class="table">
+Below is the list of User memberships for Azure active directory groups relevant to Resolve.
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.LocalUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LocalGroup)
-            </th>
-            <th></th>
+            <th scope="col">User</th>
+            <th scope="col">Group Name</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">User</th>
+            <th scope="col">Group Name</th>
+        </tr>
+    </tfoot>
 </table>
