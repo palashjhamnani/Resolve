@@ -41,7 +41,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 HRServiceFaculty newCase = new HRServiceFaculty
                 {
                     CaseID = id,
-                    Description = hrFaculty.Description,
+                   
                     EmployeeName = hrFaculty.EmployeeName,
                     FacRequestType = hrFaculty.FacRequestType,
                     FacAllowanceChange = hrFaculty.FacAllowanceChange,
@@ -86,7 +86,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,FacRequestType,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
 
         {
             /** First check important fields to see if values have changed and if so add to audit log **/
@@ -103,54 +103,56 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             {
                 if (beforeCase.EmployeeName != hrFaculty.EmployeeName)
                 {
-                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrFaculty.EmployeeName + "),";
+                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrFaculty.EmployeeName + ") ";
                 }
 
                 if (beforeCase.FacRequestType.ToString() != hrFaculty.FacRequestType.ToString())
                 {
-                    strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + "),";
+                    strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + ") ";
                 }
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrFaculty.EffectiveStartDate.ToShortDateString())
                 {
-                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + "),";
+                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + ") ";
                 }
-                if (beforeCase.EffectiveEndDate.ToString() != hrFaculty.EffectiveEndDate.ToString())
+                DateTime beforeEffectDate = beforeCase.EffectiveEndDate.GetValueOrDefault();
+                DateTime curEffectDate = hrFaculty.EffectiveEndDate.GetValueOrDefault();
+                if (beforeEffectDate.ToShortDateString() != curEffectDate.ToShortDateString())
                 {
-                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrFaculty.EffectiveEndDate.ToString() + "),";
+                    strAudit += "EndDate: (" + beforeEffectDate.ToShortDateString() + "," + curEffectDate.ToShortDateString() + ") ";
                 }
                 if (beforeCase.SupOrg.ToString() != hrFaculty.SupOrg.ToString())
                 {
-                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrFaculty.SupOrg.ToString() + "),";
+                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrFaculty.SupOrg.ToString() + ") ";
                 }
                 if (beforeCase.Department.ToString() != hrFaculty.Department.ToString())
                 {
-                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrFaculty.Department.ToString() + "),";
+                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrFaculty.Department.ToString() + ") ";
                 }
                 if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrFaculty.Amount))
                 {
                     if (beforeCase.Amount.ToString() != hrFaculty.Amount.ToString())
                     {
-                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrFaculty.Amount.ToString() + "),";
+                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrFaculty.Amount.ToString() + ") ";
                     }
                 }
                 if (!String.IsNullOrEmpty(beforeCase.Salary) && !String.IsNullOrEmpty(hrFaculty.Salary))
                 {
                     if (beforeCase.Salary.ToString() != hrFaculty.Salary.ToString())
                     {
-                        strAudit += "Salary: (" + beforeCase.Salary.ToString() + "," + hrFaculty.Salary.ToString() + "),";
+                        strAudit += "Salary: (" + beforeCase.Salary.ToString() + "," + hrFaculty.Salary.ToString() + ") ";
                     }
                 }
                 if (beforeCase.EmployeeEID.ToString() != hrFaculty.EmployeeEID.ToString())
                 {
-                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrFaculty.EmployeeEID.ToString() + "),";
+                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrFaculty.EmployeeEID.ToString() + ") ";
                 }
                 if (beforeCase.BudgetNumbers.ToString() != hrFaculty.BudgetNumbers.ToString())
                 {
-                    strAudit += "Budget#: (" + beforeCase.BudgetNumbers.ToString() + "," + hrFaculty.BudgetNumbers.ToString() + "),";
+                    strAudit += "Budget#: (" + beforeCase.BudgetNumbers.ToString() + "," + hrFaculty.BudgetNumbers.ToString() + ") ";
                 }
                 if (beforeCase.JobTitle.ToString() != hrFaculty.JobTitle.ToString())
                 {
-                    strAudit += "JobTitle: (" + beforeCase.JobTitle.ToString() + "," + hrFaculty.JobTitle.ToString() + "),";
+                    strAudit += "JobTitle: (" + beforeCase.JobTitle.ToString() + "," + hrFaculty.JobTitle.ToString() + ") ";
                 }
 
                 var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };

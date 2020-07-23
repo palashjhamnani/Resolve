@@ -41,7 +41,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 HRServiceGradStudent newCase = new HRServiceGradStudent
                 {
                     CaseID = id,
-                    Description = hrGradStudent.Description,
+                   
                     StudentName = hrGradStudent.StudentName,
                     GradRequestType = hrGradStudent.GradRequestType,
                     GradJobProfile = hrGradStudent.GradJobProfile,
@@ -77,7 +77,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,StudentName,GradRequestType,GradJobProfile,EffectiveStartDate,EffectiveEndDate,StepStipendAllowance,Department,Note,BudgetNumbers")] HRServiceGradStudent hrGradStudent)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,StudentName,GradRequestType,GradJobProfile,EffectiveStartDate,EffectiveEndDate,StepStipendAllowance,Department,Note,BudgetNumbers")] HRServiceGradStudent hrGradStudent)
 
         {
             /** First check important fields to see if values have changed and if so add to audit log **/
@@ -93,36 +93,38 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             {
                 if (beforeCase.StudentName != hrGradStudent.StudentName)
                 {
-                    strAudit += "Student: (" + beforeCase.StudentName + "," + hrGradStudent.StudentName + "),";
+                    strAudit += "Student: (" + beforeCase.StudentName + "," + hrGradStudent.StudentName + ") ";
                 }
 
                 if (beforeCase.GradRequestType.ToString() != hrGradStudent.GradRequestType.ToString())
                 {
-                    strAudit += "RequestType: (" + beforeCase.GradRequestType.ToString() + "," + hrGradStudent.GradRequestType.ToString() + "),";
+                    strAudit += "RequestType: (" + beforeCase.GradRequestType.ToString() + "," + hrGradStudent.GradRequestType.ToString() + ") ";
                 }
                 if (beforeCase.GradJobProfile.ToString() != hrGradStudent.GradJobProfile.ToString())
                 {
-                    strAudit += "JobProfile: (" + beforeCase.GradJobProfile.ToString() + "," + hrGradStudent.GradJobProfile.ToString() + "),";
+                    strAudit += "JobProfile: (" + beforeCase.GradJobProfile.ToString() + "," + hrGradStudent.GradJobProfile.ToString() + ") ";
                 }
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrGradStudent.EffectiveStartDate.ToShortDateString())
                 {
-                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrGradStudent.EffectiveStartDate.ToShortDateString() + "),";
+                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrGradStudent.EffectiveStartDate.ToShortDateString() + ") ";
                 }
-                if (beforeCase.EffectiveEndDate.ToString() != hrGradStudent.EffectiveEndDate.ToString())
+                DateTime beforeEffectDate = beforeCase.EffectiveEndDate.GetValueOrDefault();
+                DateTime curEffectDate = hrGradStudent.EffectiveEndDate.GetValueOrDefault();
+                if (beforeEffectDate.ToShortDateString() != curEffectDate.ToShortDateString())
                 {
-                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrGradStudent.EffectiveEndDate.ToString() + "),";
+                    strAudit += "EndDate: (" + beforeEffectDate.ToShortDateString() + "," + curEffectDate.ToShortDateString() + ") ";
                 }
                 if (beforeCase.Department.ToString() != hrGradStudent.Department.ToString())
                 {
-                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrGradStudent.Department.ToString() + "),";
+                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrGradStudent.Department.ToString() + ") ";
                 }
                 if (beforeCase.StepStipendAllowance.ToString() != hrGradStudent.StepStipendAllowance.ToString())
                 {
-                    strAudit += "Allowance: (" + beforeCase.StepStipendAllowance.ToString() + "," + hrGradStudent.StepStipendAllowance.ToString() + "),";
+                    strAudit += "Allowance: (" + beforeCase.StepStipendAllowance.ToString() + "," + hrGradStudent.StepStipendAllowance.ToString() + ") ";
                 }
                 if (beforeCase.BudgetNumbers.ToString() != hrGradStudent.BudgetNumbers.ToString())
                 {
-                    strAudit += "BudgetNumbers: (" + beforeCase.BudgetNumbers.ToString() + "," + hrGradStudent.BudgetNumbers.ToString() + "),";
+                    strAudit += "BudgetNumbers: (" + beforeCase.BudgetNumbers.ToString() + "," + hrGradStudent.BudgetNumbers.ToString() + ") ";
                 }
 
 

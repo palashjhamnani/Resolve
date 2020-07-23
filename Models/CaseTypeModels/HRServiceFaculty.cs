@@ -101,9 +101,6 @@ namespace Resolve.Models
         public int CaseID { get; set; }
         public Case Case { get; set; }
 
-        [Display(Name = "Description"), Required]
-        public string Description { get; set; }
-
         [Display(Name = "Effective Start Date")]
         [DataType(DataType.Date)]
         public DateTime EffectiveStartDate { get; set; }

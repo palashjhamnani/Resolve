@@ -41,7 +41,6 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 HRServiceStaff newCase = new HRServiceStaff
                 {
                     CaseID = id,
-                    Description = hrStaff.Description,
                     EmployeeName = hrStaff.EmployeeName,
                     RequestType = hrStaff.RequestType,
                     BasePayChange = hrStaff.BasePayChange,
@@ -83,7 +82,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,RequestType,BasePayChange,AllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,WorkerType,Amount,SupOrg,EmployeeEID,BudgetNumbers")] HRServiceStaff hrStaff)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,RequestType,BasePayChange,AllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,WorkerType,Amount,SupOrg,EmployeeEID,BudgetNumbers")] HRServiceStaff hrStaff)
 
         {
             /** First check important fields to see if values have changed and if so add to audit log **/
@@ -101,47 +100,49 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 if (beforeCase.EmployeeName != hrStaff.EmployeeName)
                 {
                    
-                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrStaff.EmployeeName + "),";
+                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrStaff.EmployeeName + ") ";
                 }
                 if (beforeCase.WorkerType.ToString() != hrStaff.WorkerType.ToString())
                 {
-                    strAudit += "WorkerType: (" + beforeCase.WorkerType.ToString() + "," + hrStaff.WorkerType.ToString() + "),";
+                    strAudit += "WorkerType: (" + beforeCase.WorkerType.ToString() + "," + hrStaff.WorkerType.ToString() + ") ";
                 }
 
                 if (beforeCase.RequestType.ToString() != hrStaff.RequestType.ToString())
                 {
                    
-                    strAudit += "RequestType: (" + beforeCase.RequestType.ToString() + "," + hrStaff.RequestType.ToString() + "),";
+                    strAudit += "RequestType: (" + beforeCase.RequestType.ToString() + "," + hrStaff.RequestType.ToString() + ") ";
                 }
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrStaff.EffectiveStartDate.ToShortDateString())
                 {
                     strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrStaff.EffectiveStartDate.ToShortDateString() + "),";
                 }
-                if (beforeCase.EffectiveEndDate.ToString() != hrStaff.EffectiveEndDate.ToString())
+                DateTime beforeEffectDate = beforeCase.EffectiveEndDate.GetValueOrDefault();
+                DateTime curEffectDate = hrStaff.EffectiveEndDate.GetValueOrDefault();
+                if (beforeEffectDate.ToShortDateString() != curEffectDate.ToShortDateString())
                 {
-                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrStaff.EffectiveEndDate.ToString() + "),";
+                    strAudit += "EndDate: (" + beforeEffectDate.ToShortDateString() + "," + curEffectDate.ToShortDateString() + ") ";
                 }
                 if (beforeCase.SupOrg.ToString() != hrStaff.SupOrg.ToString())
                 {
-                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrStaff.SupOrg.ToString() + "),";
+                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrStaff.SupOrg.ToString() + ") ";
                 }
                 if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrStaff.Amount))
                 {
                     if (beforeCase.Amount.ToString() != hrStaff.Amount.ToString())
                     {
-                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrStaff.Amount.ToString() + "),";
+                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrStaff.Amount.ToString() + ") ";
                     }
                 }
 
                 if (beforeCase.EmployeeEID.ToString() != hrStaff.EmployeeEID.ToString())
                 {
-                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrStaff.EmployeeEID.ToString() + "),";
+                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrStaff.EmployeeEID.ToString() + ") ";
                 }
                 if (!String.IsNullOrEmpty(beforeCase.BudgetNumbers) && !String.IsNullOrEmpty(hrStaff.BudgetNumbers))
                 {
                     if (beforeCase.BudgetNumbers.ToString() != hrStaff.BudgetNumbers.ToString())
                     {
-                        strAudit += "Budgets: (" + beforeCase.BudgetNumbers.ToString() + "," + hrStaff.BudgetNumbers.ToString() + "),";
+                        strAudit += "Budgets: (" + beforeCase.BudgetNumbers.ToString() + "," + hrStaff.BudgetNumbers.ToString() + ") ";
                     }
                 }
 
