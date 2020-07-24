@@ -97,9 +97,59 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (beforeCase.EmployeeName != hrStaff.EmployeeName)
+                string bcRequest = beforeCase.RequestType.ToString();
+                string currRequest = hrStaff.RequestType.ToString();
+                string bcBase = beforeCase.BasePayChange.ToString();
+                string currBase = hrStaff.BasePayChange.ToString();
+                string bcAllow = beforeCase.AllowanceChange.ToString();
+                string currAllow = hrStaff.AllowanceChange.ToString();
+                string bcTerm = beforeCase.TerminationReason.ToString();
+                string currTerm = hrStaff.TerminationReason.ToString();
+                string bcOff = beforeCase.Offboarding.ToString();
+                string bcLeave = beforeCase.LeaveWA.ToString();
+                string bcClose = beforeCase.ClosePosition.ToString();
+                string currOff = hrStaff.Offboarding.ToString();
+                string currLeave = hrStaff.LeaveWA.ToString();
+                string currClose = hrStaff.ClosePosition.ToString();
+                string currAmount = "";
+                if (!String.IsNullOrEmpty(hrStaff.Amount))
                 {
-                   
+                    currAmount = hrStaff.Amount;
+                }
+                string bcAmount = "";
+                if (!String.IsNullOrEmpty(beforeCase.Amount))
+                {
+                    bcAmount = beforeCase.Amount;
+                }
+                if (bcRequest != currRequest)
+                {
+                    if(currRequest !="Termination")
+                    {
+                        hrStaff.TerminationReason = null;
+                        hrStaff.Offboarding = false;
+                        hrStaff.LeaveWA = false;
+                        hrStaff.ClosePosition = false;
+                        currTerm = null;
+                        currOff = "False";
+                        currLeave = "False";
+                        currClose = "False";
+                    }
+                    if (currRequest != "Allowance" )
+                    {
+                        hrStaff.AllowanceChange = null;
+                        currAllow = "";
+
+                    }
+                    if (currRequest != "Base")
+                    {
+                        hrStaff.BasePayChange = null;
+                        currBase = "";
+                        hrStaff.Amount = "";
+                        currAmount = "";                    
+                    }
+                }
+                if (beforeCase.EmployeeName != hrStaff.EmployeeName)
+                {                   
                     strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrStaff.EmployeeName + ") ";
                 }
                 if (beforeCase.WorkerType.ToString() != hrStaff.WorkerType.ToString())
@@ -109,9 +159,38 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
                 if (beforeCase.RequestType.ToString() != hrStaff.RequestType.ToString())
                 {
-                   
                     strAudit += "RequestType: (" + beforeCase.RequestType.ToString() + "," + hrStaff.RequestType.ToString() + ") ";
                 }
+                if (bcBase != currBase)
+                {
+                    strAudit += "BasePayChange: (" + bcBase + "," + currBase + ") ";
+                }
+
+                if (bcAmount != currAmount)
+                {
+                    strAudit += "Amount: (" + bcAmount + "," + currAmount + ") ";
+                }
+                if (bcAllow != currAllow)
+                {
+                    strAudit += "AllowanceChange: (" + bcAllow + "," + currAllow + ") ";
+                }
+                if (bcTerm != currTerm)
+                {
+                    strAudit += "TerminationReason: (" + bcTerm + "," + currTerm + ") ";
+                }
+                if (bcOff != currOff)
+                {
+                    strAudit += "Offboarding: (" + bcOff + "," + currOff + ") ";
+                }
+                if (bcLeave != currLeave)
+                {
+                    strAudit += "LeaveWA: (" + bcLeave + "," + currLeave + ") ";
+                }
+                if (bcClose != currClose)
+                {
+                    strAudit += "ClosePosition: (" + bcClose + "," + currClose + ") ";
+                }
+
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrStaff.EffectiveStartDate.ToShortDateString())
                 {
                     strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrStaff.EffectiveStartDate.ToShortDateString() + "),";
@@ -126,13 +205,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrStaff.SupOrg.ToString() + ") ";
                 }
-                if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrStaff.Amount))
-                {
-                    if (beforeCase.Amount.ToString() != hrStaff.Amount.ToString())
-                    {
-                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrStaff.Amount.ToString() + ") ";
-                    }
-                }
+              
 
                 if (beforeCase.EmployeeEID.ToString() != hrStaff.EmployeeEID.ToString())
                 {

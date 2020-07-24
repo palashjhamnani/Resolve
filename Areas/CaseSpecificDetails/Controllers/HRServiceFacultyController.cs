@@ -97,7 +97,8 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             }
             if (ModelState.IsValid)
             {
-                /** First check important fields to see if values have changed and if so add to audit log **/
+                /** First check fields to see if values have changed and if so add to audit log  **/
+               /** Also clear any fields that were hidden when and not automatically reset in the form **/
 
                 string strAudit = "Case Edited. Values updated (old,new). ";
 
@@ -159,18 +160,18 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + ") ";
                 }
-                if (currRequest == "Base" || currRequest == "Allowance" || currRequest == "FTE" || currRequest == "Move")
+                if (currRequest != "Termination")
                 {
                     hrFaculty.TerminationReason = null;
                     currTerm = "";
                     hrFaculty.Offboarding = false;
-                    currOff = "false"; 
+                    currOff = "False"; 
                     hrFaculty.ClosePosition = false;
-                    currClose = "false";
+                    currClose = "False";
                     hrFaculty.LeaveWA = false;
-                    currLeave = "false";
+                    currLeave = "False";
                 }
-                if (currRequest == "Termination" || currRequest == "Allowance" || currRequest == "FTE" || currRequest == "Move")
+                if (currRequest != "Base")
                 {
                     hrFaculty.BasePayChange = null;
                     hrFaculty.Amount = "";
@@ -178,27 +179,22 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                     currAmount = "";
 
                 }
-                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "FTE" || currRequest == "Move")
-                {
-
-                    hrFaculty.FacAllowanceChange = null;
+                if (currRequest != "Allowance")
+                {   hrFaculty.FacAllowanceChange = null;
                     currAllow = "";
-
                 }
-                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "Allowance" || currRequest == "Move")
+                if (currRequest != "FTE")
                 {
                     hrFaculty.CurrentFTE = "";
                     hrFaculty.ProposedFTE = "";
                     currCurrFTE = "";
                     currPropFTE = "";
                 }
-                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "Allowance" || currRequest == "FTE")
+                if (currRequest != "Move")
                 {
                     hrFaculty.SupOrg = null;
                     currSup = "";
-
                 }
-
                 if (bcBase != currBase)
                 {
                     strAudit += "Base: (" + bcBase + "," + currBase + ") ";
@@ -207,7 +203,6 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "Amount: (" + bcAmount + "," + currAmount + ") ";
                 }
-
                 if (bcAllow != currAllow)
                 {
                     strAudit += "Allowance: (" + bcAllow + "," + currAllow + ") ";
@@ -225,12 +220,10 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "LeaveWA: (" + bcLeave + "," + currLeave + ") ";
                 }
-
                 if (bcClose != currClose)
                 {
                     strAudit += "ClosePosition: (" + bcClose + "," + currClose + ") ";
                 }
-
                 if (bcCurrFTE != currCurrFTE)
                 {
                     strAudit += "CurrentFTE: (" + bcCurrFTE + "," + currCurrFTE + ") ";
@@ -238,13 +231,11 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 if (bcPropFTE != currPropFTE)
                 {
                     strAudit += "PurposedFTE: (" + bcPropFTE + "," + currPropFTE + ") ";
-
                 }
                 if (bcSup != currSup)
                 {
                     strAudit += "SupOrg: (" + bcSup+ "," + currSup + ") ";
                 }
-
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrFaculty.EffectiveStartDate.ToShortDateString())
                 {
                     strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + ") ";
