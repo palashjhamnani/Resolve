@@ -41,7 +41,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 HRServiceFaculty newCase = new HRServiceFaculty
                 {
                     CaseID = id,
-                   
+
                     EmployeeName = hrFaculty.EmployeeName,
                     FacRequestType = hrFaculty.FacRequestType,
                     FacAllowanceChange = hrFaculty.FacAllowanceChange,
@@ -86,13 +86,9 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,BasePayChange,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
 
         {
-            /** First check important fields to see if values have changed and if so add to audit log **/
-
-            string strAudit = "Case Edited. Values updated (old,new). ";
-
             IQueryable<HRServiceFaculty> beforeCases = _context.HRServiceFaculty.Where(c => c.CaseID == id).AsNoTracking<HRServiceFaculty>();
             HRServiceFaculty beforeCase = beforeCases.FirstOrDefault();
             if (beforeCase == null)
@@ -101,15 +97,154 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             }
             if (ModelState.IsValid)
             {
+                /** First check important fields to see if values have changed and if so add to audit log **/
+
+                string strAudit = "Case Edited. Values updated (old,new). ";
+
+               
+                string bcRequest = beforeCase.FacRequestType.ToString();
+                string currRequest = hrFaculty.FacRequestType.ToString();
+                string bcBase = beforeCase.BasePayChange.ToString();
+                string currBase = hrFaculty.BasePayChange.ToString();
+                string bcAllow = beforeCase.FacAllowanceChange.ToString();
+                string currAllow = hrFaculty.FacAllowanceChange.ToString();
+                string bcTerm = beforeCase.TerminationReason.ToString();
+                string currTerm = hrFaculty.TerminationReason.ToString();
+                string bcOff = beforeCase.Offboarding.ToString();
+                string currOff = hrFaculty.Offboarding.ToString();
+                string bcClose = beforeCase.ClosePosition.ToString();
+                string currClose = hrFaculty.ClosePosition.ToString();
+                string bcLeave = beforeCase.LeaveWA.ToString();
+                string currLeave = hrFaculty.LeaveWA.ToString();
+                string bcAmount = "";
+                string currAmount = "";
+                string bcCurrFTE = "";
+                string currCurrFTE = "";
+                string bcPropFTE = "";
+                string currPropFTE = "";
+                string bcSup = beforeCase.SupOrg.ToString();
+                string currSup = hrFaculty.SupOrg.ToString();
+                if (!String.IsNullOrEmpty(beforeCase.Amount))
+                {
+                    bcAmount = beforeCase.Amount;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.Amount))
+                {
+                    currAmount = hrFaculty.Amount;
+                }
+                if (!String.IsNullOrEmpty(beforeCase.CurrentFTE))
+                {
+                    bcCurrFTE = beforeCase.CurrentFTE;
+                }
+                if (!String.IsNullOrEmpty(beforeCase.ProposedFTE))
+                {
+                    bcPropFTE = beforeCase.ProposedFTE;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.CurrentFTE))
+                {
+                    currCurrFTE = hrFaculty.CurrentFTE;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.ProposedFTE))
+                {
+                    currPropFTE = hrFaculty.ProposedFTE;
+                }
+
+
                 if (beforeCase.EmployeeName != hrFaculty.EmployeeName)
                 {
                     strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrFaculty.EmployeeName + ") ";
                 }
 
-                if (beforeCase.FacRequestType.ToString() != hrFaculty.FacRequestType.ToString())
+                if (bcRequest != currRequest)
                 {
                     strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + ") ";
                 }
+                if (currRequest == "Base" || currRequest == "Allowance" || currRequest == "FTE" || currRequest == "Move")
+                {
+                    hrFaculty.TerminationReason = null;
+                    currTerm = "";
+                    hrFaculty.Offboarding = false;
+                    currOff = "false"; 
+                    hrFaculty.ClosePosition = false;
+                    currClose = "false";
+                    hrFaculty.LeaveWA = false;
+                    currLeave = "false";
+                }
+                if (currRequest == "Termination" || currRequest == "Allowance" || currRequest == "FTE" || currRequest == "Move")
+                {
+                    hrFaculty.BasePayChange = null;
+                    hrFaculty.Amount = "";
+                    currBase = "";
+                    currAmount = "";
+
+                }
+                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "FTE" || currRequest == "Move")
+                {
+
+                    hrFaculty.FacAllowanceChange = null;
+                    currAllow = "";
+
+                }
+                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "Allowance" || currRequest == "Move")
+                {
+                    hrFaculty.CurrentFTE = "";
+                    hrFaculty.ProposedFTE = "";
+                    currCurrFTE = "";
+                    currPropFTE = "";
+                }
+                if (currRequest == "Termination" || currRequest == "Base" || currRequest == "Allowance" || currRequest == "FTE")
+                {
+                    hrFaculty.SupOrg = null;
+                    currSup = "";
+
+                }
+
+                if (bcBase != currBase)
+                {
+                    strAudit += "Base: (" + bcBase + "," + currBase + ") ";
+                }
+                if (bcAmount != currAmount)
+                {
+                    strAudit += "Amount: (" + bcAmount + "," + currAmount + ") ";
+                }
+
+                if (bcAllow != currAllow)
+                {
+                    strAudit += "Allowance: (" + bcAllow + "," + currAllow + ") ";
+                }
+
+                if (bcTerm != currTerm)
+                {
+                    strAudit += "TerminationReason: (" + bcTerm + "," + currTerm + ") ";
+                }
+                if (bcOff != currOff)
+                {
+                    strAudit += "Offboarding: (" + bcOff + "," + currOff + ") ";
+                }
+                if (bcLeave != currLeave)
+                {
+                    strAudit += "LeaveWA: (" + bcLeave + "," + currLeave + ") ";
+                }
+
+                if (bcClose != currClose)
+                {
+                    strAudit += "ClosePosition: (" + bcClose + "," + currClose + ") ";
+                }
+
+                if (bcCurrFTE != currCurrFTE)
+                {
+                    strAudit += "CurrentFTE: (" + bcCurrFTE + "," + currCurrFTE + ") ";
+                }
+                if (bcPropFTE != currPropFTE)
+                {
+                    strAudit += "PurposedFTE: (" + bcPropFTE + "," + currPropFTE + ") ";
+
+                }
+                if (bcSup != currSup)
+                {
+                    strAudit += "SupOrg: (" + bcSup+ "," + currSup + ") ";
+                }
+
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrFaculty.EffectiveStartDate.ToShortDateString())
                 {
                     strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + ") ";
@@ -120,21 +255,12 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 {
                     strAudit += "EndDate: (" + beforeEffectDate.ToShortDateString() + "," + curEffectDate.ToShortDateString() + ") ";
                 }
-                if (beforeCase.SupOrg.ToString() != hrFaculty.SupOrg.ToString())
-                {
-                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrFaculty.SupOrg.ToString() + ") ";
-                }
+
                 if (beforeCase.Department.ToString() != hrFaculty.Department.ToString())
                 {
                     strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrFaculty.Department.ToString() + ") ";
                 }
-                if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrFaculty.Amount))
-                {
-                    if (beforeCase.Amount.ToString() != hrFaculty.Amount.ToString())
-                    {
-                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrFaculty.Amount.ToString() + ") ";
-                    }
-                }
+
                 if (!String.IsNullOrEmpty(beforeCase.Salary) && !String.IsNullOrEmpty(hrFaculty.Salary))
                 {
                     if (beforeCase.Salary.ToString() != hrFaculty.Salary.ToString())

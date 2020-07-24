@@ -122,6 +122,9 @@ namespace Resolve.Models
         [Display(Name = "Allowance Change")]
         public virtual FacAllowanceChange? FacAllowanceChange { get; set; }
 
+        [Display(Name = "Base Pay Change")]
+        public virtual BasePayChange? BasePayChange { get; set; }
+
         public string EmployeeEID { get; set; }
 
         [Display(Name = "Employee Name"), Required]
