@@ -3,12 +3,7 @@
 @foreach (var item in Model.HRServiceFaculty)
 {
     <dl class="row">
-        <dt class="col-sm-6">
-            @Html.DisplayNameFor(modelItem => item.Description)
-        </dt>
-        <dd class="col-sm-6">
-            @Html.DisplayFor(modelItem => item.Description)
-        </dd>
+        
         <dt class="col-sm-6">
             @Html.DisplayNameFor(modelItem => item.EmployeeName)
         </dt>
@@ -28,10 +23,10 @@
         @if (@reqtype == "Base")
         {
             <dt class="col-sm-6">
-                @Html.DisplayNameFor(modelItem => item.FacAllowanceChange)
+                @Html.DisplayNameFor(modelItem => item.BasePayChange)
             </dt>
             <dd class="col-sm-6">
-                @Html.DisplayFor(modelItem => item.FacAllowanceChange)
+                @Html.DisplayFor(modelItem => item.BasePayChange)
             </dd>
             <dt class="col-sm-6">
                 @Html.DisplayNameFor(modelItem => item.Salary)
@@ -54,12 +49,7 @@
             <dd class="col-sm-6">
                 @Html.DisplayFor(modelItem => item.FacAllowanceChange)
             </dd>
-            <dt class="col-sm-6">
-                @Html.DisplayNameFor(modelItem => item.Salary)
-            </dt>
-            <dd class="col-sm-6">
-                @Html.DisplayFor(modelItem => item.Salary)
-            </dd>
+           
         }
 
         @if (@reqtype == "Termination")
@@ -146,8 +136,6 @@
         <dd class="col-sm-6">
             @Html.DisplayFor(modelItem => item.Department)
         </dd>
-
-
 
         <dt class="col-sm-6">
             @Html.DisplayNameFor(modelItem => item.EmployeeEID)

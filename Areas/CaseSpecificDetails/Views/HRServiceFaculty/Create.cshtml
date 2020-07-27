@@ -65,9 +65,9 @@
 <h3>Create HR Service Request</h3>
 <h4>Faculty</h4>
 <hr />
-<form asp-action="Create">
-    <div class="row">
-        <div class="col-md-4">
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
             <div class="form-group">
                 <label asp-for="FacRequestType" class="control-label"></label>
                 <select asp-for="FacRequestType" asp-items="Html.GetEnumSelectList<FacRequestType>()" class="form-control">
@@ -75,57 +75,35 @@
                 </select>
                 <span asp-validation-for="FacRequestType" class="text-danger"></span>
             </div>
-        </div>
-    </div>
-    <div id="BasePayChange">
-        <div class="row">
-
-            <div class="col-md-4">
+            <div id="BasePayChange">
                 <div class="form-group">
-                    <label asp-for="Salary" class="control-label"></label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
+                    <label asp-for="BasePayChange" class="control-label"></label>
+                    <select asp-for="BasePayChange" asp-items="Html.GetEnumSelectList<BasePayChange>()" class="form-control">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="BasePayChange" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="Amount" class="control-label"></label>
                     <input asp-for="Amount" class="form-control" />
                     <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div id="FTEChange">
-        <div class="row">
 
-            <div class="col-md-3">
+            </div>
+            <div id="FTEChange">
                 <div class="form-group">
                     <label asp-for="CurrentFTE" class="control-label"></label>
                     <input asp-for="CurrentFTE" class="form-control" />
                     <span asp-validation-for="CurrentFTE" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-3">
                 <div class="form-group">
                     <label asp-for="ProposedFTE" class="control-label"></label>
                     <input asp-for="ProposedFTE" class="form-control" />
                     <span asp-validation-for="ProposedFTE" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label asp-for="Salary" class="control-label"></label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="MoveWorker">
-        <div class="row">
 
-            <div class="col-md-4">
+            </div>
+            <div id="MoveWorker">
                 <div class="form-group">
                     <label asp-for="SupOrg" class="control-label"></label>
                     <select asp-for="SupOrg" asp-items="Html.GetEnumSelectList<SupOrg>()" class="form-control">
@@ -133,20 +111,11 @@
                     </select>
                     <span asp-validation-for="SupOrg" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label asp-for="Salary" class="control-label"></label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="FacAllowanceChange">
-        <div class="row">
 
-            <div class="col-md-4">
+
+            </div>
+
+            <div id="FacAllowanceChange">
                 <div class="form-group">
                     <label asp-for="FacAllowanceChange" class="control-label"></label>
                     <select asp-for="FacAllowanceChange" asp-items="Html.GetEnumSelectList<FacAllowanceChange>()" class="form-control">
@@ -154,21 +123,10 @@
                     </select>
                     <span asp-validation-for="FacAllowanceChange" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label asp-for="Salary" class="control-label"></label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="TerminationReason">
-        <div class="row">
 
-            <div class="col-md-4">
 
+            </div>
+            <div id="TerminationReason">
                 <div class="form-group">
                     <label asp-for="TerminationReason" class="control-label"></label>
                     <select asp-for="TerminationReason" asp-items="Html.GetEnumSelectList<TerminationReason>()" class="form-control">
@@ -176,31 +134,18 @@
                     </select>
                     <span asp-validation-for="TerminationReason" class="text-danger"></span>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-md-4">
                 <div class="form-group form-check">
                     <label class="form-check-label">
                         <input data-related-item="title1" class="form-check-input" asp-for="Offboarding" /> @Html.DisplayNameFor(model => model.Offboarding)
                     </label>
                     <span asp-validation-for="Offboarding" class="text-danger"></span>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
                 <div class="form-group form-check">
                     <label class="form-check-label">
                         <input data-related-item="title1" class="form-check-input" asp-for="ClosePosition" /> @Html.DisplayNameFor(model => model.ClosePosition)
                     </label>
                     <span asp-validation-for="ClosePosition" class="text-danger"></span>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
                 <div class="form-group form-check">
                     <label class="form-check-label">
                         <input data-related-item="title1" class="form-check-input" asp-for="LeaveWA" /> @Html.DisplayNameFor(model => model.LeaveWA)
@@ -208,11 +153,12 @@
                     <span asp-validation-for="LeaveWA" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Salary" class="control-label"></label> (*Base, Allowance, EndDate,FTE, Move)
+                <input asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+          
             <div class="form-group">
                 <label asp-for="Department" class="control-label"></label>
                 <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control">
@@ -240,22 +186,17 @@
                 <input asp-for="BudgetNumbers" class="form-control" />
                 <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="EffectiveStartDate" class="control-label"></label>
                 <input asp-for="EffectiveStartDate" class="form-control" />
                 <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EffectiveEndDate" class="control-label"></label>
+                <label asp-for="EffectiveEndDate" class="control-label"> </label> (*if applicable)
                 <input asp-for="EffectiveEndDate" class="form-control" />
                 <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Note" class="control-label"></label>
                 <textarea asp-for="Note" class="form-control"></textarea>
@@ -264,9 +205,9 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+        </form>
+        <div>
+            <a asp-action="Index">Back to List</a>
         </div>
     </div>
-</form>
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>

@@ -41,7 +41,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 HRServiceFaculty newCase = new HRServiceFaculty
                 {
                     CaseID = id,
-                    Description = hrFaculty.Description,
+
                     EmployeeName = hrFaculty.EmployeeName,
                     FacRequestType = hrFaculty.FacRequestType,
                     FacAllowanceChange = hrFaculty.FacAllowanceChange,
@@ -86,13 +86,9 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Description,EmployeeName,FacRequestType,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,BasePayChange,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
 
         {
-            /** First check important fields to see if values have changed and if so add to audit log **/
-
-            string strAudit = "Case Edited. Values updated (old,new). ";
-
             IQueryable<HRServiceFaculty> beforeCases = _context.HRServiceFaculty.Where(c => c.CaseID == id).AsNoTracking<HRServiceFaculty>();
             HRServiceFaculty beforeCase = beforeCases.FirstOrDefault();
             if (beforeCase == null)
@@ -101,56 +97,179 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (beforeCase.EmployeeName != hrFaculty.EmployeeName)
+                /** First check fields to see if values have changed and if so add to audit log  **/
+               /** Also clear any fields that were hidden when and not automatically reset in the form **/
+
+                string strAudit = "Case Edited. Values updated (old,new). ";
+
+               
+                string bcRequest = beforeCase.FacRequestType.ToString();
+                string currRequest = hrFaculty.FacRequestType.ToString();
+                string bcBase = beforeCase.BasePayChange.ToString();
+                string currBase = hrFaculty.BasePayChange.ToString();
+                string bcAllow = beforeCase.FacAllowanceChange.ToString();
+                string currAllow = hrFaculty.FacAllowanceChange.ToString();
+                string bcTerm = beforeCase.TerminationReason.ToString();
+                string currTerm = hrFaculty.TerminationReason.ToString();
+                string bcOff = beforeCase.Offboarding.ToString();
+                string currOff = hrFaculty.Offboarding.ToString();
+                string bcClose = beforeCase.ClosePosition.ToString();
+                string currClose = hrFaculty.ClosePosition.ToString();
+                string bcLeave = beforeCase.LeaveWA.ToString();
+                string currLeave = hrFaculty.LeaveWA.ToString();
+                string bcAmount = "";
+                string currAmount = "";
+                string bcCurrFTE = "";
+                string currCurrFTE = "";
+                string bcPropFTE = "";
+                string currPropFTE = "";
+                string bcSup = beforeCase.SupOrg.ToString();
+                string currSup = hrFaculty.SupOrg.ToString();
+                if (!String.IsNullOrEmpty(beforeCase.Amount))
                 {
-                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrFaculty.EmployeeName + "),";
+                    bcAmount = beforeCase.Amount;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.Amount))
+                {
+                    currAmount = hrFaculty.Amount;
+                }
+                if (!String.IsNullOrEmpty(beforeCase.CurrentFTE))
+                {
+                    bcCurrFTE = beforeCase.CurrentFTE;
+                }
+                if (!String.IsNullOrEmpty(beforeCase.ProposedFTE))
+                {
+                    bcPropFTE = beforeCase.ProposedFTE;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.CurrentFTE))
+                {
+                    currCurrFTE = hrFaculty.CurrentFTE;
+                }
+                if (!String.IsNullOrEmpty(hrFaculty.ProposedFTE))
+                {
+                    currPropFTE = hrFaculty.ProposedFTE;
                 }
 
-                if (beforeCase.FacRequestType.ToString() != hrFaculty.FacRequestType.ToString())
+
+                if (beforeCase.EmployeeName != hrFaculty.EmployeeName)
                 {
-                    strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + "),";
+                    strAudit += "Employee: (" + beforeCase.EmployeeName + "," + hrFaculty.EmployeeName + ") ";
+                }
+
+                if (bcRequest != currRequest)
+                {
+                    strAudit += "RequestType: (" + beforeCase.FacRequestType.ToString() + "," + hrFaculty.FacRequestType.ToString() + ") ";
+                }
+                if (currRequest != "Termination")
+                {
+                    hrFaculty.TerminationReason = null;
+                    currTerm = "";
+                    hrFaculty.Offboarding = false;
+                    currOff = "False"; 
+                    hrFaculty.ClosePosition = false;
+                    currClose = "False";
+                    hrFaculty.LeaveWA = false;
+                    currLeave = "False";
+                }
+                if (currRequest != "Base")
+                {
+                    hrFaculty.BasePayChange = null;
+                    hrFaculty.Amount = "";
+                    currBase = "";
+                    currAmount = "";
+
+                }
+                if (currRequest != "Allowance")
+                {   hrFaculty.FacAllowanceChange = null;
+                    currAllow = "";
+                }
+                if (currRequest != "FTE")
+                {
+                    hrFaculty.CurrentFTE = "";
+                    hrFaculty.ProposedFTE = "";
+                    currCurrFTE = "";
+                    currPropFTE = "";
+                }
+                if (currRequest != "Move")
+                {
+                    hrFaculty.SupOrg = null;
+                    currSup = "";
+                }
+                if (bcBase != currBase)
+                {
+                    strAudit += "Base: (" + bcBase + "," + currBase + ") ";
+                }
+                if (bcAmount != currAmount)
+                {
+                    strAudit += "Amount: (" + bcAmount + "," + currAmount + ") ";
+                }
+                if (bcAllow != currAllow)
+                {
+                    strAudit += "Allowance: (" + bcAllow + "," + currAllow + ") ";
+                }
+
+                if (bcTerm != currTerm)
+                {
+                    strAudit += "TerminationReason: (" + bcTerm + "," + currTerm + ") ";
+                }
+                if (bcOff != currOff)
+                {
+                    strAudit += "Offboarding: (" + bcOff + "," + currOff + ") ";
+                }
+                if (bcLeave != currLeave)
+                {
+                    strAudit += "LeaveWA: (" + bcLeave + "," + currLeave + ") ";
+                }
+                if (bcClose != currClose)
+                {
+                    strAudit += "ClosePosition: (" + bcClose + "," + currClose + ") ";
+                }
+                if (bcCurrFTE != currCurrFTE)
+                {
+                    strAudit += "CurrentFTE: (" + bcCurrFTE + "," + currCurrFTE + ") ";
+                }
+                if (bcPropFTE != currPropFTE)
+                {
+                    strAudit += "PurposedFTE: (" + bcPropFTE + "," + currPropFTE + ") ";
+                }
+                if (bcSup != currSup)
+                {
+                    strAudit += "SupOrg: (" + bcSup+ "," + currSup + ") ";
                 }
                 if (beforeCase.EffectiveStartDate.ToShortDateString() != hrFaculty.EffectiveStartDate.ToShortDateString())
                 {
-                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + "),";
+                    strAudit += "StartDate: (" + beforeCase.EffectiveStartDate.ToShortDateString() + "," + hrFaculty.EffectiveStartDate.ToShortDateString() + ") ";
                 }
-                if (beforeCase.EffectiveEndDate.ToString() != hrFaculty.EffectiveEndDate.ToString())
+                DateTime beforeEffectDate = beforeCase.EffectiveEndDate.GetValueOrDefault();
+                DateTime curEffectDate = hrFaculty.EffectiveEndDate.GetValueOrDefault();
+                if (beforeEffectDate.ToShortDateString() != curEffectDate.ToShortDateString())
                 {
-                    strAudit += "EndDate: (" + beforeCase.EffectiveEndDate.ToString() + "," + hrFaculty.EffectiveEndDate.ToString() + "),";
+                    strAudit += "EndDate: (" + beforeEffectDate.ToShortDateString() + "," + curEffectDate.ToShortDateString() + ") ";
                 }
-                if (beforeCase.SupOrg.ToString() != hrFaculty.SupOrg.ToString())
-                {
-                    strAudit += "SupOrg: (" + beforeCase.SupOrg.ToString() + "," + hrFaculty.SupOrg.ToString() + "),";
-                }
+
                 if (beforeCase.Department.ToString() != hrFaculty.Department.ToString())
                 {
-                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrFaculty.Department.ToString() + "),";
+                    strAudit += "Department: (" + beforeCase.Department.ToString() + "," + hrFaculty.Department.ToString() + ") ";
                 }
-                if (!String.IsNullOrEmpty(beforeCase.Amount) && !String.IsNullOrEmpty(hrFaculty.Amount))
-                {
-                    if (beforeCase.Amount.ToString() != hrFaculty.Amount.ToString())
-                    {
-                        strAudit += "Amount: (" + beforeCase.Amount.ToString() + "," + hrFaculty.Amount.ToString() + "),";
-                    }
-                }
+
                 if (!String.IsNullOrEmpty(beforeCase.Salary) && !String.IsNullOrEmpty(hrFaculty.Salary))
                 {
                     if (beforeCase.Salary.ToString() != hrFaculty.Salary.ToString())
                     {
-                        strAudit += "Salary: (" + beforeCase.Salary.ToString() + "," + hrFaculty.Salary.ToString() + "),";
+                        strAudit += "Salary: (" + beforeCase.Salary.ToString() + "," + hrFaculty.Salary.ToString() + ") ";
                     }
                 }
                 if (beforeCase.EmployeeEID.ToString() != hrFaculty.EmployeeEID.ToString())
                 {
-                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrFaculty.EmployeeEID.ToString() + "),";
+                    strAudit += "EmployeeEID: (" + beforeCase.EmployeeEID.ToString() + "," + hrFaculty.EmployeeEID.ToString() + ") ";
                 }
                 if (beforeCase.BudgetNumbers.ToString() != hrFaculty.BudgetNumbers.ToString())
                 {
-                    strAudit += "Budget#: (" + beforeCase.BudgetNumbers.ToString() + "," + hrFaculty.BudgetNumbers.ToString() + "),";
+                    strAudit += "Budget#: (" + beforeCase.BudgetNumbers.ToString() + "," + hrFaculty.BudgetNumbers.ToString() + ") ";
                 }
                 if (beforeCase.JobTitle.ToString() != hrFaculty.JobTitle.ToString())
                 {
-                    strAudit += "JobTitle: (" + beforeCase.JobTitle.ToString() + "," + hrFaculty.JobTitle.ToString() + "),";
+                    strAudit += "JobTitle: (" + beforeCase.JobTitle.ToString() + "," + hrFaculty.JobTitle.ToString() + ") ";
                 }
 
                 var audit = new CaseAudit { AuditLog = strAudit, CaseID = id, LocalUserID = User.Identity.Name };
