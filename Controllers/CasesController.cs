@@ -188,6 +188,14 @@ namespace Resolve.Controllers
                 is_user_admin = true;
             }
             ViewData["is_user_admin"] = is_user_admin;
+            var current_u_groups = _context.UserGroup
+                .Where(b => b.LocalUserID == u_name).ToList();
+            List<string> current_user_groups = new List<string>();
+            foreach (var item in current_u_groups)
+            {
+                current_user_groups.Add(item.LocalGroupID);
+            }
+            ViewData["current_user_groups"] = current_user_groups;
             var @case = await _context.Case
                 .Include(s => s.CaseType)
                 .Include(u => u.LocalUser)
@@ -196,6 +204,7 @@ namespace Resolve.Controllers
                 .Include(a => a.CaseAttachments).ThenInclude(e => e.LocalUser)
                 .Include(a => a.GroupAssignments).ThenInclude(e => e.LocalGroup)
                 .Include(a => a.Approvers).ThenInclude(e => e.LocalUser)
+                .Include(a => a.Approvers).ThenInclude(e => e.LocalGroup)
                 .Include(a => a.OnBehalves).ThenInclude(e => e.LocalUser)
                 .Include(p => p.SampleCaseType)
                 .Include(p => p.SAR4)
@@ -268,7 +277,7 @@ namespace Resolve.Controllers
                         .Single(b => b.LocalUserID == app_group.LocalUserID);
                     var approver_preference = _context.EmailPreference
                         .Single(b => b.LocalUserID == app_group.LocalUserID);
-                    var appr_add = new Approver { CaseID = cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = 1 };
+                    var appr_add = new Approver { CaseID = cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = 1, LocalGroupID = CTypeGroup.LocalGroupID };
                     _context.Add(appr_add);
                     //Send Notification
                     if (approver_preference.CaseAssignment == true)
@@ -294,7 +303,7 @@ namespace Resolve.Controllers
                             .Single(b => b.LocalUserID == app.LocalUserID);
                         var approver_preferences = _context.EmailPreference
                             .Single(b => b.LocalUserID == app.LocalUserID);
-                        var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order) };
+                        var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order), LocalGroupID = item.LocalGroupID };
                         _context.Add(app_add);
                         //Send Notification
                         if (approver_preferences.CaseAssignment == true)
@@ -471,7 +480,7 @@ namespace Resolve.Controllers
                                 .Single(b => b.LocalUserID == app_group.LocalUserID);
                             var approver_preference = _context.EmailPreference
                                 .Single(b => b.LocalUserID == app_group.LocalUserID);
-                            var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order) };
+                            var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order), LocalGroupID = CTGroup[0].LocalGroupID };
                             _context.Add(appr_add);
                             var audit_log = new CaseAudit { AuditLog = "Case has been assigned to "+app_luser.FirstName+" "+app_luser.LastName+" as the next approver in hierarchy.", CaseID = int_cid, LocalUserID = User.Identity.Name };
                             _context.Add(audit_log);
@@ -835,6 +844,49 @@ namespace Resolve.Controllers
             return RedirectToAction("Details", new { id = cid, approved = 0 });
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SwapApprover(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var cid = HttpContext.Request.Form["CaseID"];
+            var gid = HttpContext.Request.Form["GrpID"].ToString();
+            var old_approver = HttpContext.Request.Form["OldApprover"].ToString();
+            var final_comment = HttpContext.Request.Form["FinalComment"];
+            int int_cid = Convert.ToInt32(cid);
+            int details_arg = 0;
+            try
+            {
+                var approver_old = await _context.Approver.FindAsync(int_cid, old_approver);
+                _context.Approver.Remove(approver_old);
+                await _context.SaveChangesAsync();
+                var swapped_approver = new Approver { LocalUserID = User.Identity.Name, CaseID = int_cid, LocalGroupID = gid };
+                _context.Add(swapped_approver);
+                var audit = new CaseAudit { AuditLog = "Approver "+old_approver+" has been swapped with "+User.Identity.Name, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
+                // Adding final approval comment
+                if (final_comment != "")
+                {
+                    var f_comment = new CaseComment { Comment = "Assignment Swap Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(f_comment);
+                }
+                await _context.SaveChangesAsync();
+                details_arg = 5;
+                
+                ViewData["Approved"] = "Success";
+                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+            }
+            catch (Exception)
+            {
+                ViewData["Approved"] = "Error";
+            }
+
+            return RedirectToAction("Details", new { id = cid, approved = 0 });
+        }
 
     }
 }

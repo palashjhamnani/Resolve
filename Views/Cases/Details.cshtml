@@ -473,9 +473,22 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @{
+                                                            // groups to which the current user belongs to
+                                                            var current_user_groups = ViewData["current_user_groups"] as List<string>;
+                                                        }
 
                                                         @foreach (var item in Model.Approvers)
                                                         {
+                                                            // group through which the current user has been assigned
+                                                            var approver_group = item.LocalGroupID;
+                                                            // Check if approver_group is present in current_user_groups and set a flag
+                                                            bool allow_approver = false;
+                                                            if (current_user_groups.Contains(approver_group))
+                                                            {
+                                                                allow_approver = true;
+                                                            }                                                           
+
                                                         <tr>
                                                             <td>@Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)</td>
                                                             @{
@@ -504,10 +517,41 @@
                                                                 }
                                                             }
                                                             @{
-                                                                //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver, then provide option to assign to self
-                                                                if (1 == 1)
+                                                                //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver and if the case is pending on this approver, then provide option to assign to self
+                                                                if (!approvers.Contains(User.GetDisplayName()) && allow_approver == true && item.Approved == 0)
                                                                 {
-                                                                    <td><button class="btn btn-sm btn-primary">Assign to Self</button></td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AssignToSelf">
+                                                                            Assign to Self
+                                                                        </button>
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade" id="AssignToSelf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="exampleModalLabel">Swap Approver?</h5>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <form asp-action="SwapApprover">
+                                                                                        <div class="modal-body">
+                                                                                            <div class="form-group">
+                                                                                                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Comments..."></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                                                            <input type="hidden" value="@item.LocalUserID" name="OldApprover" />
+                                                                                            <input type="hidden" value="@item.LocalGroupID" name="GrpID" />
+                                                                                            <button class="btn btn-primary" type="submit">Assign to Self</button>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>                                                                    
                                                                 }
                                                                 else
                                                                 {

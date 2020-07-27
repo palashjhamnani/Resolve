@@ -22,7 +22,7 @@ namespace Resolve.Controllers
         // GET: Approvers
         public async Task<IActionResult> Index()
         {
-            var resolveCaseContext = _context.Approver.Include(a => a.Case).Include(a => a.LocalUser);
+            var resolveCaseContext = _context.Approver.Include(a => a.Case).Include(a => a.LocalUser).Include(a => a.LocalGroup);
             return View(await resolveCaseContext.ToListAsync());
         }
 
@@ -37,6 +37,7 @@ namespace Resolve.Controllers
             var approver = await _context.Approver
                 .Include(a => a.Case)
                 .Include(a => a.LocalUser)
+                .Include(a => a.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (approver == null)
             {
@@ -51,6 +52,7 @@ namespace Resolve.Controllers
         {
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID");
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID");
+            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID");
             return View();
         }
 
@@ -59,7 +61,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,Approved,Order")] Approver approver)
+        public async Task<IActionResult> Create([Bind("CaseID,LocalUserID,Approved,Order,LocalGroupID")] Approver approver)
         {
             if (ModelState.IsValid)
             {
@@ -69,6 +71,7 @@ namespace Resolve.Controllers
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", approver.CaseID);
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", approver.LocalUserID);
+            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", approver.LocalGroupID);
             return View(approver);
         }
 
@@ -87,6 +90,7 @@ namespace Resolve.Controllers
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", approver.CaseID);
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", approver.LocalUserID);
+            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", approver.LocalGroupID);
             return View(approver);
         }
 
@@ -95,7 +99,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,Approved,Order")] Approver approver)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,Approved,Order,LocalGroupID")] Approver approver)
         {
             if (id != approver.CaseID)
             {
@@ -124,6 +128,7 @@ namespace Resolve.Controllers
             }
             ViewData["CaseID"] = new SelectList(_context.Case, "CaseID", "CaseID", approver.CaseID);
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", approver.LocalUserID);
+            ViewData["LocalGroupID"] = new SelectList(_context.LocalGroup, "LocalGroupID", "LocalGroupID", approver.LocalGroupID);
             return View(approver);
         }
 
@@ -138,6 +143,7 @@ namespace Resolve.Controllers
             var approver = await _context.Approver
                 .Include(a => a.Case)
                 .Include(a => a.LocalUser)
+                .Include(a => a.LocalGroup)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (approver == null)
             {
