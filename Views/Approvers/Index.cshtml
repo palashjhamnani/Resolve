@@ -25,6 +25,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
+            <th>Approver Group</th>
             <th></th>
         </tr>
     </thead>
@@ -43,6 +44,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Order)
             </td>
+            <td>@Html.DisplayFor(modelItem => item.LocalGroupID)</td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
