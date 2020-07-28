@@ -27,9 +27,9 @@ namespace Resolve.Controllers
         }
 
         // GET: Approvers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? Caseid, string Userid)
         {
-            if (id == null)
+            if (Caseid == null || Userid == "")
             {
                 return NotFound();
             }
@@ -38,7 +38,7 @@ namespace Resolve.Controllers
                 .Include(a => a.Case)
                 .Include(a => a.LocalUser)
                 .Include(a => a.LocalGroup)
-                .FirstOrDefaultAsync(m => m.CaseID == id);
+                .FirstOrDefaultAsync(m => m.CaseID == Caseid && m.LocalUserID == Userid);
             if (approver == null)
             {
                 return NotFound();
@@ -76,14 +76,14 @@ namespace Resolve.Controllers
         }
 
         // GET: Approvers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? Caseid, string Userid)
         {
-            if (id == null)
+            if (Caseid == null || Userid == "")
             {
                 return NotFound();
             }
 
-            var approver = await _context.Approver.FindAsync(id);
+            var approver = await _context.Approver.FindAsync(Caseid, Userid);
             if (approver == null)
             {
                 return NotFound();
@@ -99,9 +99,9 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,Approved,Order,LocalGroupID")] Approver approver)
+        public async Task<IActionResult> Edit(int Caseid, string Userid, [Bind("CaseID,LocalUserID,Approved,Order,LocalGroupID")] Approver approver)
         {
-            if (id != approver.CaseID)
+            if (Caseid != approver.CaseID || Userid != approver.LocalUserID)
             {
                 return NotFound();
             }
@@ -115,7 +115,7 @@ namespace Resolve.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApproverExists(approver.CaseID))
+                    if (!ApproverExists(approver.CaseID, approver.LocalUserID))
                     {
                         return NotFound();
                     }
@@ -133,9 +133,9 @@ namespace Resolve.Controllers
         }
 
         // GET: Approvers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? Caseid, string Userid)
         {
-            if (id == null)
+            if (Caseid == null || Userid == "")
             {
                 return NotFound();
             }
@@ -144,7 +144,7 @@ namespace Resolve.Controllers
                 .Include(a => a.Case)
                 .Include(a => a.LocalUser)
                 .Include(a => a.LocalGroup)
-                .FirstOrDefaultAsync(m => m.CaseID == id);
+                .FirstOrDefaultAsync(m => m.CaseID == Caseid && m.LocalUserID == Userid);
             if (approver == null)
             {
                 return NotFound();
@@ -156,17 +156,17 @@ namespace Resolve.Controllers
         // POST: Approvers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int Caseid, string Userid)
         {
-            var approver = await _context.Approver.FindAsync(id);
+            var approver = await _context.Approver.FindAsync(Caseid, Userid);
             _context.Approver.Remove(approver);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ApproverExists(int id)
+        private bool ApproverExists(int Caseid, string Userid)
         {
-            return _context.Approver.Any(e => e.CaseID == id);
+            return _context.Approver.Any(e => e.CaseID == Caseid && e.LocalUserID == Userid);
         }
     }
 }

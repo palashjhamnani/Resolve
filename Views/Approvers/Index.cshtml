@@ -10,14 +10,18 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Approver</a>
 </p>
-<table class="table">
+
+Meaning of Approved variable:
+0: Pending, 1: Approved, -1: Rejected, 3: Cancelled
+
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Case)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LocalUser)
+                Approver
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Approved)
@@ -26,31 +30,41 @@
                 @Html.DisplayNameFor(model => model.Order)
             </th>
             <th>Approver Group</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Case.CaseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Approved)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Order)
-            </td>
-            <td>@Html.DisplayFor(modelItem => item.LocalGroupID)</td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Case.CaseCID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Approved)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.LocalGroup.GroupName)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { Caseid=item.CaseID, Userid = item.LocalUserID }) |
+                    @Html.ActionLink("Details", "Details", new { Caseid=item.CaseID, Userid = item.LocalUserID }) |
+                    @Html.ActionLink("Delete", "Delete", new { Caseid=item.CaseID, Userid = item.LocalUserID })
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">CaseID</th>
+            <th scope="col">Approver</th>
+            <th scope="col">Approved</th>
+            <th scope="col">Order</th>
+            <th scope="col">Approver Group</th>
+        </tr>
+    </tfoot>
 </table>

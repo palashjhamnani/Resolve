@@ -9,11 +9,11 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Case</a>
 </p>
-<table class="table">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LocalUser)
+                Created By
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OnBehalfOf)
@@ -27,33 +27,44 @@
             <th>
                 @Html.DisplayNameFor(model => model.CaseType)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OnBehalfOf)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CaseStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CaseCreationTimestamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CaseID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CaseID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CaseID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            string modified_date = item.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OnBehalfOf)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CaseStatus)
+                </td>
+                <td>
+                    <span hidden>@modified_date</span>@Html.DisplayFor(modelItem => item.CaseCreationTimestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CaseID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CaseID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CaseID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">Created By</th>
+            <th scope="col">OnBehalf Of</th>
+            <th scope="col">Case Status</th>
+            <th scope="col">Creation Timestamp</th>
+            <th scope="col">Case Type</th>
+        </tr>
+    </tfoot>
 </table>
