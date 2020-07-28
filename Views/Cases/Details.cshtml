@@ -67,6 +67,11 @@
                             <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-info">Cancelled</span></h6>
                         }
                         else
+                            if (Model.CaseType.Hierarchical_Approval == true)
+                        {
+                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@Model.CaseType.GroupNumber Approvals Pending</span></h6>
+                        }
+                        else
                         {
                             <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@total_approvers Approvals Pending</span></h6>
                         }
@@ -248,7 +253,7 @@
                             }
                         }
                         else
-                      if (approved == 3)
+                     if (approved == 3)
                         {
                             //Case Cancelled
                         }
