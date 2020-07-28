@@ -51,9 +51,9 @@ Meaning of Approved variable:
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.LocalGroup.GroupName)</td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { Caseid=item.CaseID, Userid = item.LocalUserID }) |
-                    @Html.ActionLink("Details", "Details", new { Caseid=item.CaseID, Userid = item.LocalUserID }) |
-                    @Html.ActionLink("Delete", "Delete", new { Caseid=item.CaseID, Userid = item.LocalUserID })
+                    @Html.ActionLink("Edit", "Edit", new { CaseID=item.CaseID, LocalUserID = item.LocalUserID }) |
+                    @Html.ActionLink("Details", "Details", new { CaseID=item.CaseID, LocalUserID = item.LocalUserID }) |
+                    @Html.ActionLink("Delete", "Delete", new { CaseID=item.CaseID, LocalUserID = item.LocalUserID })
                 </td>
             </tr>
         }
