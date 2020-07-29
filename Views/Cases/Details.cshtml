@@ -444,35 +444,38 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                     <h6 class="m-0 font-weight-bold text-primary">General Case Details</h6>
                     <div class="dropdown no-arrow">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editdescription">
-                            Edit
-                        </button>
-
-                        <div class="modal fade" id="editdescription" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog mw-100 w-75" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Case Description</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form asp-action="UserEdit">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <textarea class="form-control" name="CaseDesc" rows="8">@Model.Description</textarea>
+                        @{
+                            if (Model.Processed == 0)
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editdescription">
+                                    Edit
+                                </button>
+                                <div class="modal fade" id="editdescription" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog mw-100 w-75" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Case Description</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
+                                            <form asp-action="UserEdit">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" name="CaseDesc" rows="8">@Model.Description</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />                                            
-                                            <button class="btn btn-primary" type="submit">Edit</button>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-
+                            }
+                        }
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#assignmentModal">
                             Assignments
                         </button>
@@ -739,7 +742,12 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                     <h6 class="m-0 font-weight-bold text-primary">Specific Case Details</h6>
                     <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-controller="@Model.CaseType.CaseTypeTitle" asp-area="CaseSpecificDetails" asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a>
+                        @{
+                            if (Model.Processed == 0)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-controller="@Model.CaseType.CaseTypeTitle" asp-area="CaseSpecificDetails" asp-action="Edit" asp-route-id="@Model.CaseID">Edit</a>
+                            }
+                        }
                     </div>
                 </div>
                 <!-- Card Body -->
