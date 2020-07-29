@@ -383,6 +383,34 @@ namespace Resolve.Controllers
             return View(@case);
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserEdit()
+        {
+            string desc = HttpContext.Request.Form["CaseDesc"].ToString();
+            int cid = Convert.ToInt32(HttpContext.Request.Form["CaseID"]);            
+            try
+            {
+                var case_to_edit = await _context.Case.FindAsync(cid);
+                case_to_edit.Description = desc;
+                _context.Update(case_to_edit);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = cid, approved = 5 });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CaseExists(cid))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return RedirectToAction("Details", new { id = cid, approved = 0 });
+                }
+            }            
+        }
+
         // GET: Cases/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
