@@ -351,7 +351,7 @@ namespace Resolve.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID,Description")] Case @case)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID,Description,Processed")] Case @case)
         {
             if (id != @case.CaseID)
             {
@@ -381,6 +381,34 @@ namespace Resolve.Controllers
             ViewData["CaseTypeID"] = new SelectList(_context.CaseType, "CaseTypeID", "CaseTypeID", @case.CaseTypeID);
             ViewData["LocalUserID"] = new SelectList(_context.LocalUser, "LocalUserID", "LocalUserID", @case.LocalUserID);
             return View(@case);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserEdit()
+        {
+            string desc = HttpContext.Request.Form["CaseDesc"].ToString();
+            int cid = Convert.ToInt32(HttpContext.Request.Form["CaseID"]);            
+            try
+            {
+                var case_to_edit = await _context.Case.FindAsync(cid);
+                case_to_edit.Description = desc;
+                _context.Update(case_to_edit);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = cid, approved = 5 });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CaseExists(cid))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return RedirectToAction("Details", new { id = cid, approved = 0 });
+                }
+            }            
         }
 
         // GET: Cases/Delete/5
