@@ -139,7 +139,7 @@ namespace Resolve.Models
         [Display(Name = "Proposed FTE")]
         public string ProposedFTE { get; set; }
 
-        [Display(Name = "Budget Numbers"), Required]
+        [Display(Name = "Budget Numbers")]
         public string BudgetNumbers { get; set; }
 
         public string Note { get; set; }
