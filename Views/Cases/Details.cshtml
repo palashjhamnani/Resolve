@@ -553,8 +553,9 @@
                                                                     }
                                                                 }
                                                                 @{
-                                                                    //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver and if the case is pending on this approver, then provide option to assign to self
-                                                                    if (!approvers.Contains(User.GetDisplayName()) && allow_approver == true && item.Approved == 0)
+                                                                    //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver
+                                                                    //and if the case is pending on this approver, and Case is not marked as processed yet, then provide option to assign to self
+                                                                    if (!approvers.Contains(User.GetDisplayName()) && allow_approver == true && item.Approved == 0 && Model.Processed == 0)
                                                                     {
                                                                         <td>
                                                                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AssignToSelf">
@@ -767,9 +768,13 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="height: 50px;">
                     <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
                     <div class="dropdown no-arrow">
-                        <a class="btn btn-primary btn-sm" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
-                            Create
-                        </a>
+                        @{ if (Model.Processed == 0)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-controller="CaseAttachments" asp-action="Create" asp-route-id="@Model.CaseID">
+                                    Create
+                                </a>
+                            }
+                        }
                     </div>
                 </div>
                 <!-- Card Body -->

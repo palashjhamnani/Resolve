@@ -30,4 +30,9 @@
     <ProjectReference Include="..\Dependency\Microsoft.Identity.Web\Microsoft.Identity.Web.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Views\Reports\" />
+  </ItemGroup>
+
 </Project>
