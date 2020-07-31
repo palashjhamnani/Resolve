@@ -28,6 +28,7 @@ namespace Resolve.Data
         public DbSet<HRServiceStaff> HRServiceStaff { get; set; }
         public DbSet<HRServiceFaculty> HRServiceFaculty { get; set; }
         public DbSet<HRServiceGradStudent> HRServiceGradStudent { get; set; }
+        public DbSet<PerioLimitedCare> PerioLimitedCare { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -116,6 +117,24 @@ namespace Resolve.Data
             modelBuilder.Entity<HRServiceFaculty>()
                 .Property(i => i.LeaveWA)
                 .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+                .Property(i => i.PerioExam)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+               .Property(i => i.RestorativeExam)
+               .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+              .Property(i => i.bwxrays)
+              .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+                .Property(i => i.paxrays)
+                .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+             .Property(i => i.Prophy)
+             .HasDefaultValue(0);
+            modelBuilder.Entity<PerioLimitedCare>()
+             .Property(i => i.Other)
+             .HasDefaultValue(0);
         }
                
 

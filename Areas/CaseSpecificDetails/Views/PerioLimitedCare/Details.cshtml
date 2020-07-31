@@ -1,0 +1,93 @@
+﻿@model Resolve.Models.Case
+
+@foreach (var item in Model.PerioLimitedCare)
+{
+    <dl class="row">
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.StudentName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.StudentName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.PatientName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.PatientName)
+        </dd>
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.PatientAddress)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.PatientAddress)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.BirthDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.BirthDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.PatientPhone)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.PatientPhone)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Complaint)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Complaint)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.TreatmentPlan)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.TreatmentPlan)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.bwxrays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.bwxrays)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.paxrays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.paxrays)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.RestorativeExam)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.RestorativeExam)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.PerioExam)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.PerioExam)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Prophy)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Prophy)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Other)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Other)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.TChart)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.TChart)
+        </dd>
+    </dl>
+}

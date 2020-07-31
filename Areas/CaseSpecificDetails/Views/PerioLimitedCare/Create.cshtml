@@ -1,0 +1,108 @@
+﻿@model Resolve.Models.PerioLimitedCare
+
+@{
+    ViewData["Title"] = "Create Specific Details";
+}
+
+<h3>Perio Limited Care</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="form-group">
+                <label asp-for="StudentName" class="control-label required-field"></label>
+                <input asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientName" class="control-label"></label>
+                <input asp-for="PatientName" class="form-control" />
+                <span asp-validation-for="PatientName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientAddress" class="control-label"></label>
+                <input asp-for="PatientAddress" class="form-control" />
+                <span asp-validation-for="PatientAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BirthDate" class="control-label required-field"></label>
+                <input asp-for="BirthDate" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientPhone" class="control-label"></label>
+                <input asp-for="PatientPhone" class="form-control" />
+                <span asp-validation-for="PatientPhone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Complaint" class="control-label"></label>
+                <textarea asp-for="Complaint" class="form-control"></textarea>
+                <span asp-validation-for="Complaint" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TreatmentPlan" class="control-label"></label>
+                <textarea asp-for="TreatmentPlan" class="form-control"></textarea>
+                <span asp-validation-for="TreatmentPlan" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="bwxrays" /> @Html.DisplayNameFor(model => model.bwxrays)
+                </label>
+                <span asp-validation-for="bwxrays" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="paxrays" /> @Html.DisplayNameFor(model => model.paxrays)
+                </label>
+                <span asp-validation-for="paxrays" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="RestorativeExam" /> @Html.DisplayNameFor(model => model.RestorativeExam)
+                </label>
+                <span asp-validation-for="RestorativeExam" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="PerioExam" /> @Html.DisplayNameFor(model => model.PerioExam)
+                </label>
+                <span asp-validation-for="PerioExam" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="Prophy" /> @Html.DisplayNameFor(model => model.Prophy)
+                </label>
+                <span asp-validation-for="Prophy" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input data-related-item="title1" class="form-check-input" asp-for="Other" /> @Html.DisplayNameFor(model => model.Other)
+                </label>
+                <span asp-validation-for="Other" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TChart" class="control-label"></label>
+                <input asp-for="TChart" class="form-control" />
+                <span asp-validation-for="TChart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
