@@ -211,6 +211,7 @@ namespace Resolve.Controllers
                 .Include(p => p.HRServiceFaculty)
                 .Include(p => p.HRServiceGradStudent)
                 .Include(p => p.HRServiceStaff)
+                .Include(p => p.PerioLimitedCare)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {
