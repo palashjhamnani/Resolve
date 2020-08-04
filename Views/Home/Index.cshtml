@@ -81,7 +81,7 @@
                                         {
                                             Desc = item.Description;
                                         }
-                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                        <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
@@ -107,7 +107,7 @@
                                         {
                                             Desc = item.Case.Description;
                                         }
-                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                        <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
@@ -192,7 +192,7 @@
                                         {
                                             Desc = item.Case.Description;
                                         }
-                                        <tr class='clickable-row' data-href="Cases/Details/@item.CaseID">
+                                        <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
@@ -283,7 +283,7 @@
                                             {
                                                 Desc = c.Case.Description;
                                             }
-                                            <tr class='clickable-row' data-href="Cases/Details/@c.CaseID">
+                                            <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = c.CaseID }))'" style="cursor: pointer;">
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
