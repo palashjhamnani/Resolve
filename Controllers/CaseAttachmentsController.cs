@@ -234,9 +234,9 @@ namespace Resolve.Controllers
                 System.IO.File.Delete(fullPath);
                 _context.CaseAttachment.Remove(caseAttachment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Cases", new { id = cid, approved = 3 });
+                return RedirectToAction("Details", "Cases", new { id = cid, err_message = "The attachment has been deleted successfully!" });
             }
-            return RedirectToAction("Details", "Cases", new { id = cid, approved = 0});
+            return RedirectToAction("Details", "Cases", new { id = cid, err_message = "The attachment could not be deleted at this time!"});
         }
     }
 }

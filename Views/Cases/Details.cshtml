@@ -79,65 +79,15 @@
                     }
 
                     @{
-                        if (ViewData["Approved"].ToString() == "Success")
+                        if (ViewData["err_message"] != null)
                         {
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                The case has been APPROVED successfully!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        else
-                            if (ViewData["Approved"].ToString() == "RejectSuccess")
-                        {
-                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                The case has been REJECTED successfully!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        else
-                            if (ViewData["Approved"].ToString() == "Reopened")
-                        {
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                The case has been Re-Opened successfully!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        else
-                            if (ViewData["Approved"].ToString() == "AttachDeleted")
-                        {
-                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                The attachment has been deleted successfully!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        else
-                            if (ViewData["Approved"].ToString() == "OperationSuccess")
-                        {
-                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                The operation has been completed successfully!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        else
-                            if (ViewData["Approved"].ToString() == "Failed")
-                        {
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                The action could not be executed at this time. Please contact administrator!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
+                                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                            @ViewData["err_message"].ToString()
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                        }                        
                     }
                     <div class="dropdown no-arrow">
                         @{
@@ -253,7 +203,7 @@
                             }
                         }
                         else
-                     if (approved == 3)
+                    if (approved == 3)
                         {
                             //Case Cancelled
                         }
