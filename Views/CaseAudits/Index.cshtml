@@ -10,7 +10,7 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Audit</a>
 </p>
-<table class="table table-sm">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
             <th>
@@ -25,30 +25,37 @@
             <th>
                 @Html.DisplayNameFor(model => model.LocalUser)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditTimestamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditLog)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Case.CaseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CaseAuditID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CaseAuditID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CaseAuditID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuditTimestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuditLog)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Case.CaseCID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalUser.LocalUserID)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.CaseAuditID">Details</a>
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Audit Log</th>
+            <th scope="col">CaseID</th>
+            <th scope="col">User</th>
+        </tr>
+    </tfoot>
 </table>

@@ -10,7 +10,7 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">New Group Assignment</a>
 </p>
-<table class="table">
+<table id="dt_filter_select_general" class="table table-sm">
     <thead>
         <tr>
             <th>
@@ -19,24 +19,31 @@
             <th>
                 @Html.DisplayNameFor(model => model.LocalGroup)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Case.CaseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalGroup.LocalGroupID)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Case.CaseCID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalGroup.GroupName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
     </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col">CaseID</th>
+            <th scope="col">Group</th>
+        </tr>
+    </tfoot>
 </table>

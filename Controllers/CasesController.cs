@@ -142,42 +142,13 @@ namespace Resolve.Controllers
 
 
             // GET: Cases/Details/5
-            public async Task<IActionResult> Details(int? id, int? approved)
+            public async Task<IActionResult> Details(int? id, string err_message)
             {
             if (id == null)
             {
                 return NotFound();
             }
-            ViewData["Approved"] = "NotSet";
-            if (approved == 1)
-            {
-                ViewData["Approved"] = "Success";
-            }
-            else
-                if (approved == 0)
-                {
-                    ViewData["Approved"] = "Failed";
-                }
-            else
-                if (approved == 2)
-            {
-                ViewData["Approved"] = "Reopened";
-            }
-            else
-                if (approved == 3)
-            {
-                ViewData["Approved"] = "AttachDeleted";
-            }
-            else
-                if (approved == -1)
-            {
-                ViewData["Approved"] = "RejectSuccess";
-            }
-            else
-                if (approved == 5)
-            {
-                ViewData["Approved"] = "OperationSuccess";
-            }
+            ViewData["err_message"] = err_message;
             bool is_user_admin = false;
             var user_name = User.GetDisplayName();
             string u_name = user_name.ToString();
@@ -399,7 +370,7 @@ namespace Resolve.Controllers
                 case_to_edit.Description = desc;
                 _context.Update(case_to_edit);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = cid, approved = 5 });
+                return RedirectToAction("Details", new { id = cid, err_message = "Case details have been updated successfully!" });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -409,7 +380,7 @@ namespace Resolve.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Details", new { id = cid, approved = 0 });
+                    return RedirectToAction("Details", new { id = cid, err_message = "Case detail cannot be updated at this time. Please contact administrator." });
                 }
             }            
         }
@@ -470,7 +441,7 @@ namespace Resolve.Controllers
             var process_value = HttpContext.Request.Form["ProcessValue"];
             var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
-            int details_arg = 0;
+            string details_arg = "";
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
             var caseProcessed = await _context.Case.FindAsync(int_cid);
             var caseCreator = await _context.LocalUser.FindAsync(caseProcessed.LocalUserID);
@@ -529,7 +500,7 @@ namespace Resolve.Controllers
                             await _context.SaveChangesAsync();                            
                         }
                     }                    
-                    details_arg = 1;
+                    details_arg = "The case has been approved successfully!";
                 }
                 else
                     if (process_value == "Reopen")
@@ -572,7 +543,7 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = 2;
+                    details_arg = "The case has been reopened successfully!";
                 }
                 else
                     if (process_value == "Reject")
@@ -590,7 +561,7 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = -1;
+                    details_arg = "The case has been rejected successfully!";
                 }
                 
                 // Mark Case as Processed if all approvers have taken action or if any of the approver has rejected the case
@@ -703,7 +674,7 @@ namespace Resolve.Controllers
                 }
                 ViewData["Approved"] = "Success";
                 //var cid = HttpContext.Request.Form["CaseID"];
-                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+                return RedirectToAction("Details", new { id = cid, err_message = details_arg });
                 //return RedirectToAction(nameof(Details));
             }
             catch (Exception)
@@ -711,7 +682,7 @@ namespace Resolve.Controllers
                 ViewData["Approved"] = "Error";
             }
 
-            return RedirectToAction("Details", new { id = cid, approved = 0 });
+            return RedirectToAction("Details", new { id = cid, err_message = "Could not process the request at this time" });
         }
 
 
@@ -729,7 +700,7 @@ namespace Resolve.Controllers
             var process_value = HttpContext.Request.Form["ProcessValue"];
             var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
-            int details_arg = 0;
+            string details_arg = "";
             var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
             var CaseToProcess = await _context.Case.FindAsync(int_cid);
             var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
@@ -771,7 +742,7 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = 1;
+                    details_arg = "The case has been approved successfully!";
                 }
                 else
                     if (process_value == "Reopen")
@@ -789,7 +760,7 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = 2;
+                    details_arg = "The case has been reopened successfully!";
                 }
                 else
                     if (process_value == "Reject")
@@ -806,17 +777,17 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = -1;
+                    details_arg = "The case has been rejected successfully!";
                 }
                 ViewData["Approved"] = "Success";
-                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+                return RedirectToAction("Details", new { id = cid, err_message = details_arg });
             }
             catch (Exception)
             {
                 ViewData["Approved"] = "Error";
             }
 
-            return RedirectToAction("Details", new { id = cid, approved = 0 });
+            return RedirectToAction("Details", new { id = cid, err_message = "The request could not be completed at this time!" });
         }
 
 
@@ -832,7 +803,7 @@ namespace Resolve.Controllers
             var process_value = HttpContext.Request.Form["ProcessValue"];
             var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
-            int details_arg = 0;
+            string details_arg = "";
             var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
             var CaseToProcess = await _context.Case.FindAsync(int_cid);
             var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
@@ -862,17 +833,17 @@ namespace Resolve.Controllers
                         _context.Add(f_comment);
                     }
                     await _context.SaveChangesAsync();
-                    details_arg = 5;
+                    details_arg = "The case has been cancelled successfully!";
                 }
                 ViewData["Approved"] = "Success";
-                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+                return RedirectToAction("Details", new { id = cid, err_message = details_arg });
             }
             catch (Exception)
             {
                 ViewData["Approved"] = "Error";
             }
 
-            return RedirectToAction("Details", new { id = cid, approved = 0 });
+            return RedirectToAction("Details", new { id = cid, err_message = "Cancel case request could not be completed at this time!" });
         }
 
 
@@ -889,7 +860,7 @@ namespace Resolve.Controllers
             var old_approver = HttpContext.Request.Form["OldApprover"].ToString();
             var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
-            int details_arg = 0;
+            string details_arg = "";
             try
             {
                 var approver_old = await _context.Approver.FindAsync(int_cid, old_approver);
@@ -906,17 +877,17 @@ namespace Resolve.Controllers
                     _context.Add(f_comment);
                 }
                 await _context.SaveChangesAsync();
-                details_arg = 5;
+                details_arg = "You have been assigned as an approver to this case!";
                 
                 ViewData["Approved"] = "Success";
-                return RedirectToAction("Details", new { id = cid, approved = details_arg });
+                return RedirectToAction("Details", new { id = cid, err_message = details_arg });
             }
             catch (Exception)
             {
                 ViewData["Approved"] = "Error";
             }
 
-            return RedirectToAction("Details", new { id = cid, approved = 0 });
+            return RedirectToAction("Details", new { id = cid, err_message = "Swap approver request could not be completed at this time!" });
         }
 
     }
