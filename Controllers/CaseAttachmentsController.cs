@@ -91,7 +91,10 @@ namespace Resolve.Controllers
                         string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                         // Use CopyTo() method provided by IFormFile interface to
                         // copy the file to wwwroot/images folder
-                        Attachment.CopyTo(new FileStream(filePath, FileMode.Create));
+                        FileStream file_stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                        Attachment.CopyTo(file_stream);
+                        file_stream.Close();
+                        file_stream.Dispose();
                         CaseAttachment newAttachment = new CaseAttachment
                         {
                             LocalUserID = User.Identity.Name,
