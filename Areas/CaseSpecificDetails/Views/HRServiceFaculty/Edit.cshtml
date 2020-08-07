@@ -9,18 +9,7 @@
     <script type="text/javascript">
            jQuery(document).ready(function ($) {
             var MyFacRequestType = "@Model.FacRequestType";
-            if (MyFacRequestType == "Allowance") {
-                $("#FacAllowanceChange").show();
-            }
-            else {
-                $("#FacAllowanceChange").hide();
-           }
-            if (MyFacRequestType == "Base") {
-                   $("#BasePayChange").show();
-               }
-            else {
-                   $("#BasePayChange").hide();
-           }
+           
            if (MyFacRequestType == "Termination") {
                $("#TerminationReason").show();
                }
@@ -42,45 +31,25 @@
            }
 
             $("#FacRequestType").change(function () {
-                if ($(this).find(':selected').text() == "Compensation Base Pay Change") {
-                    $("#BasePayChange").show();
-                    $("#FacAllowanceChange").hide();
-                    $("#TerminationReason").hide();
-                    $("#FTEChange").hide();
-                    $("#MoveWorker").hide();
-                } else if ($(this).find(':selected').text() == "Compensation Allowance Change") {
-                    $("#FacAllowanceChange").show();
-                    $("#BasePayChange").hide();
-                    $("#TerminationReason").hide();
-                    $("#FTEChange").hide();
-                    $("#MoveWorker").hide();
-                }
-                else if ($(this).find(':selected').text() == "Termination") {
+                if ($(this).find(':selected').text() == "Termination") {
                     $("#TerminationReason").show();
-                    $("#FacAllowanceChange").hide();
-                    $("#BasePayChange").hide();
                     $("#FTEChange").hide();
                     $("#MoveWorker").hide(); $("#TerminationReason").show();
                 }
                 else if ($(this).find(':selected').text() == "FTE Change") {
                     $("#FTEChange").show();
-                    $("#FacAllowanceChange").hide();
-                    $("#BasePayChange").hide();
                     $("#TerminationReason").hide();
                     $("#MoveWorker").hide();
 
                 }
                 else if ($(this).find(':selected').text() == "Move Worker") {
                     $("#MoveWorker").show();
-                    $("#FacAllowanceChange").hide();
-                    $("#BasePayChange").hide();
                     $("#TerminationReason").hide();
                     $("#FTEChange").hide();
 
                 }
                 else {
-                    $("#FacAllowanceChange").hide();
-                    $("#BasePayChange").hide();
+                   
                     $("#TerminationReason").hide();
                     $("#FTEChange").hide();
                     $("#MoveWorker").hide();
@@ -108,21 +77,7 @@
                 </select>
                 <span asp-validation-for="FacRequestType" class="text-danger"></span>
             </div>
-            <div id="BasePayChange">
-                <div class="form-group">
-                    <label asp-for="BasePayChange" class="control-label"></label>
-                    <select asp-for="BasePayChange" asp-items="Html.GetEnumSelectList<BasePayChange>()" class="form-control">
-                        <option selected="selected" value="">Please select</option>
-                    </select>
-                    <span asp-validation-for="BasePayChange" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Amount" class="control-label"></label>
-                    <input asp-for="Amount" class="form-control" />
-                    <span asp-validation-for="Amount" class="text-danger"></span>
-                </div>
-
-            </div>
+           
             <div id="FTEChange">
                 <div class="form-group">
                     <label asp-for="CurrentFTE" class="control-label"></label>
@@ -147,18 +102,7 @@
 
 
             </div>
-
-            <div id="FacAllowanceChange">
-                <div class="form-group">
-                    <label asp-for="FacAllowanceChange" class="control-label"></label>
-                    <select asp-for="FacAllowanceChange" asp-items="Html.GetEnumSelectList<FacAllowanceChange>()" class="form-control">
-                        <option selected="selected" value="">Please select</option>
-                    </select>
-                    <span asp-validation-for="FacAllowanceChange" class="text-danger"></span>
-                </div>
-
-
-            </div>
+        
             <div id="TerminationReason">
                 <div class="form-group">
                     <label asp-for="TerminationReason" class="control-label"></label>
