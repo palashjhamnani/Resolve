@@ -49,10 +49,11 @@ namespace Resolve.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateComment(int id, [Bind("CaseCommentID,Comment,CommentTimestamp,CaseID,LocalUserID")] CaseComment caseComment)
         {
+            var cid = HttpContext.Request.Form["CaseID"];
             //caseComment.CaseID = cid;
             //HttpContext.Request.Form["UserName"];
             try
-            {
+            {                
                 if (ModelState.IsValid)
                 {
                     _context.Add(caseComment);
@@ -111,20 +112,18 @@ namespace Resolve.Controllers
                                 }                                                                
                             }
                         }
+                        return RedirectToAction("Details", new { id = cid, err_message = "Comment posted and notified all stakeholders!" });
                     }
                     catch
                     {
-                        Console.WriteLine("Could not send notification!");
-                    }
-                    var cid = HttpContext.Request.Form["CaseID"];
-                    return RedirectToAction("Details", new { id = cid });
+                        return RedirectToAction("Details", new { id = cid, err_message = "Notification to all stakeholders could not be sent at this time!" });
+                    }                    
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Error!");
+                return RedirectToAction("Details", new { id = cid, err_message = "Comment could not be posted at this time!" });
             }
-
             return View(caseComment);
         }
 

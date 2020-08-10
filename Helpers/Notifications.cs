@@ -33,7 +33,7 @@ namespace Resolve.Helpers
                 string email_pass = _config.GetValue<string>("Smtp:Password");
                 int email_port = _config.GetValue<int>("Smtp:Port");
                 string host_add = _config.GetValue<string>("Launch:Host_Name");
-                string host_port = _config.GetValue<int>("Launch:Host_Port").ToString();
+                string host_port = _config.GetValue<string>("Launch:Host_Port");
                 MimeMessage message = new MimeMessage();
                 MailboxAddress from = new MailboxAddress("SOD RequestManager", from_add);
                 message.From.Add(from);
@@ -43,7 +43,7 @@ namespace Resolve.Helpers
                 // Picking Template
                 if (template == "assignment")
                 {
-                    var fileName = $"Helpers/email_templates/case_assignment.html";
+                    var fileName = $"wwwroot/email_templates/case_assignment.html";
                     message.Subject = "New Case [" + case_cid + "] Assigned";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
@@ -60,7 +60,7 @@ namespace Resolve.Helpers
                 else
                     if (template == "comment")
                 {
-                    var fileName = $"Helpers/email_templates/comment_creation.html";
+                    var fileName = $"wwwroot/email_templates/comment_creation.html";
                     message.Subject = "New Comment on [" + case_cid + "]";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
@@ -80,7 +80,7 @@ namespace Resolve.Helpers
                 else
                     if (template == "approved")
                 {
-                    var fileName = $"Helpers/email_templates/case_approval.html";
+                    var fileName = $"wwwroot/email_templates/case_approval.html";
                     message.Subject = "Case Approved - [" + case_cid + "]";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
@@ -97,7 +97,7 @@ namespace Resolve.Helpers
                 else
                     if (template == "rejected")
                 {
-                    var fileName = $"Helpers/email_templates/case_rejection.html";
+                    var fileName = $"wwwroot/email_templates/case_rejection.html";
                     message.Subject = "Case Rejected - [" + case_cid + "]";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
