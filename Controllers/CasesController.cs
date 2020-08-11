@@ -289,16 +289,17 @@ namespace Resolve.Controllers
                 else
                 {
                     foreach (var item in CTypeGroups)
-                    {
+                    {                      
                         var app = _context.LocalGroup
                             .Single(b => b.LocalGroupID == item.LocalGroupID);
                         var approver_luser = _context.LocalUser
                             .Single(b => b.LocalUserID == app.LocalUserID);
                         var approver_preferences = _context.EmailPreference
                             .Single(b => b.LocalUserID == app.LocalUserID);
+                        // Adding the default approver from this group
                         var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order), LocalGroupID = item.LocalGroupID };
                         _context.Add(app_add);
-                        //Send Notification to all assigned groups along with the approvers
+                        //Send Notification to this approver
                         if (approver_preferences.CaseAssignment == true)
                         {
                             var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
@@ -307,8 +308,30 @@ namespace Resolve.Controllers
                                 Console.WriteLine("Could not send assignment notification!");
                             }
                         }
+                        // Assigning Case to this group
                         var grp_add = new GroupAssignment { CaseID = cid, LocalGroupID = item.LocalGroupID };
                         _context.Add(grp_add);
+                        // Sending notification to this group's members
+                        var g_members = _context.UserGroup.Where(p => p.LocalGroupID == item.LocalGroupID).ToList();
+                        foreach (var member in g_members)
+                        {
+                            // We don't want to notify the approver again, but only the other group members
+                            if (member.LocalUserID != approver_luser.LocalUserID)
+                            {
+                                // Check group members preference
+                                var g_user = _context.LocalUser.Single(p => p.LocalUserID == member.LocalUserID);
+                                var e_preference = _context.EmailPreference
+                                .Single(b => b.LocalUserID == member.LocalUserID);
+                                if (e_preference.GroupAssignment == true)
+                                {
+                                    var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: g_user, template: "g_assignment", group_name: app.GroupName);
+                                    if (notif_result != "Sent")
+                                    {
+                                        Console.WriteLine("Could not send group assignment notification!");
+                                    }
+                                }
+                            }
+                        }
                     }
                     await _context.SaveChangesAsync();
                 }
@@ -516,7 +539,28 @@ namespace Resolve.Controllers
                             }
                             var grp_add = new GroupAssignment { CaseID = int_cid, LocalGroupID = CTGroup[0].LocalGroupID };
                             _context.Add(grp_add);
-                            await _context.SaveChangesAsync();                            
+                            await _context.SaveChangesAsync();
+                            //Send Notification to the group members to which the case is currently assigned to since Case Type is hierarchical
+                            var group_members = _context.UserGroup.Where(p => p.LocalGroupID == app_group.LocalGroupID).ToList();
+                            foreach (var item in group_members)
+                            {
+                                // We don't want to notify the approver again, but only the other group members
+                                if (item.LocalUserID != app_luser.LocalUserID)
+                                {
+                                    // Check group members preference
+                                    var group_user = _context.LocalUser.Single(p => p.LocalUserID == item.LocalUserID);
+                                    var email_preference = _context.EmailPreference
+                                    .Single(b => b.LocalUserID == item.LocalUserID);
+                                    if (email_preference.GroupAssignment == true)
+                                    {
+                                        var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: group_user, template: "g_assignment", group_name: app_group.GroupName);
+                                        if (notif_result != "Sent")
+                                        {
+                                            Console.WriteLine("Could not send group assignment notification!");
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }                    
                     details_arg = "The case has been approved successfully!";
