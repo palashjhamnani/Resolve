@@ -3,6 +3,57 @@
 @{
     ViewData["Title"] = "Edit Specific Details";
 }
+@section Scripts {
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            var MyRequestType = "@Model.ScholarRequestType";
+            if (MyRequestType == "Allowance") {
+                $("#Compensation").show();
+            }
+            else {
+                $("#Compensation").hide();
+            }
+            if (MyRequestType == "FTEChange") {
+                $("#FTEChange").show();
+            }
+             else {
+                    $("#FTEChange").hide();
+            }
+            if (MyRequestType == "Promotion") {
+                $("#Promotion").show();
+            }
+            else {
+                $("#Promotion").hide();
+            }
+           
+            $("#ScholarRequestType").change(function () {
+                if ($(this).find(':selected').text() == "Compensation Allowance Change") {
+                    $("#Compensation").show();
+                    $("#FTEChange").hide();
+                    $("#Promotion").hide();
+                }
+                else if ($(this).find(':selected').text() == "FTE Change") {
+                    $("#FTEChange").show();
+                    $("#Compensation").hide();
+                    $("#Promotion").hide();
+                }
+                else if ($(this).find(':selected').text() == "Promotion") {
+                    $("#Promotion").show();
+                    $("#Compensation").hide();
+                    $("#FTEChange").hide();
+                }
+                else {
+                    $("#Compensation").hide();
+                    $("#FTEChange").hide();
+                    $("#Promotion").hide();
+                }
+
+            });
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
 
 <h3>Edit HR Service Request</h3>
 <h4>Scholar/Resident</h4>
@@ -19,12 +70,14 @@
                 </select>
                 <span asp-validation-for="ScholarRequestType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ScholarCompAllowanceChange" class="control-label required-field"></label>
-                <select asp-for="ScholarCompAllowanceChange" asp-items="Html.GetEnumSelectList<ScholarCompAllowanceChange>()" class="form-control">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="ScholarCompAllowanceChange" class="text-danger"></span>
+            <div id="Compensation">
+                <div class="form-group">
+                    <label asp-for="ScholarCompAllowanceChange" class="control-label required-field"></label>
+                    <select asp-for="ScholarCompAllowanceChange" asp-items="Html.GetEnumSelectList<ScholarCompAllowanceChange>()" class="form-control">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="ScholarCompAllowanceChange" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="ScholarJobProfile" class="control-label required-field"></label>
@@ -33,68 +86,74 @@
                 </select>
                 <span asp-validation-for="ScholarJobProfile" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CurrentFTE" class="control-label required-field"></label>
-                <input asp-for="CurrentFTE" class="form-control" />
-                <span asp-validation-for="CurrentFTE" class="text-danger"></span>
+            <div id="FTEChange">
+                <div class="form-group">
+                    <label asp-for="CurrentFTE" class="control-label required-field"></label>
+                    <input asp-for="CurrentFTE" class="form-control" />
+                    <span asp-validation-for="CurrentFTE" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProposedFTE" class="control-label required-field"></label>
+                    <input asp-for="ProposedFTE" class="form-control" />
+                    <span asp-validation-for="ProposedFTE" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ProposedFTE" class="control-label required-field"></label>
-                <input asp-for="ProposedFTE" class="form-control" />
-                <span asp-validation-for="ProposedFTE" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="JobTitle" class="control-label required-field"></label>
                 <input asp-for="JobTitle" class="form-control" />
                 <span asp-validation-for="JobTitle" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PropTitle" class="control-label required-field"></label>
-                <input asp-for="PropTitle" class="form-control" />
-                <span asp-validation-for="PropTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Department" class="control-label required-field"></label>
-                <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="Department" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label required-field"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BudgetNumbers" class="control-label"></label>
-                <input asp-for="BudgetNumbers" class="form-control" />
-                <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StepStipendAllowance" class="control-label"></label>
-                <input asp-for="StepStipendAllowance" class="form-control" />
-                <span asp-validation-for="StepStipendAllowance" class="text-danger"></span>
+            <div id="Promotion">
+                <div class="form-group">
+                    <label asp-for="PropTitle" class="control-label required-field"></label>
+                    <input asp-for="PropTitle" class="form-control" />
+                    <span asp-validation-for="PropTitle" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label asp-for="EffectiveStartDate" class="control-label required-field"></label>
-                <input asp-for="EffectiveStartDate" class="form-control" />
-                <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EffectiveEndDate" class="control-label"></label>
-                <input asp-for="EffectiveEndDate" class="form-control" />
-                <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
-            </div>
+             <div class="form-group">
+                    <label asp-for="Department" class="control-label required-field"></label>
+                    <select asp-for="Department" asp-items="Html.GetEnumSelectList<Department>()" class="form-control">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="Department" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label required-field"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BudgetNumbers" class="control-label"></label>
+                    <input asp-for="BudgetNumbers" class="form-control" />
+                    <span asp-validation-for="BudgetNumbers" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StepStipendAllowance" class="control-label"></label>
+                    <input asp-for="StepStipendAllowance" class="form-control" />
+                    <span asp-validation-for="StepStipendAllowance" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Note" class="control-label"></label>
-                <textarea asp-for="Note" class="form-control"></textarea>
-                <span asp-validation-for="Note" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+                <div class="form-group">
+                    <label asp-for="EffectiveStartDate" class="control-label required-field"></label>
+                    <input asp-for="EffectiveStartDate" class="form-control" />
+                    <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EffectiveEndDate" class="control-label"></label>
+                    <input asp-for="EffectiveEndDate" class="form-control" />
+                    <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Note" class="control-label"></label>
+                    <textarea asp-for="Note" class="form-control"></textarea>
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
         </form>
     </div>
 </div>

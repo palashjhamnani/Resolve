@@ -9,7 +9,7 @@ namespace Resolve.Models
 {
     public enum ScholarRequestType
     {
-        [Display(Name = "Conpensation Allowance Change")]
+        [Display(Name = "Compensation Allowance Change")]
         Compensation,
         [Display(Name = "Distribution Change")]
         Distribution,
