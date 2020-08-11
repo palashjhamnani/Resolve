@@ -47,6 +47,8 @@ namespace Resolve.Models
         public ICollection<HRServiceStaff> HRServiceStaff { get; set; }
         public ICollection<HRServiceFaculty> HRServiceFaculty { get; set; }
         public ICollection<PerioLimitedCare> PerioLimitedCare { get; set; }
+        public ICollection<HiringAffiliateFaculty> HiringAffiliateFaculty { get; set; }
+        public ICollection<HRServiceScholarResident> HRServiceScholarResident { get; set; }
 
     }  
 
