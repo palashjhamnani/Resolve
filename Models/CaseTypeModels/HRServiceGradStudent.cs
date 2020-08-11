@@ -9,8 +9,6 @@ namespace Resolve.Models
 {
     public enum GradRequestType
     {
-        [Display(Name = "Distribution Change")]
-        Distribution,
         [Display(Name = "Extend End Date")]
         Extend,
         [Display(Name = "New Hire")]
@@ -38,8 +36,6 @@ namespace Resolve.Models
     {
         [Display(Name = "Endodontics")]
         Endodontics,
-        [Display(Name = "Office of Research")]
-        Research,
         [Display(Name = "Oral and Maxillofacial Surgery")]
         OMS,
         [Display(Name = "Oral Health Sciences")]

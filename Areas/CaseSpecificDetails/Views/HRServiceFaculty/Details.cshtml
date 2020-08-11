@@ -17,10 +17,40 @@
             @Html.DisplayFor(modelItem => item.FacRequestType)
             
         </dd>
-        @{ string reqtype = item.FacRequestType.ToString(); }   
+        @{ string reqtype = item.FacRequestType.ToString(); }
+       
 
-       
-       
+        @if (@reqtype == "Base")
+        {
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(modelItem => item.BasePayChange)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(modelItem => item.BasePayChange)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(modelItem => item.Salary)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(modelItem => item.Salary)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(modelItem => item.Amount)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(modelItem => item.Amount)
+            </dd>
+        }
+        @if (@reqtype == "Allowance")
+        {
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(modelItem => item.FacAllowanceChange)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(modelItem => item.FacAllowanceChange)
+            </dd>
+           
+        }
 
         @if (@reqtype == "Termination")
         {

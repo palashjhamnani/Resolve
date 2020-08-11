@@ -8,7 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Resolve.Models
 {
     public enum FacRequestType
-    {      
+    {
+        [Display(Name = "Compensation Base Pay Change")]
+        Base,
+        [Display(Name = "Compensation Allowance Change")]
+        Allowance,
         [Display(Name = "Distribution Change")]
         Distribution,
         [Display(Name = "Employment End Date Change")]
@@ -17,6 +21,8 @@ namespace Resolve.Models
         FTE,
         [Display(Name = "Move Worker")]
         Move,
+        [Display(Name = "Paid to Unpaid")]
+        Unpaid,
         [Display(Name = "Termination")]
         Termination,
         [Display(Name = "Other")]
@@ -53,6 +59,7 @@ namespace Resolve.Models
         SeparationDissat,
         [Display(Name = "Separation - Medical Disability")]
         SepartionMedDis,
+
         [Display(Name = "Separation - Not Reappointed/Renewed")]
         SeparationNoRenew,
         [Display(Name = "Separation - Personal Reasons")]
@@ -71,8 +78,22 @@ namespace Resolve.Models
         SeparationCause,
         [Display(Name = "Separation - Transfer Within UW Medicine")]
         SeparationTransfer
+
+
     }
-   
+    public enum FacAllowanceChange
+    {
+        [Display(Name = "Administrative Suppliment")]
+        AdminSupp,
+        [Display(Name = "Endowed Supplement")]
+        EndowedSupp,
+        [Display(Name = "Lump Sum Moving Allowance")]
+        LumpSumMoving,
+        [Display(Name = "Lump Sum Relocation Payment")]
+        LumpSumReloc,
+        [Display(Name = "Other")]
+        Other
+    }
     public class HRServiceFaculty
 
     {
@@ -91,13 +112,18 @@ namespace Resolve.Models
         [Display(Name = "Request Type"), Required]
         public FacRequestType FacRequestType { get; set; }
 
-        [Display(Name = "Proposed SupOrg")]
         public virtual SupOrg? SupOrg { get; set; }
 
         public virtual Department Department { get; set; }
 
         [Display(Name = "Termination Reason")]
         public virtual TerminationReason? TerminationReason { get; set; }
+
+        [Display(Name = "Allowance Change")]
+        public virtual FacAllowanceChange? FacAllowanceChange { get; set; }
+
+        [Display(Name = "Base Pay Change")]
+        public virtual BasePayChange? BasePayChange { get; set; }
 
         public string EmployeeEID { get; set; }
 

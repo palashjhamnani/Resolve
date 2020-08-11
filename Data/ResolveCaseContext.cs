@@ -29,8 +29,6 @@ namespace Resolve.Data
         public DbSet<HRServiceFaculty> HRServiceFaculty { get; set; }
         public DbSet<HRServiceGradStudent> HRServiceGradStudent { get; set; }
         public DbSet<PerioLimitedCare> PerioLimitedCare { get; set; }
-        public DbSet<HiringAffiliateFaculty> HiringAffiliateFaculty { get; set; }
-        public DbSet<HRServiceScholarResident> HRServiceScholarResident { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
