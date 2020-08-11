@@ -475,78 +475,87 @@
                                                                 allow_approver = true;
                                                             }
 
-                                                            <tr>
-                                                                <td>@Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)</td>
-                                                                @{
-                                                                    if (item.Approved == 0)
-                                                                    {
-                                                                        <td>Pending</td>
-                                                                    }
-                                                                    else
-                                                                        if (item.Approved == 1)
-                                                                    {
-                                                                        <td>Approved</td>
-                                                                    }
-                                                                    else
-                                                                        if (item.Approved == -1)
-                                                                    {
-                                                                        <td>Rejected</td>
-                                                                    }
-                                                                    else
-                                                                        if (item.Approved == 3)
-                                                                    {
-                                                                        <td>Case Cancelled</td>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <td>@Html.DisplayFor(modelItem => item.Approved)</td>
-                                                                    }
+                                                        <tr>
+                                                            <td>@Html.DisplayFor(modelItem => item.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.LocalUser.LastName)</td>
+                                                            @{
+                                                                if (item.Approved == 0)
+                                                                {
+                                                                    <td>Pending</td>
                                                                 }
-                                                                @{
-                                                                    //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver
-                                                                    //and if the case is pending on this approver, and Case is not marked as processed yet, then provide option to assign to self
-                                                                    if (!approvers.Contains(User.GetDisplayName()) && allow_approver == true && item.Approved == 0 && Model.Processed == 0)
-                                                                    {
-                                                                        <td>
-                                                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AssignToSelf">
-                                                                                Assign to Self
-                                                                            </button>
-                                                                            <!-- Modal -->
-                                                                            <div class="modal fade" id="AssignToSelf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                                <div class="modal-dialog" role="document">
-                                                                                    <div class="modal-content">
-                                                                                        <div class="modal-header">
-                                                                                            <h5 class="modal-title" id="exampleModalLabel">Swap Approver with Self?</h5>
-                                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                <span aria-hidden="true">&times;</span>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                        <form asp-action="SwapApprover">
-                                                                                            <div class="modal-body">
-                                                                                                <div class="form-group">
-                                                                                                    <textarea class="form-control" name="FinalComment" rows="3" placeholder="Comments..."></textarea>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="modal-footer">
-                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                                                <input type="hidden" value="@Model.CaseID" name="CaseID" />
-                                                                                                <input type="hidden" value="@item.LocalUserID" name="OldApprover" />
-                                                                                                <input type="hidden" value="@item.LocalGroupID" name="GrpID" />
-                                                                                                <button class="btn btn-primary" type="submit">Save</button>
-                                                                                            </div>
-                                                                                        </form>
+                                                                else
+                                                                    if (item.Approved == 1)
+                                                                {
+                                                                    <td>Approved</td>
+                                                                }
+                                                                else
+                                                                    if (item.Approved == -1)
+                                                                {
+                                                                    <td>Rejected</td>
+                                                                }
+                                                                else
+                                                                    if (item.Approved == 3)
+                                                                {
+                                                                    <td>Case Cancelled</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>@Html.DisplayFor(modelItem => item.Approved)</td>
+                                                                }
+                                                            }
+                                                            @{
+                                                                //If current user is part of the group of which THIS approver is a part of, AND if current user isn't already an assigned approver
+                                                                //and if the case is pending on this approver, and Case is not marked as processed yet, then provide option to assign to self
+                                                                if (!approvers.Contains(User.GetDisplayName()) && allow_approver == true && item.Approved == 0 && Model.Processed == 0)
+                                                                {
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AssignToSelf">
+                                                                            Assign to Self
+                                                                        </button>
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade" id="AssignToSelf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="exampleModalLabel">Swap Approver with Self?</h5>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
                                                                                     </div>
+                                                                                    <form asp-action="SwapApprover">
+                                                                                        <div class="modal-body">
+                                                                                            <div class="form-group">
+                                                                                                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Comments..."></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                                            <input type="hidden" value="@Model.CaseID" name="CaseID" />
+                                                                                            <input type="hidden" value="@item.LocalUserID" name="OldApprover" />
+                                                                                            <input type="hidden" value="@item.LocalGroupID" name="GrpID" />
+                                                                                            <button class="btn btn-primary" type="submit">Save</button>
+                                                                                        </div>
+                                                                                    </form>
                                                                                 </div>
                                                                             </div>
-                                                                        </td>
+                                                                        </div>
+                                                                    </td>
 
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <td>NA</td>
-                                                                    }
                                                                 }
-                                                            </tr>
+                                                                else
+                                                                if (User.GetDisplayName() == item.LocalUserID && item.Approved == 0 && Model.Processed == 0)
+                                                                {
+                                                                    <td>                                                            
+                                                                        <a type="button" class="btn btn-warning btn-sm" asp-area="" asp-controller="Cases" asp-action="Reassign" asp-route-id="@Model.CaseID" asp-route-gid="@item.LocalGroup.LocalGroupID">
+                                                                            Re-Assign
+                                                                        </a>
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>NA</td>
+                                                                }
+                                                            }
+                                                        </tr>
                                                         }
                                                     </tbody>
                                                 </table>

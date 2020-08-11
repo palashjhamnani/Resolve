@@ -887,5 +887,60 @@ namespace Resolve.Controllers
             return RedirectToAction("Details", new { id = cid, err_message = "Swap approver request could not be completed at this time!" });
         }
 
+        // GET
+        public IActionResult Reassign(int id, string gid)
+        {
+            var group_members = _context.UserGroup.Where(p => p.LocalGroupID == gid).ToList();
+            List<string> g_members = new List<string>();
+            foreach (var item in group_members)
+            {
+                if (item.LocalUserID != User.Identity.Name)
+                {
+                    g_members.Add(item.LocalUserID);
+                }                
+            }
+            ViewData["group_members"] = new SelectList(g_members);
+            ViewData["group_name"] = _context.LocalGroup.Find(gid).GroupName;
+            ViewData["Case_CID"] = _context.Case.Find(id).CaseCID;
+            ViewData["Case_ID"] = id;
+            ViewData["Group_ID"] = gid;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reassign()
+        {
+            var cid = HttpContext.Request.Form["Case_ID"];
+            var gid = HttpContext.Request.Form["Group_ID"].ToString();
+            var final_comment = HttpContext.Request.Form["FinalComment"];
+            var reassign_to = HttpContext.Request.Form["reassign_to"].ToString();
+            int int_cid = Convert.ToInt32(cid);
+            string details_arg = "";
+            try
+            {
+                var approver_old = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
+                _context.Approver.Remove(approver_old);
+                await _context.SaveChangesAsync();
+                var reassigned_approver = new Approver { LocalUserID = reassign_to, CaseID = int_cid, LocalGroupID = gid };
+                _context.Add(reassigned_approver);
+                var audit = new CaseAudit { AuditLog = "Approver " + User.Identity.Name + " has been swapped with " + reassign_to, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                _context.Add(audit);
+                // Adding final approval comment
+                if (final_comment != "")
+                {
+                    var f_comment = new CaseComment { Comment = "Reassignment Comment: " + final_comment, CaseID = int_cid, LocalUserID = User.Identity.Name };
+                    _context.Add(f_comment);
+                }
+                await _context.SaveChangesAsync();
+                details_arg = "Case successfully reassigned to " + reassign_to;
+                return RedirectToAction("Details", new { id = cid, err_message = details_arg });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Details", new { id = cid, err_message = "Reassign approver request could not be completed at this time!" });
+            }            
+        }
+
     }
 }

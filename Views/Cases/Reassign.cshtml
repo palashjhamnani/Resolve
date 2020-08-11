@@ -1,0 +1,30 @@
+﻿@model Resolve.Models.Approver
+
+@{
+    ViewData["Title"] = "RequestManager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Reassign Case - @ViewData["Case_CID"].ToString()</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Reassign">
+            <div class="form-group">
+                <label class="control-label">Select a group member from group: @ViewData["group_name"].ToString()</label>
+                <select name="reassign_to" class="form-control" asp-items="ViewBag.group_members"></select>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" name="FinalComment" rows="3" placeholder="Optional Comment..."></textarea>
+            </div>
+            <input type="hidden" value="@ViewData["Case_ID"]" name="Case_ID" />
+            <input type="hidden" value="@ViewData["Group_ID"]" name="Group_ID" />
+            <div class="form-group">
+                <input type="submit" value="Reassign" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
