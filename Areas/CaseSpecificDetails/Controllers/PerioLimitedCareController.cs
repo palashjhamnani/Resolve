@@ -33,7 +33,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, [Bind("StudentName,PatientName,PatientAddress,PatientPhone,BirthDate,Complaint,TreatmentPlan,bwxrays,paxrays,RestorativeExam,PerioExam,Prophy,Other,TChart")] PerioLimitedCare perioLimitedCare)
+        public async Task<IActionResult> Create(int id, [Bind("StudentName,PatientName,PatientAddress,PatientPhone,BirthDate,Complaint,TreatmentPlan,bwxrays,paxrays,RestorativeExam,PerioExam,Prophy,Other,TChart,Note")] PerioLimitedCare perioLimitedCare)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +63,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,StudentName,PatientName,PatientAddress,PatientPhone,BirthDate,Complaint,TreatmentPlan,bwxrays,paxrays,RestorativeExam,PerioExam,Prophy,Other,TChart")] PerioLimitedCare perioLimitedCare)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,StudentName,PatientName,PatientAddress,PatientPhone,BirthDate,Complaint,TreatmentPlan,bwxrays,paxrays,RestorativeExam,PerioExam,Prophy,Other,TChart.Note")] PerioLimitedCare perioLimitedCare)
 
         {
             /** First check important fields to see if values have changed and if so add to audit log **/

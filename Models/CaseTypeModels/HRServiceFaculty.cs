@@ -91,6 +91,7 @@ namespace Resolve.Models
         [Display(Name = "Request Type"), Required]
         public FacRequestType FacRequestType { get; set; }
 
+        [Display(Name = "Proposed SupOrg")]
         public virtual SupOrg? SupOrg { get; set; }
 
         public virtual Department Department { get; set; }
