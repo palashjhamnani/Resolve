@@ -1,0 +1,63 @@
+﻿@model Resolve.Models.Case
+
+@foreach (var item in Model.HRServiceScholarResident)
+{
+    <dl class="row">
+       
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.ScholarRequestType)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.ScholarRequestType)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Name)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Name)
+        </dd>
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.ScholarJobProfile)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.ScholarJobProfile)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EffectiveStartDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EffectiveStartDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EffectiveEndDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EffectiveEndDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Department)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Department)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.StepStipendAllowance)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.StepStipendAllowance)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.BudgetNumbers)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.BudgetNumbers)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Note)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Note)
+        </dd>
+    </dl>
+}

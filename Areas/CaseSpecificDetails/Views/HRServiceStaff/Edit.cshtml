@@ -62,7 +62,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CaseID" />
             <div class="form-group" id="WorkerType">
-                <label asp-for="WorkerType" class="control-label"></label>
+                <label asp-for="WorkerType" class="control-label required-field"></label>
                 <select asp-for="WorkerType" asp-items="Html.GetEnumSelectList<WorkerType>()" class="form-control">
                     <option selected="selected" value="">Please select</option>
                 </select>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="RequestType" class="control-label"></label>
+                <label asp-for="RequestType" class="control-label required-field"></label>
                 <select asp-for="RequestType" asp-items="Html.GetEnumSelectList<RequestType>()" class="form-control">
                     <option selected="selected" value="">Please select</option>
                 </select>
@@ -139,7 +139,7 @@
                 <span asp-validation-for="SupOrg" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EmployeeName" class="control-label"></label>
+                <label asp-for="EmployeeName" class="control-label required-field"></label>
                 <input asp-for="EmployeeName" class="form-control" />
                 <span asp-validation-for="EmployeeName" class="text-danger"></span>
             </div>
@@ -155,12 +155,12 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="EffectiveStartDate" class="control-label"></label>
+                <label asp-for="EffectiveStartDate" class="control-label required-field"></label>
                 <input asp-for="EffectiveStartDate" class="form-control" />
                 <span asp-validation-for="EffectiveStartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EffectiveEndDate" class="control-label"></label>
+                <label asp-for="EffectiveEndDate" class="control-label"></label> (<span class="text-danger">*if applicable</span>)
                 <input asp-for="EffectiveEndDate" class="form-control" />
                 <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
             </div>
