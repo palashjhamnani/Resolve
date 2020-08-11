@@ -26,7 +26,7 @@ namespace Resolve.Models
         [Display(Name = "Patient Address")]
         public string PatientAddress { get; set; }
 
-        [Display(Name = "Patient Phone")]
+        [Display(Name = "PatientPhone")]
         public string PatientPhone { get; set; }
 
         [Display(Name = "Chief Complaint")]
@@ -55,8 +55,6 @@ namespace Resolve.Models
 
         [Display(Name = "Other")]
         public bool Other { get; set; }
-
-        public string Note { get; set; }
 
     }
 }

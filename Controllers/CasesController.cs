@@ -181,9 +181,7 @@ namespace Resolve.Controllers
                 .Include(p => p.HRServiceFaculty)
                 .Include(p => p.HRServiceGradStudent)
                 .Include(p => p.HRServiceStaff)
-                .Include(p => p.HRServiceScholarResident)
                 .Include(p => p.PerioLimitedCare)
-                .Include(p => p.HiringAffiliateFaculty)
                 .FirstOrDefaultAsync(m => m.CaseID == id);
             if (@case == null)
             {

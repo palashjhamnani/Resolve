@@ -44,6 +44,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
                     EmployeeName = hrFaculty.EmployeeName,
                     FacRequestType = hrFaculty.FacRequestType,
+                    FacAllowanceChange = hrFaculty.FacAllowanceChange,
                     EffectiveStartDate = hrFaculty.EffectiveStartDate,
                     EffectiveEndDate = hrFaculty.EffectiveEndDate,
                     SupOrg = hrFaculty.SupOrg,
@@ -85,7 +86,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacRequestType,BasePayChange,FacAllowanceChange,EffectiveStartDate,EffectiveEndDate,TerminationReason,Offboarding,Note,ClosePosition,LeaveWA,Salary,Amount,SupOrg,Department,CurrentFTE,ProposedFTE,JobTitle,EmployeeEID,BudgetNumbers")] HRServiceFaculty hrFaculty)
 
         {
             IQueryable<HRServiceFaculty> beforeCases = _context.HRServiceFaculty.Where(c => c.CaseID == id).AsNoTracking<HRServiceFaculty>();
@@ -100,9 +101,14 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                /** Also clear any fields that were hidden when and not automatically reset in the form **/
 
                 string strAudit = "Case Edited. Values updated (old,new). ";
+
                
                 string bcRequest = beforeCase.FacRequestType.ToString();
-                string currRequest = hrFaculty.FacRequestType.ToString();              
+                string currRequest = hrFaculty.FacRequestType.ToString();
+                string bcBase = beforeCase.BasePayChange.ToString();
+                string currBase = hrFaculty.BasePayChange.ToString();
+                string bcAllow = beforeCase.FacAllowanceChange.ToString();
+                string currAllow = hrFaculty.FacAllowanceChange.ToString();
                 string bcTerm = beforeCase.TerminationReason.ToString();
                 string currTerm = hrFaculty.TerminationReason.ToString();
                 string bcOff = beforeCase.Offboarding.ToString();
@@ -165,8 +171,18 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                     hrFaculty.LeaveWA = false;
                     currLeave = "False";
                 }
-               
-               
+                if (currRequest != "Base")
+                {
+                    hrFaculty.BasePayChange = null;
+                    hrFaculty.Amount = "";
+                    currBase = "";
+                    currAmount = "";
+
+                }
+                if (currRequest != "Allowance")
+                {   hrFaculty.FacAllowanceChange = null;
+                    currAllow = "";
+                }
                 if (currRequest != "FTE")
                 {
                     hrFaculty.CurrentFTE = "";
@@ -179,12 +195,19 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                     hrFaculty.SupOrg = null;
                     currSup = "";
                 }
-               
+                if (bcBase != currBase)
+                {
+                    strAudit += "Base: (" + bcBase + "," + currBase + ") ";
+                }
                 if (bcAmount != currAmount)
                 {
                     strAudit += "Amount: (" + bcAmount + "," + currAmount + ") ";
                 }
-               
+                if (bcAllow != currAllow)
+                {
+                    strAudit += "Allowance: (" + bcAllow + "," + currAllow + ") ";
+                }
+
                 if (bcTerm != currTerm)
                 {
                     strAudit += "TerminationReason: (" + bcTerm + "," + currTerm + ") ";
