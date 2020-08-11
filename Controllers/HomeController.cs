@@ -110,6 +110,7 @@ namespace Resolve.Controllers
                     LocalUserID = CreateUser.LocalUserID,
                     CaseCreation = true,
                     CaseAssignment = true,
+                    GroupAssignment = true,
                     CommentCreation = true,
                     AttachmentCreation = true,
                     CaseProcessed = true,

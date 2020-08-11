@@ -23,7 +23,7 @@ namespace Resolve.Helpers
             _config = config;
         }
 
-        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null, string comment_on_case = null)
+        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null, string comment_on_case = null, string group_name = null)
         {
             try
             {
@@ -58,59 +58,77 @@ namespace Resolve.Helpers
                     message.Body = bodyBuilder.ToMessageBody();
                 }
                 else
+                    if (template == "g_assignment")
+                    {
+                        var fileName = $"wwwroot/email_templates/group_case_assignment.html";
+                        message.Subject = "New Case [" + case_cid + "] Assigned";
+                        var body = File.ReadAllText(fileName);
+                        body = body.Replace("{first_name}", luser.FirstName)
+                        .Replace("{last_name}", luser.LastName)
+                        .Replace("{Resolve_Hostname}", host_add)
+                        .Replace("{group_name}", group_name)
+                        .Replace("{Resolve_Port}", host_port)
+                        .Replace("{Resolve_CASEID}", case_id)
+                        .Replace("{Resolve_CASECID}", case_cid)
+                        .Replace("{Resolve_UserID}", luser.LocalUserID);
+                        bodyBuilder.HtmlBody = body;
+                        //bodyBuilder.TextBody = "Hello World!";
+                        message.Body = bodyBuilder.ToMessageBody();
+                    }
+                else
                     if (template == "comment")
-                {
-                    var fileName = $"wwwroot/email_templates/comment_creation.html";
-                    message.Subject = "New Comment on [" + case_cid + "]";
-                    var body = File.ReadAllText(fileName);
-                    body = body.Replace("{first_name}", luser.FirstName)
-                    .Replace("{last_name}", luser.LastName)
-                    .Replace("{Resolve_Hostname}", host_add)
-                    .Replace("{Resolve_Port}", host_port)
-                    .Replace("{Resolve_CASEID}", case_id)
-                    .Replace("{Resolve_CASECID}", case_cid)
-                    .Replace("{Resolve_UserID}", luser.LocalUserID)
-                    .Replace("{commenter_fname}", comment_by.FirstName)
-                    .Replace("{commenter_lname}", comment_by.LastName)
-                    .Replace("{comment_on_case}", comment_on_case);
-                    bodyBuilder.HtmlBody = body;
-                    //bodyBuilder.TextBody = "Hello World!";
-                    message.Body = bodyBuilder.ToMessageBody();
-                }
+                    {
+                        var fileName = $"wwwroot/email_templates/comment_creation.html";
+                        message.Subject = "New Comment on [" + case_cid + "]";
+                        var body = File.ReadAllText(fileName);
+                        body = body.Replace("{first_name}", luser.FirstName)
+                        .Replace("{last_name}", luser.LastName)
+                        .Replace("{Resolve_Hostname}", host_add)
+                        .Replace("{Resolve_Port}", host_port)
+                        .Replace("{Resolve_CASEID}", case_id)
+                        .Replace("{Resolve_CASECID}", case_cid)
+                        .Replace("{Resolve_UserID}", luser.LocalUserID)
+                        .Replace("{commenter_fname}", comment_by.FirstName)
+                        .Replace("{commenter_lname}", comment_by.LastName)
+                        .Replace("{comment_on_case}", comment_on_case);
+                        bodyBuilder.HtmlBody = body;
+                        //bodyBuilder.TextBody = "Hello World!";
+                        message.Body = bodyBuilder.ToMessageBody();
+                    }
                 else
                     if (template == "approved")
-                {
-                    var fileName = $"wwwroot/email_templates/case_approval.html";
-                    message.Subject = "Case Approved - [" + case_cid + "]";
-                    var body = File.ReadAllText(fileName);
-                    body = body.Replace("{first_name}", luser.FirstName)
-                    .Replace("{last_name}", luser.LastName)
-                    .Replace("{Resolve_Hostname}", host_add)
-                    .Replace("{Resolve_Port}", host_port)
-                    .Replace("{Resolve_CASEID}", case_id)
-                    .Replace("{Resolve_CASECID}", case_cid)
-                    .Replace("{Resolve_UserID}", luser.LocalUserID);
-                    bodyBuilder.HtmlBody = body;
-                    //bodyBuilder.TextBody = "Hello World!";
-                    message.Body = bodyBuilder.ToMessageBody();
-                }
+                    {
+                        var fileName = $"wwwroot/email_templates/case_approval.html";
+                        message.Subject = "Case Approved - [" + case_cid + "]";
+                        var body = File.ReadAllText(fileName);
+                        body = body.Replace("{first_name}", luser.FirstName)
+                        .Replace("{last_name}", luser.LastName)
+                        .Replace("{Resolve_Hostname}", host_add)
+                        .Replace("{Resolve_Port}", host_port)
+                        .Replace("{Resolve_CASEID}", case_id)
+                        .Replace("{Resolve_CASECID}", case_cid)
+                        .Replace("{Resolve_UserID}", luser.LocalUserID);
+                        bodyBuilder.HtmlBody = body;
+                        //bodyBuilder.TextBody = "Hello World!";
+                        message.Body = bodyBuilder.ToMessageBody();
+                    }
                 else
                     if (template == "rejected")
-                {
-                    var fileName = $"wwwroot/email_templates/case_rejection.html";
-                    message.Subject = "Case Rejected - [" + case_cid + "]";
-                    var body = File.ReadAllText(fileName);
-                    body = body.Replace("{first_name}", luser.FirstName)
-                    .Replace("{last_name}", luser.LastName)
-                    .Replace("{Resolve_Hostname}", host_add)
-                    .Replace("{Resolve_Port}", host_port)
-                    .Replace("{Resolve_CASEID}", case_id)
-                    .Replace("{Resolve_CASECID}", case_cid)
-                    .Replace("{Resolve_UserID}", luser.LocalUserID);
-                    bodyBuilder.HtmlBody = body;
-                    //bodyBuilder.TextBody = "Hello World!";
-                    message.Body = bodyBuilder.ToMessageBody();
-                }
+                    {
+                        var fileName = $"wwwroot/email_templates/case_rejection.html";
+                        message.Subject = "Case Rejected - [" + case_cid + "]";
+                        var body = File.ReadAllText(fileName);
+                        body = body.Replace("{first_name}", luser.FirstName)
+                        .Replace("{last_name}", luser.LastName)
+                        .Replace("{Resolve_Hostname}", host_add)
+                        .Replace("{Resolve_Port}", host_port)
+                        .Replace("{Resolve_CASEID}", case_id)
+                        .Replace("{Resolve_CASECID}", case_cid)
+                        .Replace("{Resolve_UserID}", luser.LocalUserID);
+                        bodyBuilder.HtmlBody = body;
+                        //bodyBuilder.TextBody = "Hello World!";
+                        message.Body = bodyBuilder.ToMessageBody();
+                    }
 
                 SmtpClient client = new SmtpClient();
                 client.Connect(server_add, email_port, false);

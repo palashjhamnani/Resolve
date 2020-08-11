@@ -15,6 +15,7 @@ namespace Resolve.Models
         public LocalUser LocalUser { get; set; }       
 
         public bool CaseCreation { get; set; }
+        public bool GroupAssignment { get; set; }
         public bool CaseAssignment { get; set; }
         public bool CommentCreation { get; set; }
         public bool AttachmentCreation { get; set; }
