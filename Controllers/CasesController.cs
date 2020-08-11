@@ -912,6 +912,7 @@ namespace Resolve.Controllers
         public async Task<IActionResult> Reassign()
         {
             var cid = HttpContext.Request.Form["Case_ID"];
+            var ccid = HttpContext.Request.Form["Case_CID"];
             var gid = HttpContext.Request.Form["Group_ID"].ToString();
             var final_comment = HttpContext.Request.Form["FinalComment"];
             var reassign_to = HttpContext.Request.Form["reassign_to"].ToString();
@@ -919,9 +920,11 @@ namespace Resolve.Controllers
             string details_arg = "";
             try
             {
+                // Removing current approver
                 var approver_old = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
                 _context.Approver.Remove(approver_old);
                 await _context.SaveChangesAsync();
+                // Adding requested new approver from the same group
                 var reassigned_approver = new Approver { LocalUserID = reassign_to, CaseID = int_cid, LocalGroupID = gid };
                 _context.Add(reassigned_approver);
                 var audit = new CaseAudit { AuditLog = "Approver " + User.Identity.Name + " has been swapped with " + reassign_to, CaseID = int_cid, LocalUserID = User.Identity.Name };
@@ -933,7 +936,23 @@ namespace Resolve.Controllers
                     _context.Add(f_comment);
                 }
                 await _context.SaveChangesAsync();
-                details_arg = "Case successfully reassigned to " + reassign_to;
+                details_arg = "Case successfully reassigned to " + reassign_to + "! ";
+                // Sending Notification
+                var pref = _context.EmailPreference.Single(p => p.LocalUserID == reassign_to);
+                var new_user = _context.LocalUser.Single(p => p.LocalUserID == reassign_to);
+                if (pref.CaseAssignment == true)
+                {
+                    var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
+                    if (notif_result != "Sent")
+                    {
+                        details_arg = details_arg + "Could not notify new approver!";
+                    }
+                    else
+                        if (notif_result == "Sent")
+                    {
+                        details_arg = details_arg + "Notified new approver!";
+                    }
+                }
                 return RedirectToAction("Details", new { id = cid, err_message = details_arg });
             }
             catch (Exception)
