@@ -245,10 +245,7 @@ namespace Resolve.Controllers
                     var app_group = _context.LocalGroup
                             .Single(b => b.LocalGroupID == CTypeGroup.LocalGroupID);
                     var app_luser = _context.LocalUser
-                        .Single(b => b.LocalUserID == app_group.LocalUserID);
-                    @case.CaseStatus = "Pending on " + app_luser.LocalUserID;
-                    _context.Add(@case);
-                    await _context.SaveChangesAsync();
+                        .Single(b => b.LocalUserID == app_group.LocalUserID);                    
                     var approver_preference = _context.EmailPreference
                         .Single(b => b.LocalUserID == app_group.LocalUserID);
                     var appr_add = new Approver { CaseID = cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = 1, LocalGroupID = CTypeGroup.LocalGroupID };
@@ -524,11 +521,7 @@ namespace Resolve.Controllers
                             var app_group = _context.LocalGroup
                                 .Single(b => b.LocalGroupID == CTGroup[0].LocalGroupID);
                             var app_luser = _context.LocalUser
-                                .Single(b => b.LocalUserID == app_group.LocalUserID);
-                            // Change pending on new approver
-                            caseProcessed.CaseStatus = "Pending on " + app_luser.LocalUserID;
-                            _context.Add(caseProcessed);
-                            await _context.SaveChangesAsync();
+                                .Single(b => b.LocalUserID == app_group.LocalUserID);                            
                             var approver_preference = _context.EmailPreference
                                 .Single(b => b.LocalUserID == app_group.LocalUserID);
                             var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order), LocalGroupID = CTGroup[0].LocalGroupID };
