@@ -53,7 +53,7 @@
                                 <thead>
                                     <tr>
                                         <th class="th-sm" style="width: 20%">Case ID</th>
-                                        <th class="th-sm" style="width: 10%">Status</th>
+                                        <th class="th-sm" style="width: 10%">Pending On</th>
                                         <th class="th-sm" style="width: 40%">Description</th>
                                         <th class="th-sm" style="width: 10%">Created</th>
                                         <th class="th-sm" style="width: 20%">Case Type</th>
@@ -81,7 +81,32 @@
                                         }
                                         <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.CaseCID)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.CaseStatus)</td>
+                                            @{
+                                                if (item.CaseType.Hierarchical_Approval == true)
+                                                {
+                                                    string pending_on = "";
+                                                    foreach (var approver in item.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = approver.LocalUser.FirstName + " " + approver.LocalUser.LastName;
+                                                        }
+                                                    }
+                                                    <td>@pending_on</td>
+                                                }
+                                                else
+                                                {
+                                                    int pending_on = 0;
+                                                    foreach (var approver in item.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = pending_on + 1;
+                                                        }
+                                                    }
+                                                    <td>@pending_on Approvers</td>
+                                                }
+                                            }
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CaseType.CaseTypeTitle)</td>
@@ -107,12 +132,37 @@
                                         }
                                         <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            @{
+                                                if (item.Case.CaseType.Hierarchical_Approval == true)
+                                                {
+                                                    string pending_on = "";
+                                                    foreach (var approver in item.Case.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = approver.LocalUser.FirstName + " " + approver.LocalUser.LastName;
+                                                        }
+                                                    }
+                                                    <td>@pending_on</td>
+                                                }
+                                                else
+                                                {
+                                                    int pending_on = 0;
+                                                    foreach (var approver in item.Case.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = pending_on + 1;
+                                                        }
+                                                    }
+                                                    <td>@pending_on Approvers</td>
+                                                }
+                                            }
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
                                         </tr>
-                                    }
+                                      }
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -120,7 +170,7 @@
                                             Case ID
                                         </th>
                                         <th>
-                                            Status
+                                            Pending On
                                         </th>
                                         <th>
                                             Description
@@ -165,7 +215,7 @@
                                     <tr>
                                         <th scope="col">Case ID</th>
                                         <th>Created By</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Pending On</th>
                                         <th scope="col">Description</th>
                                         <th scope="col">Created</th>
                                         <th scope="col">Case Type</th>
@@ -193,7 +243,32 @@
                                         <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.CaseID }))'" style="cursor: pointer;">
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => item.Case.LocalUser.LastName)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+                                            @{
+                                                if (item.Case.CaseType.Hierarchical_Approval == true)
+                                                {
+                                                    string pending_on = "";
+                                                    foreach (var approver in item.Case.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = approver.LocalUser.FirstName + " " + approver.LocalUser.LastName;
+                                                        }
+                                                    }
+                                                    <td>@pending_on</td>
+                                                }
+                                                else
+                                                {
+                                                    int pending_on = 0;
+                                                    foreach (var approver in item.Case.Approvers)
+                                                    {
+                                                        if (approver.Approved == 0)
+                                                        {
+                                                            pending_on = pending_on + 1;
+                                                        }
+                                                    }
+                                                    <td>@pending_on Approvers</td>
+                                                }
+                                            }
                                             <td>@Html.DisplayFor(modelItem => Desc)</td>
                                             <td data-toggle="tooltip" title="@item.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
@@ -209,7 +284,7 @@
                                             Created By
                                         </th>
                                         <th>
-                                            Status
+                                            Pending On
                                         </th>
                                         <th>
                                             Description
@@ -254,7 +329,7 @@
                                     <tr>
                                         <th scope="col">Case ID</th>
                                         <th>Created By</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Pending On</th>
                                         <th scope="col">Description</th>
                                         <th scope="col">Created</th>
                                         <th scope="col">Case Type</th>
@@ -284,7 +359,32 @@
                                             <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = c.CaseID }))'" style="cursor: pointer;">
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.LocalUser.FirstName) @Html.DisplayFor(modelItem => c.Case.LocalUser.LastName)</td>
-                                                <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
+                                                @{
+                                                    if (c.Case.CaseType.Hierarchical_Approval == true)
+                                                    {
+                                                        string pending_on = "";
+                                                        foreach (var approver in c.Case.Approvers)
+                                                        {
+                                                            if (approver.Approved == 0)
+                                                            {
+                                                                pending_on = approver.LocalUser.FirstName + " " + approver.LocalUser.LastName;
+                                                            }
+                                                        }
+                                                        <td>@pending_on</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        int pending_on = 0;
+                                                        foreach (var approver in c.Case.Approvers)
+                                                        {
+                                                            if (approver.Approved == 0)
+                                                            {
+                                                                pending_on = pending_on + 1;
+                                                            }
+                                                        }
+                                                        <td>@pending_on Approvers</td>
+                                                    }
+                                                }
                                                 <td>@Html.DisplayFor(modelItem => Desc)</td>
                                                 <td data-toggle="tooltip" title="@c.Case.CaseCreationTimestamp"><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
                                                 <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
