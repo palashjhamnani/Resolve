@@ -3,7 +3,12 @@
 @foreach (var item in Model.PerioLimitedCare)
 {
     <dl class="row">
-
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.TChart)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.TChart)
+        </dd>
         <dt class="col-sm-4">
             @Html.DisplayNameFor(modelItem => item.StudentName)
         </dt>
@@ -84,10 +89,11 @@
             @Html.DisplayFor(modelItem => item.Other)
         </dd>
         <dt class="col-sm-4">
-            @Html.DisplayNameFor(modelItem => item.TChart)
+            @Html.DisplayNameFor(modelItem => item.OtherProcedure)
         </dt>
         <dd class="col-sm-8">
-            @Html.DisplayFor(modelItem => item.TChart)
+            @Html.DisplayFor(modelItem => item.OtherProcedure)
         </dd>
+
     </dl>
 }
