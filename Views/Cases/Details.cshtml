@@ -69,7 +69,9 @@
                         else
                             if (Model.CaseType.Hierarchical_Approval == true)
                         {
-                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@approvals_remaining/@Model.CaseType.GroupNumber Approvals Pending</span></h6>
+                            int total_approvers_for_hierarchical = Convert.ToInt32(Model.CaseType.GroupNumber);
+                            int remaining = total_approvers_for_hierarchical - approved_count;
+                            <h6 class="m-0 font-weight-bold text-primary">@Model.CaseCID <span class="badge badge-warning">@remaining/@total_approvers_for_hierarchical Approvals Pending</span></h6>
                         }
                         else
                         {

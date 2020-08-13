@@ -255,7 +255,7 @@ namespace Resolve.Controllers
                     //Send Notification to the approver
                     if (approver_preference.CaseAssignment == true)
                     {
-                        var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: app_luser, template: "assignment");
+                        var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: app_luser, template: "assignment");
                         if (notif_result != "Sent")
                         {
                             Console.WriteLine("Could not send assignment notification!");
@@ -304,7 +304,7 @@ namespace Resolve.Controllers
                         //Send Notification to this approver
                         if (approver_preferences.CaseAssignment == true)
                         {
-                            var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
+                            var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
                             if (notif_result != "Sent")
                             {
                                 Console.WriteLine("Could not send assignment notification!");
@@ -533,7 +533,7 @@ namespace Resolve.Controllers
                             //Send Notification
                             if (approver_preference.CaseAssignment == true)
                             {
-                                var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
+                                var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
                                 if (notif_result != "Sent")
                                 {
                                     Console.WriteLine("Could not send assignment notification!");
@@ -1008,9 +1008,10 @@ namespace Resolve.Controllers
                 // Sending Notification
                 var pref = _context.EmailPreference.Single(p => p.LocalUserID == reassign_to);
                 var new_user = _context.LocalUser.Single(p => p.LocalUserID == reassign_to);
+                var rel_case = _context.Case.Single(p => p.CaseID == int_cid);
                 if (pref.CaseAssignment == true)
                 {
-                    var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
+                    var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
                     if (notif_result != "Sent")
                     {
                         details_arg = details_arg + "Could not notify new approver!";

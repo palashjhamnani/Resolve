@@ -5,6 +5,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Simple Email</title>
     <style>
+	.beta table {
+	  font-family: arial, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+
+	.beta td, .beta th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+
+	.beta tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
     /* -------------------------------------
         INLINED WITH htmlemail.io/inline
     ------------------------------------- */
@@ -114,6 +129,34 @@
                                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                                               <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hi {first_name} {last_name},</p>
                                               <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">A new case [{Resolve_CASECID}] has been created and assigned to you. To process the case, please click the below link to go to case description. You could then approve/reject the case as applicable.</p>
+											  
+											  <table class="beta">
+												<thead>
+													<tr>
+														<th class="th-sm" style="width: 20%">Property</th>
+														<th class="th-sm" style="width: 10%">Value</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>Case Type</td>
+														<td>{Case_Type}</td>
+													</tr>
+													<tr>
+														<td>Created By</td>
+														<td>{Created_By}</td>
+													</tr>
+													<tr>
+														<td>Created On</td>
+														<td>{Created_On}</td>
+													</tr>
+													<tr>
+														<td>Description</td>
+														<td>{Case_Description}</td>
+													</tr>
+												</tbody>
+											  </table>
+											  <br />
                                               <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                                   <tbody>
                                                       <tr>

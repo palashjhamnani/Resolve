@@ -23,7 +23,7 @@ namespace Resolve.Helpers
             _config = config;
         }
 
-        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null, string comment_on_case = null, string group_name = null)
+        public string SendEmail(LocalUser luser, string case_cid, string case_id, string template, LocalUser comment_by = null, string comment_on_case = null, string group_name = null, Case related_case = null)
         {
             try
             {
@@ -38,7 +38,12 @@ namespace Resolve.Helpers
                 MailboxAddress from = new MailboxAddress("SOD RequestManager", from_add);
                 message.From.Add(from);
                 MailboxAddress to = new MailboxAddress(luser.FirstName, luser.LocalUserID);
-                message.To.Add(to);                
+                message.To.Add(to);
+
+                // Copy Admin (anyal@uw.edu) to every email send out by Resolve
+                //MailboxAddress copy = new MailboxAddress("palashj@uw.edu");                
+                //message.Cc.Add(copy);
+
                 BodyBuilder bodyBuilder = new BodyBuilder();
                 // Picking Template
                 if (template == "assignment")
@@ -52,7 +57,11 @@ namespace Resolve.Helpers
                     .Replace("{Resolve_Port}", host_port)
                     .Replace("{Resolve_CASEID}", case_id)
                     .Replace("{Resolve_CASECID}", case_cid)
-                    .Replace("{Resolve_UserID}", luser.LocalUserID);
+                    .Replace("{Resolve_UserID}", luser.LocalUserID)
+                    .Replace("{Case_Type}", related_case.CaseType.CaseTypeTitle)
+                    .Replace("{Created_By}", related_case.LocalUserID)
+                    .Replace("{Created_On}", related_case.CaseCreationTimestamp.ToString())
+                    .Replace("{Case_Description}", related_case.Description);
                     bodyBuilder.HtmlBody = body;
                     //bodyBuilder.TextBody = "Hello World!";
                     message.Body = bodyBuilder.ToMessageBody();
