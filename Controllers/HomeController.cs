@@ -196,31 +196,53 @@ namespace Resolve.Controllers
             var UCases = await _context.LocalUser
                 // Created by the User
                 .Include(s => s.Cases.Where(p => p.Processed == 0))
-                    .ThenInclude(w => w.CaseType)                    
+                    .ThenInclude(w => w.CaseType)
+                // Including Approvers
+                .Include(s => s.Cases.Where(p => p.Processed == 0))
+                    .ThenInclude(w => w.Approvers)
+                    .ThenInclude(w => w.LocalUser)
                     // Created on behalf of the User
                     .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 0))
                         .ThenInclude(s => s.Case)
                         .ThenInclude(s => s.CaseType)
+                    // Including Approvers
+                    .Include(s => s.OnBehalves.Where(p => p.Case.Processed == 0))
+                        .ThenInclude(s => s.Case)
+                        .ThenInclude(s => s.Approvers)
+                        .ThenInclude(w => w.LocalUser)
                 // Assigned to the User
                 .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
                     .ThenInclude(q => q.Case)
                     .ThenInclude(q => q.CaseType)
+                // Including Case Creator
                 .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
                     .ThenInclude(q => q.Case)
-                    .ThenInclude(q => q.LocalUser)                
+                    .ThenInclude(q => q.LocalUser)
+                // Including Approvers
+                .Include(q => q.CasesforApproval.Where(p => p.Case.Processed == 0 && p.Approved == 0))
+                    .ThenInclude(q => q.Case)
+                    .ThenInclude(q => q.Approvers)
+                    .ThenInclude(w => w.LocalUser)
                 // Assigned to the Groups to which the user belongs to
                 .Include(e => e.UserGroups)
                         .ThenInclude(e => e.LocalGroup)
                         .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
                         .ThenInclude(e => e.Case)
                         .ThenInclude(e => e.CaseType)
+                // Including Case Creator
                 .Include(e => e.UserGroups)
                         .ThenInclude(e => e.LocalGroup)
                         .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
                         .ThenInclude(e => e.Case)
                         .ThenInclude(e => e.LocalUser)
+                // Including Approvers
+                .Include(e => e.UserGroups)
+                        .ThenInclude(e => e.LocalGroup)
+                        .ThenInclude(e => e.GroupCases.Where(p => p.Case.Processed == 0))
+                        .ThenInclude(e => e.Case)
+                        .ThenInclude(e => e.Approvers)
+                        .ThenInclude(w => w.LocalUser)
                 .Include(e => e.EmailPreference)
-            .AsNoTracking()
             .FirstOrDefaultAsync(m => m.LocalUserID == ADemail);
             int group_case_count = 0;
             foreach (var item in UCases.UserGroups)
