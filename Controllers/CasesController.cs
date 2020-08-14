@@ -487,7 +487,7 @@ namespace Resolve.Controllers
             int int_cid = Convert.ToInt32(cid);
             string details_arg = "";
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
-            var caseProcessed = await _context.Case.FindAsync(int_cid);
+            var caseProcessed = _context.Case.Include(p => p.CaseType).Single(p => p.CaseID == int_cid);
             var caseCreator = await _context.LocalUser.FindAsync(caseProcessed.LocalUserID);
             var CType = await _context.CaseType.FindAsync(caseProcessed.CaseTypeID);
             //var CTypeGroups = _context.CaseTypeGroup
@@ -1008,7 +1008,9 @@ namespace Resolve.Controllers
                 // Sending Notification
                 var pref = _context.EmailPreference.Single(p => p.LocalUserID == reassign_to);
                 var new_user = _context.LocalUser.Single(p => p.LocalUserID == reassign_to);
-                var rel_case = _context.Case.Single(p => p.CaseID == int_cid);
+                var rel_case = _context.Case
+                    .Include(p => p.CaseType)
+                    .Single(p => p.CaseID == int_cid);
                 if (pref.CaseAssignment == true)
                 {
                     var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
