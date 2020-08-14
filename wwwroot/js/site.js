@@ -32,7 +32,7 @@ $(document).ready(function () {
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
-                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Search</option></select>')
+                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Filter</option></select>')
                     .appendTo($(column.footer()).empty())
                     .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
@@ -56,7 +56,7 @@ $(document).ready(function () {
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
-                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Search</option></select>')
+                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Filter</option></select>')
                     .appendTo($(column.footer()).empty())
                     .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
@@ -80,7 +80,7 @@ $(document).ready(function () {
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
-                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Search</option></select>')
+                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Filter</option></select>')
                     .appendTo($(column.footer()).empty())
                     .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
@@ -104,7 +104,7 @@ $(document).ready(function () {
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
-                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Search</option></select>')
+                var select = $('<select  class="browser-default custom-select form-control-sm"><option value="" selected>Filter</option></select>')
                     .appendTo($(column.footer()).empty())
                     .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(

@@ -40,8 +40,9 @@ namespace Resolve.Helpers
                 MailboxAddress to = new MailboxAddress(luser.FirstName, luser.LocalUserID);
                 message.To.Add(to);
 
-                // Copy Admin (anyal@uw.edu) to every email send out by Resolve
-                //MailboxAddress copy = new MailboxAddress("palashj@uw.edu");                
+                // Uncomment this section when group send mail gets fixed, otherwise the system will send duplicate emails to Anya for each member in a group
+                // Copy Admin (anyal@uw.edu) to every email sent out by Resolve
+                //MailboxAddress copy = new MailboxAddress("Anya L. Levysmith", "anyal@uw.edu");                
                 //message.Cc.Add(copy);
 
                 BodyBuilder bodyBuilder = new BodyBuilder();
