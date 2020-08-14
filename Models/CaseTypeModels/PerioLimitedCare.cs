@@ -56,6 +56,9 @@ namespace Resolve.Models
         [Display(Name = "Other")]
         public bool Other { get; set; }
 
+        [Display(Name = "Other Explanation")]
+        public string OtherProcedure { get; set; }
+       
         public string Note { get; set; }
 
     }

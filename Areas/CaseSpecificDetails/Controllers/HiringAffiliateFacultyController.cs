@@ -71,7 +71,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseID,EmployeeName,FacAffiliateTitle,HireDate,Department,Note")] HiringAffiliateFaculty hrAffFaculty)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseID,Name,FacAffiliateTitle,HireDate,Department,Note")] HiringAffiliateFaculty hrAffFaculty)
 
         {
             IQueryable<HiringAffiliateFaculty> beforeCases = _context.HiringAffiliateFaculty.Where(c => c.CaseID == id).AsNoTracking<HiringAffiliateFaculty>();
