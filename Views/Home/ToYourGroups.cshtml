@@ -14,6 +14,7 @@
             <th scope="col">Group</th>
             <th scope="col">Case ID</th>
             <th scope="col">Status</th>
+            <th scope="col">Description</th>
             <th scope="col">Created</th>
             <th scope="col">Case Type</th>
         </tr>
@@ -25,13 +26,28 @@
             @foreach (var c in item.LocalGroup.GroupCases)
             {
                 string modified_date = c.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
-                <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = c.Case.CaseID }))'" style="cursor: pointer;">
-                    <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
-                    <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
-                    <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
-                    <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
-                    <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
-                </tr>
+                string Desc = "";
+                if (c.Case.Description != null && c.Case.Description.Length > 50)
+                {
+                    Desc = c.Case.Description.Substring(0, 50);
+                }
+                else
+                if (c.Case.Description == null)
+                {
+                    Desc = "";
+                }
+                else
+                {
+                    Desc = c.Case.Description;
+                }
+        <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = c.Case.CaseID }))'" style="cursor: pointer;">
+            <td>@Html.DisplayFor(modelItem => c.LocalGroup.GroupName)</td>
+            <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
+            <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
+            <td>@Html.DisplayFor(modelItem => Desc)</td>
+            <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
+            <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
+        </tr>
             }
         }
     </tbody>
@@ -40,6 +56,7 @@
             <th scope="col">Group</th>
             <th scope="col">Case ID</th>
             <th scope="col">Status</th>
+            <th scope="col">Description</th>
             <th scope="col">Created</th>
             <th scope="col">Case Type</th>
         </tr>

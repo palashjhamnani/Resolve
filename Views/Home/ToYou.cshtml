@@ -13,6 +13,7 @@
         <tr>
             <th scope="col">Case ID</th>
             <th scope="col">Status</th>
+            <th scope="col">Description</th>
             <th scope="col">Created</th>
             <th scope="col">Case Type</th>
         </tr>
@@ -22,18 +23,34 @@
         @foreach (var item in Model.CasesforApproval)
         {
             string modified_date = item.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
-            <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.Case.CaseID }))'" style="cursor: pointer;">
-                <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
-                <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
-                <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
-                <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
-            </tr>
+            string Desc = "";
+            if (item.Case.Description != null && item.Case.Description.Length > 50)
+            {
+                Desc = item.Case.Description.Substring(0, 50);
+            }
+            else
+            if (item.Case.Description == null)
+            {
+                Desc = "";
+            }
+            else
+            {
+                Desc = item.Case.Description;
+            }
+        <tr onclick="location.href = '@(Url.Action("Details", "Cases", new { id = item.Case.CaseID }))'" style="cursor: pointer;">
+            <td>@Html.DisplayFor(modelItem => item.Case.CaseCID)</td>
+            <td>@Html.DisplayFor(modelItem => item.Case.CaseStatus)</td>
+            <td>@Html.DisplayFor(modelItem => Desc)</td>
+            <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => item.Case.CaseCreationTimestamp)</td>
+            <td>@Html.DisplayFor(modelItem => item.Case.CaseType.CaseTypeTitle)</td>
+        </tr>
         }
     </tbody>
     <tfoot>
         <tr>
             <th scope="col">Case ID</th>
             <th scope="col">Status</th>
+            <th scope="col">Description</th>
             <th scope="col">Created</th>
             <th scope="col">Case Type</th>
         </tr>
