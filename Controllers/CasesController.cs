@@ -487,7 +487,7 @@ namespace Resolve.Controllers
             int int_cid = Convert.ToInt32(cid);
             string details_arg = "";
             var caseForApproval = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
-            var caseProcessed = await _context.Case.FindAsync(int_cid);
+            var caseProcessed = _context.Case.Include(p => p.CaseType).Single(p => p.CaseID == int_cid);
             var caseCreator = await _context.LocalUser.FindAsync(caseProcessed.LocalUserID);
             var CType = await _context.CaseType.FindAsync(caseProcessed.CaseTypeID);
             //var CTypeGroups = _context.CaseTypeGroup
@@ -523,7 +523,7 @@ namespace Resolve.Controllers
                             var app_group = _context.LocalGroup
                                 .Single(b => b.LocalGroupID == CTGroup[0].LocalGroupID);
                             var app_luser = _context.LocalUser
-                                .Single(b => b.LocalUserID == app_group.LocalUserID);                            
+                                .Single(b => b.LocalUserID == app_group.LocalUserID);
                             var approver_preference = _context.EmailPreference
                                 .Single(b => b.LocalUserID == app_group.LocalUserID);
                             var appr_add = new Approver { CaseID = int_cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = Convert.ToInt32(CTGroup[0].Order), LocalGroupID = CTGroup[0].LocalGroupID };
@@ -929,9 +929,10 @@ namespace Resolve.Controllers
             try
             {
                 var approver_old = await _context.Approver.FindAsync(int_cid, old_approver);
+                var old_order = approver_old.Order;
                 _context.Approver.Remove(approver_old);
                 await _context.SaveChangesAsync();
-                var swapped_approver = new Approver { LocalUserID = User.Identity.Name, CaseID = int_cid, LocalGroupID = gid };
+                var swapped_approver = new Approver { LocalUserID = User.Identity.Name, CaseID = int_cid, LocalGroupID = gid, Order = old_order };
                 _context.Add(swapped_approver);
                 var audit = new CaseAudit { AuditLog = "Approver "+old_approver+" has been swapped with "+User.Identity.Name, CaseID = int_cid, LocalUserID = User.Identity.Name };
                 _context.Add(audit);
@@ -990,10 +991,11 @@ namespace Resolve.Controllers
             {
                 // Removing current approver
                 var approver_old = await _context.Approver.FindAsync(int_cid, User.Identity.Name);
+                var old_order = approver_old.Order;
                 _context.Approver.Remove(approver_old);
                 await _context.SaveChangesAsync();
                 // Adding requested new approver from the same group
-                var reassigned_approver = new Approver { LocalUserID = reassign_to, CaseID = int_cid, LocalGroupID = gid };
+                var reassigned_approver = new Approver { LocalUserID = reassign_to, CaseID = int_cid, LocalGroupID = gid, Order = old_order };
                 _context.Add(reassigned_approver);
                 var audit = new CaseAudit { AuditLog = "Approver " + User.Identity.Name + " has been swapped with " + reassign_to, CaseID = int_cid, LocalUserID = User.Identity.Name };
                 _context.Add(audit);
@@ -1008,7 +1010,9 @@ namespace Resolve.Controllers
                 // Sending Notification
                 var pref = _context.EmailPreference.Single(p => p.LocalUserID == reassign_to);
                 var new_user = _context.LocalUser.Single(p => p.LocalUserID == reassign_to);
-                var rel_case = _context.Case.Single(p => p.CaseID == int_cid);
+                var rel_case = _context.Case
+                    .Include(p => p.CaseType)
+                    .Single(p => p.CaseID == int_cid);
                 if (pref.CaseAssignment == true)
                 {
                     var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
