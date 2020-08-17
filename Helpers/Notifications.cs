@@ -194,7 +194,7 @@ namespace Resolve.Helpers
                     if (template == "new_approved")
                 {
                     var fileName = $"wwwroot/email_templates/new_case_approval.html";
-                    message.Subject = "Case Approved - [" + case_cid + "]";
+                    message.Subject = "Case Approved - [" + related_case.CaseType.CaseTypeTitle + "] : [" + case_cid + "]";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
                     .Replace("{last_name}", luser.LastName)
@@ -232,7 +232,7 @@ namespace Resolve.Helpers
                     if (template == "new_rejected")
                 {
                     var fileName = $"wwwroot/email_templates/new_case_rejection.html";
-                    message.Subject = "Case Rejected - [" + case_cid + "]";
+                    message.Subject = "Case Rejected - [" + related_case.CaseType.CaseTypeTitle + "] : [" + case_cid + "]";
                     var body = File.ReadAllText(fileName);
                     body = body.Replace("{first_name}", luser.FirstName)
                     .Replace("{last_name}", luser.LastName)
