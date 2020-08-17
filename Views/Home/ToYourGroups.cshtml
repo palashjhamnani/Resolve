@@ -11,12 +11,12 @@
 <table id="dt_filter_select_general" class="table table-hover table-sm">
     <thead>
         <tr>
-            <th scope="col">Group</th>
-            <th scope="col">Case ID</th>
-            <th scope="col">Status</th>
-            <th scope="col">Description</th>
-            <th scope="col">Created</th>
-            <th scope="col">Case Type</th>
+            <th scope="col" style="width: 15%">Group</th>
+            <th scope="col" style="width: 15%">Case ID</th>
+            <th scope="col" style="width: 10%">Status</th>
+            <th scope="col" style="width: 35%">Description</th>
+            <th scope="col" style="width: 10%">Created</th>
+            <th scope="col" style="width: 15%">Case Type</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +26,7 @@
             @foreach (var c in item.LocalGroup.GroupCases)
             {
                 string modified_date = c.Case.CaseCreationTimestamp.ToString("yyyyMMddHHmmss");
+                string shortDate = c.Case.CaseCreationTimestamp.ToShortDateString();
                 string Desc = "";
                 if (c.Case.Description != null && c.Case.Description.Length > 50)
                 {
@@ -45,7 +46,7 @@
             <td>@Html.DisplayFor(modelItem => c.Case.CaseCID)</td>
             <td>@Html.DisplayFor(modelItem => c.Case.CaseStatus)</td>
             <td>@Html.DisplayFor(modelItem => Desc)</td>
-            <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => c.Case.CaseCreationTimestamp)</td>
+            <td><span hidden>@modified_date</span>@Html.DisplayFor(modelItem => shortDate)</td>
             <td>@Html.DisplayFor(modelItem => c.Case.CaseType.CaseTypeTitle)</td>
         </tr>
             }
