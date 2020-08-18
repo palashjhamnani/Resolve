@@ -780,38 +780,57 @@ namespace Resolve.Controllers
             var process_value = HttpContext.Request.Form["ProcessValue"];
             var final_comment = HttpContext.Request.Form["FinalComment"];
             int int_cid = Convert.ToInt32(cid);
-            string details_arg = "";
-            var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
+            string details_arg = "";            
             var CaseToProcess = _context.Case.Include(p => p.CaseType).Single(p => p.CaseID == int_cid);
             var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
             try
             {
+                if (CaseToProcess.CaseType.Hierarchical_Approval == true && process_value == "Reopen")
+                {
+                    var approvers_ahead = await _context.Approver
+                            .Where(p => p.CaseID == int_cid && p.Order > 1).ToListAsync();
+                    var groups_ahead = await _context.CaseTypeGroup
+                        .Where(p => p.CaseTypeID == CType.CaseTypeID && p.Order > 1).ToListAsync();
+                    if (approvers_ahead.Count() != 0)
+                    {
+                        foreach (var item in approvers_ahead)
+                        {
+                            _context.Approver.Remove(item);
+                        }
+                    }
+                    if (groups_ahead.Count() != 0)
+                    {
+                        foreach (var item in groups_ahead)
+                        {
+                            var @group = await _context.GroupAssignment.FindAsync(int_cid, item.LocalGroupID);
+                            if (@group != null)
+                            {
+                                _context.GroupAssignment.Remove(@group);
+                            }                            
+                        }
+                    }                    
+                }
+                await _context.SaveChangesAsync();
+                var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
                 foreach (var item in all_approvers)
                 {
                     if (process_value == "Approve")
-                    {
-                        item.Approved = 1;
-                        _context.Update(item);
-                    }
+                        {
+                            item.Approved = 1;
+                            _context.Update(item);
+                        }
                     else
                         if (process_value == "Reopen")
-                    {
-                        if (CaseToProcess.CaseType.Hierarchical_Approval == true && item.Order != 1)
-                        {
-                            _context.Remove(item);
-                        }
-                        else
                         {
                             item.Approved = 0;
                             _context.Update(item);
-                        }                        
-                    }
+                        }
                     else
                         if (process_value == "Reject")
-                    {
-                        item.Approved = -1;
-                        _context.Update(item);
-                    }
+                        {
+                            item.Approved = -1;
+                            _context.Update(item);
+                        }
                 }
                 await _context.SaveChangesAsync();
                 if (process_value == "Approve")
