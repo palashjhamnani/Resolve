@@ -767,7 +767,7 @@ namespace Resolve.Controllers
             int int_cid = Convert.ToInt32(cid);
             string details_arg = "";
             var all_approvers = await _context.Approver.Where(p => p.CaseID == int_cid).ToListAsync();
-            var CaseToProcess = await _context.Case.FindAsync(int_cid);
+            var CaseToProcess = _context.Case.Include(p => p.CaseType).Single(p => p.CaseID == int_cid);
             var CType = await _context.CaseType.FindAsync(CaseToProcess.CaseTypeID);
             try
             {
@@ -781,8 +781,15 @@ namespace Resolve.Controllers
                     else
                         if (process_value == "Reopen")
                     {
-                        item.Approved = 0;
-                        _context.Update(item);
+                        if (CaseToProcess.CaseType.Hierarchical_Approval == true && item.Order != 1)
+                        {
+                            _context.Remove(item);
+                        }
+                        else
+                        {
+                            item.Approved = 0;
+                            _context.Update(item);
+                        }                        
                     }
                     else
                         if (process_value == "Reject")
