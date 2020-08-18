@@ -69,6 +69,9 @@ namespace Resolve.Controllers
                         .Single(a => a.LocalUserID == caseComment.LocalUserID);
                         var case_creator =_context.LocalUser
                         .Single(a => a.LocalUserID == case_c.LocalUserID);
+                        var rel_case = _context.Case
+                        .Include(a => a.CaseType)
+                        .Single(a => a.CaseID == caseComment.CaseID);
                         //Send Notification
                         //Collect all current approvers
                         var approvers = _context.Approver
@@ -105,10 +108,11 @@ namespace Resolve.Controllers
                                 var u_pref = _context.EmailPreference
                                 .Single(b => b.LocalUserID == item.LocalUserID);
                                 // Check if the email recievers have subscribed to alerts
+                                // Anya added new_comment email template with rearranged fields
                                 if (u_pref.CommentCreation == true)
                                 {
-                                    var notif_result = new Notifications(_config).SendEmail(case_id: caseComment.CaseID.ToString(),
-                                        case_cid: case_c.CaseCID, luser: item, template: "comment", comment_by: luser, comment_on_case: caseComment.Comment);                                                                   
+                                    var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: caseComment.CaseID.ToString(),
+                                        case_cid: case_c.CaseCID, luser: item, template: "new_comment", comment_by: luser, comment_on_case: caseComment.Comment);                                                                   
                                 }                                                                
                             }
                         }
@@ -253,9 +257,10 @@ namespace Resolve.Controllers
                     var appr_add = new Approver { CaseID = cid, LocalUserID = app_group.LocalUserID, Approved = 0, Order = 1, LocalGroupID = CTypeGroup.LocalGroupID };
                     _context.Add(appr_add);
                     //Send Notification to the approver
+                    // Anya added new_assignment email template with rearranged fields
                     if (approver_preference.CaseAssignment == true)
                     {
-                        var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: app_luser, template: "assignment");
+                        var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: app_luser, template: "new_assignment");
                         if (notif_result != "Sent")
                         {
                             Console.WriteLine("Could not send assignment notification!");
@@ -276,9 +281,10 @@ namespace Resolve.Controllers
                             var group_user = _context.LocalUser.Single(p => p.LocalUserID == item.LocalUserID);
                             var email_preference = _context.EmailPreference
                             .Single(b => b.LocalUserID == item.LocalUserID);
+                            // Anya added new_group_assignment email template with rearranged fields and add related_case info
                             if (email_preference.GroupAssignment == true)
                             {
-                                var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: group_user, template: "g_assignment", group_name: app_group.GroupName);
+                                var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: group_user, template: "new_g_assignment", group_name: app_group.GroupName);
                                 if (notif_result != "Sent")
                                 {
                                     Console.WriteLine("Could not send group assignment notification!");
@@ -302,9 +308,10 @@ namespace Resolve.Controllers
                         var app_add = new Approver { CaseID = cid, LocalUserID = app.LocalUserID, Approved = 0, Order = Convert.ToInt32(item.Order), LocalGroupID = item.LocalGroupID };
                         _context.Add(app_add);
                         //Send Notification to this approver
+                        // Anya added new_assignment email template with rearranged fields and add related_case info
                         if (approver_preferences.CaseAssignment == true)
                         {
-                            var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "assignment");
+                            var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: approver_luser, template: "new_assignment");
                             if (notif_result != "Sent")
                             {
                                 Console.WriteLine("Could not send assignment notification!");
@@ -324,9 +331,10 @@ namespace Resolve.Controllers
                                 var g_user = _context.LocalUser.Single(p => p.LocalUserID == member.LocalUserID);
                                 var e_preference = _context.EmailPreference
                                 .Single(b => b.LocalUserID == member.LocalUserID);
+                                // Anya added new_group_assignment email template with rearranged fields and add related_case info
                                 if (e_preference.GroupAssignment == true)
                                 {
-                                    var notif_result = new Notifications(_config).SendEmail(case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: g_user, template: "g_assignment", group_name: app.GroupName);
+                                    var notif_result = new Notifications(_config).SendEmail(related_case: @case, case_id: @case.CaseID.ToString(), case_cid: @case.CaseCID, luser: g_user, template: "new_g_assignment", group_name: app.GroupName);
                                     if (notif_result != "Sent")
                                     {
                                         Console.WriteLine("Could not send group assignment notification!");
@@ -531,9 +539,10 @@ namespace Resolve.Controllers
                             var audit_log = new CaseAudit { AuditLog = "Case has been assigned to "+app_luser.FirstName+" "+app_luser.LastName+" as the next approver in hierarchy.", CaseID = int_cid, LocalUserID = User.Identity.Name };
                             _context.Add(audit_log);
                             //Send Notification
+                            // Anya added new_assignment email template with rearranged fields and add related_case info
                             if (approver_preference.CaseAssignment == true)
                             {
-                                var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "assignment");
+                                var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: app_luser, template: "new_assignment");
                                 if (notif_result != "Sent")
                                 {
                                     Console.WriteLine("Could not send assignment notification!");
@@ -553,9 +562,10 @@ namespace Resolve.Controllers
                                     var group_user = _context.LocalUser.Single(p => p.LocalUserID == item.LocalUserID);
                                     var email_preference = _context.EmailPreference
                                     .Single(b => b.LocalUserID == item.LocalUserID);
+                                    // Anya added new_group_assignment email template with rearranged fields and add related_case info
                                     if (email_preference.GroupAssignment == true)
                                     {
-                                        var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: group_user, template: "g_assignment", group_name: app_group.GroupName);
+                                        var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: group_user, template: "new_g_assignment", group_name: app_group.GroupName);
                                         if (notif_result != "Sent")
                                         {
                                             Console.WriteLine("Could not send group assignment notification!");
@@ -663,9 +673,11 @@ namespace Resolve.Controllers
                     await _context.SaveChangesAsync();
                     // Send notification
                     var pref = _context.EmailPreference.Single(p => p.LocalUserID == caseCreator.LocalUserID);
+                    
+                    // Anya added new_approved email template with rearranged fields and add related_case info
                     if (pref.CaseProcessed == true)
                     {
-                        var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "approved");
+                        var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "new_approved");
                         if (notif_result != "Sent")
                         {
                             Console.WriteLine("Could not send approval notification to the case creator!");
@@ -679,9 +691,10 @@ namespace Resolve.Controllers
                     {
                         var behalf_user = _context.LocalUser.Single(p => p.LocalUserID == on_behalf[0].LocalUserID);
                         var behalf_pref = _context.EmailPreference.Single(p => p.LocalUserID == behalf_user.LocalUserID);
+                        // Anya added new_approved email template with rearranged fields and add related_case info
                         if (behalf_pref.CaseProcessed == true)
                         {
-                            var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "approved");
+                            var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "new_approved");
                             if (notif_result != "Sent")
                             {
                                 Console.WriteLine("Could not send approval notification to the user on whose behalf the case was created!");
@@ -700,11 +713,12 @@ namespace Resolve.Controllers
                         var audit = new CaseAudit { AuditLog = "Case marked as processed", CaseID = int_cid, LocalUserID = User.Identity.Name };
                         _context.Add(audit);
                         await _context.SaveChangesAsync();
-                        // Send notification of Case Rejection
-                        var pref = _context.EmailPreference.Single(p => p.LocalUserID == caseCreator.LocalUserID);
+                    // Send notification of Case Rejection
+                    // Anya added new_rejected email template with rearranged fields and add related_case info
+                    var pref = _context.EmailPreference.Single(p => p.LocalUserID == caseCreator.LocalUserID);
                         if (pref.CaseProcessed == true)
                         {
-                            var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "rejected");
+                            var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: caseCreator, template: "new_rejected");
                             if (notif_result != "Sent")
                             {
                                 Console.WriteLine("Could not send rejection notification to the case creator!");
@@ -718,9 +732,10 @@ namespace Resolve.Controllers
                         {
                             var behalf_user = _context.LocalUser.Single(p => p.LocalUserID == on_behalf[0].LocalUserID);
                             var behalf_pref = _context.EmailPreference.Single(p => p.LocalUserID == behalf_user.LocalUserID);
+                            // Anya added new_rejected email template with rearranged fields and add related_case info
                             if (behalf_pref.CaseProcessed == true)
                             {
-                                var notif_result = new Notifications(_config).SendEmail(case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "rejected");
+                                var notif_result = new Notifications(_config).SendEmail(related_case: caseProcessed, case_id: cid, case_cid: caseProcessed.CaseCID, luser: behalf_user, template: "new_rejected");
                                 if (notif_result != "Sent")
                                 {
                                     Console.WriteLine("Could not send rejection notification to the user on whose behalf the case was created!");
@@ -1020,9 +1035,10 @@ namespace Resolve.Controllers
                 var rel_case = _context.Case
                     .Include(p => p.CaseType)
                     .Single(p => p.CaseID == int_cid);
+                // Anya added new_assigned email template with rearranged fields and add related_case info
                 if (pref.CaseAssignment == true)
                 {
-                    var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: cid, case_cid: ccid, luser: new_user, template: "assignment");
+                    var notif_result = new Notifications(_config).SendEmail(related_case: rel_case, case_id: cid, case_cid: ccid, luser: new_user, template: "new_assignment");
                     if (notif_result != "Sent")
                     {
                         details_arg = details_arg + "Could not notify new approver!";

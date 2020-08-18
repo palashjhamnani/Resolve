@@ -70,7 +70,7 @@ namespace Resolve.Models
         public virtual ScholarJobProfile ScholarJobProfile { get; set; }
 
         [Display(Name = "Compensation Allowance Change")]
-        public virtual ScholarCompAllowanceChange ScholarCompAllowanceChange { get; set; }
+        public virtual ScholarCompAllowanceChange? ScholarCompAllowanceChange { get; set; }
 
         public virtual Department Department { get; set; }
 
