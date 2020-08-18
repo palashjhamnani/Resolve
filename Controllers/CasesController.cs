@@ -92,11 +92,11 @@ namespace Resolve.Controllers
                         to_addresses.Add(case_creator);
                         // If case is on behalf of someone, add that user as well
                         var on_behalf = _context.OnBehalf
-                            .Where(b => b.CaseID == caseComment.CaseID)
-                            .ToList();
-                        if (on_behalf.Count != 0)
+                            .Include(p => p.LocalUser)
+                            .Single(b => b.CaseID == caseComment.CaseID);
+                        if (on_behalf != null)
                         {
-                            to_addresses.Add(on_behalf[0].LocalUser);
+                            to_addresses.Add(on_behalf.LocalUser);
                         }
                         // Remove all duplicate users from the to_addresses list
                         ICollection<LocalUser> withoutDuplicates = new HashSet<LocalUser>(to_addresses);
