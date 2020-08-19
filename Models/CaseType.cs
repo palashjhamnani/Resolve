@@ -16,7 +16,7 @@ namespace Resolve.Models
         public string CaseTypeTitle { get; set; }
 
         [Display(Name = "Description")]
-        public string? LongDescription { get; set; }
+        public string LongDescription { get; set; }
         public int? GroupNumber { get; set; }
         public bool Hierarchical_Approval { get; set; }
         public ICollection<Case> Cases { get; set; }
