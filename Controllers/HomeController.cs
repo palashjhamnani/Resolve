@@ -381,7 +381,7 @@ namespace Resolve.Controllers
             {
                 filename = $"resolve_admin_guide.pdf";
             }
-            var filepath = $"Documentation/{filename}";
+            var filepath = $"wwwroot/Documentation/{filename}";
             byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             return File(fileBytes, "application/x-msdownload", filename);
         }
