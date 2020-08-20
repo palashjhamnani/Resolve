@@ -15,6 +15,7 @@ using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Resolve.Controllers
 {
@@ -91,13 +92,23 @@ namespace Resolve.Controllers
                         // Add the Case Creator to the list as well
                         to_addresses.Add(case_creator);
                         // If case is on behalf of someone, add that user as well
-                        var on_behalf = _context.OnBehalf
-                            .Include(p => p.LocalUser)
-                            .Single(b => b.CaseID == caseComment.CaseID);
-                        if (on_behalf != null)
+                        if (case_c.OnBehalfOf == true)
                         {
-                            to_addresses.Add(on_behalf.LocalUser);
-                        }
+                            try
+                            {
+                                var on_behalf = _context.OnBehalf
+                                .Include(p => p.LocalUser)
+                                .Single(b => b.CaseID == caseComment.CaseID);
+                                if (on_behalf != null)
+                                {
+                                    to_addresses.Add(on_behalf.LocalUser);
+                                }
+                            }                                
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Could not send notification to onbehalf user");
+                            }                            
+                        }                        
                         // Remove all duplicate users from the to_addresses list
                         ICollection<LocalUser> withoutDuplicates = new HashSet<LocalUser>(to_addresses);
                         foreach (var item in withoutDuplicates)
@@ -135,6 +146,7 @@ namespace Resolve.Controllers
 
 
         // GET: Cases
+        [Authorize("Admin")]
         public async Task<IActionResult> Index()
         {
             var resolveCaseContext = _context.Case.Include(s => s.CaseType).Include(u => u.LocalUser);
@@ -355,6 +367,7 @@ namespace Resolve.Controllers
 
 
         // GET: Cases/Edit/5
+        [Authorize("Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -375,6 +388,7 @@ namespace Resolve.Controllers
         // POST: Cases/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CaseID,LocalUserID,OnBehalfOf,CaseStatus,CaseCreationTimestamp,CaseTypeID,Description,Processed")] Case @case)
@@ -438,6 +452,7 @@ namespace Resolve.Controllers
         }
 
         // GET: Cases/Delete/5
+        [Authorize("Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -458,6 +473,7 @@ namespace Resolve.Controllers
         }
 
         // POST: Cases/Delete/5
+        [Authorize("Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -595,7 +611,10 @@ namespace Resolve.Controllers
                             foreach (var item in groups_ahead)
                             {
                                 var @group = await _context.GroupAssignment.FindAsync(int_cid, item.LocalGroupID);
-                                _context.GroupAssignment.Remove(@group);
+                                if (@group != null)
+                                {
+                                    _context.GroupAssignment.Remove(@group);
+                                }                                
                             }
                             await _context.SaveChangesAsync();
                             var audit_remove = new CaseAudit { AuditLog = "Groups and Approvers ahead of current approver in hierarchy have been removed.", CaseID = int_cid, LocalUserID = User.Identity.Name };
@@ -765,7 +784,7 @@ namespace Resolve.Controllers
 
 
 
-
+        [Authorize("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminProcess(int id)
