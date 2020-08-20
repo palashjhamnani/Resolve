@@ -473,13 +473,11 @@ namespace Resolve.Controllers
             return _context.Case.Any(e => e.CaseID == id);
         }
 
-
-        // Approve
+        // Approve	
         public IActionResult Process(int? id)
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

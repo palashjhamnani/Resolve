@@ -43,6 +43,8 @@
                                 <a class="dropdown-item" asp-area="" asp-controller="GroupAssignments" asp-action="Index">Group Assignments</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="OnBehalves" asp-action="Index">On Behalf</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="CaseAudits" asp-action="Index">Audit Logs</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ag"><i class="fa fa-download"></i> Admin Guide</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="dg"><i class="fa fa-download"></i> Developer Guide</a>
                             </div>
                         </div>
                     }
@@ -85,12 +87,10 @@
             <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting</a>
             <div class="btn-group dropup btn-sm">
                 <button type="button" class="btn btn-outline-secondary btn-sm dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Guides <i class="fas fa-caret-up"></i>
+                    User Guide <i class="fas fa-caret-up"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ug"><i class="fa fa-download"></i> User Guide</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ag"><i class="fa fa-download"></i> Admin Guide</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="dg"><i class="fa fa-download"></i> Developer Guide</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Download" asp-route-id="ug"><i class="fa fa-download"></i> User Guide</a>                    
                 </div>
             </div>
         </div>
