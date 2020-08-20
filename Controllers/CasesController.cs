@@ -473,9 +473,15 @@ namespace Resolve.Controllers
             return _context.Case.Any(e => e.CaseID == id);
         }
 
+        // Approve	
+        public IActionResult Process(int? id)
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Process(int? id)
+        public async Task<IActionResult> Process(int id)
         {
             if (id == null)
             {
@@ -762,7 +768,7 @@ namespace Resolve.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AdminProcess(int? id)
+        public async Task<IActionResult> AdminProcess(int id)
         {
             if (id == null)
             {
@@ -891,7 +897,7 @@ namespace Resolve.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelCase(int? id)
+        public async Task<IActionResult> CancelCase(int id)
         {
             if (id == null)
             {
@@ -947,7 +953,7 @@ namespace Resolve.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SwapApprover(int? id)
+        public async Task<IActionResult> SwapApprover(int id)
         {
             if (id == null)
             {

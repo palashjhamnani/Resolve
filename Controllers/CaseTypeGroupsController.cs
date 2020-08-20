@@ -27,7 +27,7 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseTypeGroups/Details/5
-        public async Task<IActionResult> Details(int? CaseTypeid, string LocalGroupid)
+        public async Task<IActionResult> Details(int? CaseTypeid, string? LocalGroupid)
         {
             if (CaseTypeid == null || LocalGroupid == "")
             {
@@ -145,7 +145,7 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseTypeGroups/Edit/5
-        public async Task<IActionResult> Edit(int? CaseTypeid, string LocalGroupid)
+        public async Task<IActionResult> Edit(int? CaseTypeid, string? LocalGroupid)
         {
             if (CaseTypeid == null || LocalGroupid == "")
             {
@@ -200,7 +200,7 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseTypeGroups/Delete/5
-        public async Task<IActionResult> Delete(int? CaseTypeid, string LocalGroupid)
+        public async Task<IActionResult> Delete(int? CaseTypeid, string? LocalGroupid)
         {
             if (CaseTypeid == null || LocalGroupid == "")
             {

@@ -68,6 +68,10 @@ namespace Resolve.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id, CaseAttachmentCreateViewModel model)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 string uniqueFileName = null;
