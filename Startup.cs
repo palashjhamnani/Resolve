@@ -22,6 +22,7 @@ using Resolve.Data;
 using Resolve.Infrastructure;
 using Resolve.Services;
 using Resolve.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Resolve
 {
@@ -58,7 +59,9 @@ namespace Resolve
                 options.AddPolicy(AdminAuthPolicy.Name,
                                   AdminAuthPolicy.Build);
             });
-
+            //services.Configure<CookieAuthenticationOptions>(OpenIdConnectDefaults., options => options.AccessDeniedPath = "/Home/NoAuth");
+            services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
+            options => options.AccessDeniedPath = "/Home/NoAuth");
             // Token acquisition service based on MSAL.NET 
             // and chosen token cache implementation
             services.AddWebAppCallsProtectedWebApi(Configuration, new string[] { Constants.ScopeUserRead })

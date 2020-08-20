@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Resolve.Data;
 using Resolve.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Resolve.Controllers
 {
+    [Authorize("Admin")]
     public class CaseTypesController : Controller
     {
         private readonly ResolveCaseContext _context;

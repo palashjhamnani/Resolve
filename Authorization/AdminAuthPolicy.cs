@@ -10,7 +10,6 @@ namespace Resolve.Authorization
     {
         public static string Name => "Admin";
         public static void Build(AuthorizationPolicyBuilder builder) =>
-            builder.RequireClaim("groups", "773d56cf-4ede-494e-8823-1956116230f1");        
-
+            builder.RequireClaim("groups", "773d56cf-4ede-494e-8823-1956116230f1");
     }
 }

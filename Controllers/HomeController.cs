@@ -294,7 +294,12 @@ namespace Resolve.Controllers
 
         public IActionResult Privacy()
         {
-            Console.WriteLine("Privacy");
+            //Console.WriteLine("Privacy");
+            return View();
+        }
+
+        public IActionResult NoAuth()
+        {            
             return View();
         }
 
