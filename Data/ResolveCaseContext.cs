@@ -31,6 +31,8 @@ namespace Resolve.Data
         public DbSet<PerioLimitedCare> PerioLimitedCare { get; set; }
         public DbSet<HiringAffiliateFaculty> HiringAffiliateFaculty { get; set; }
         public DbSet<HRServiceScholarResident> HRServiceScholarResident { get; set; }
+        public DbSet<Travel> Travel { get; set; }
+        public DbSet<FoodEvent> FoodEvent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

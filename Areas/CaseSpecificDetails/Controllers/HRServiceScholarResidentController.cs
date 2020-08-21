@@ -86,7 +86,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
 
         {
             /** First check important fields to see if values have changed and if so add to audit log **/
-            string strAudit = "Case Edited. Values updated (old,new). ";
+            string strAudit = "Case Details Edited. Values updated (old,new). ";
 
             IQueryable<HRServiceScholarResident> beforeCases = _context.HRServiceScholarResident.Where(c => c.CaseID == id).AsNoTracking<HRServiceScholarResident>();
             HRServiceScholarResident beforeCase = beforeCases.FirstOrDefault();
@@ -98,7 +98,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
             {
                 if (beforeCase.Name != hrScholar.Name)
                 {
-                    strAudit += "Student: (" + beforeCase.Name + "," + hrScholar.Name + ") ";
+                    strAudit += "Name: (" + beforeCase.Name + "," + hrScholar.Name + ") ";
                 }
 
                

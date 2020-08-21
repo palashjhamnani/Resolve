@@ -99,7 +99,7 @@ namespace Resolve.Areas.CaseSpecificDetails.Controllers
                 /** First check fields to see if values have changed and if so add to audit log  **/
                /** Also clear any fields that were hidden when and not automatically reset in the form **/
 
-                string strAudit = "Case Edited. Values updated (old,new). ";
+                string strAudit = "Case Details Edited. Values updated (old,new). ";
                
                 string bcRequest = beforeCase.FacRequestType.ToString();
                 string currRequest = hrFaculty.FacRequestType.ToString();              

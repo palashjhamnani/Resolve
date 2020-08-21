@@ -1,0 +1,33 @@
+﻿@model Resolve.Models.Case
+
+@foreach (var item in Model.Travel)
+{
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EmployeeName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EmployeeName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Department)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Department)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.TravelStartDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.TravelStartDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.TravelEndDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.TravelEndDate)
+        </dd>
+
+
+    </dl>
+}

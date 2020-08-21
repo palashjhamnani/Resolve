@@ -1,0 +1,33 @@
+﻿@model Resolve.Models.Case
+
+@foreach (var item in Model.FoodEvent)
+{
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EmployeeName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EmployeeName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.Department)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.Department)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EventDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EventDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(modelItem => item.EventTitle)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(modelItem => item.EventTitle)
+        </dd>
+
+
+    </dl>
+}
