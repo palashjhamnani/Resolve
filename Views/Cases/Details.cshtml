@@ -266,7 +266,17 @@
                                                         @Html.DisplayFor(modelItem => item.AuditTimestamp)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(modelItem => item.AuditLog)
+                                                        @{
+                                                            if (item.AuditLog == "Case Specific Details Edited")
+                                                            {
+                                                                @Html.DisplayFor(modelItem => item.AuditLog)
+                                                                <a class="btn btn-primary btn-sm" asp-area="CaseSpecificDetails" asp-controller="@Model.CaseType.CaseTypeTitle" asp-action="EditLog" asp-route-id="@item.CaseAuditID">Check Details</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.DisplayFor(modelItem => item.AuditLog)
+                                                            }
+                                                        }
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.LocalUserID)

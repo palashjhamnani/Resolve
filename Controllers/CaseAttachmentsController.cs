@@ -12,6 +12,8 @@ using Resolve.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using static Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Resolve.Controllers
 {
@@ -27,6 +29,7 @@ namespace Resolve.Controllers
         }
 
         // GET: CaseAttachments
+        [Authorize("Admin")]
         public async Task<IActionResult> Index()
         {
             var resolveCaseContext = _context.CaseAttachment.Include(c => c.Case).Include(c => c.LocalUser);

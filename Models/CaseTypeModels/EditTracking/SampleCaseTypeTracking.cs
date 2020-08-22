@@ -7,9 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Resolve.Models
 {
-    public class SampleCaseType
+    public class SampleCaseTypeTracking
     {
-        [Required, Key, ForeignKey("Case")]
+        public int SampleCaseTypeTrackingID { get; set; }
+        public string Status { get; set; }
+        public int CaseAuditID { get; set; }
+        public CaseAudit CaseAudit { get; set; }
         public int CaseID { get; set; }
         public Case Case { get; set; }
 

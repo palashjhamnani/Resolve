@@ -22,5 +22,8 @@ namespace Resolve.Models
 
         public string LocalUserID { get; set; }
         public LocalUser LocalUser { get; set; }
+
+        // Tracking Case Edit Specific Details
+        public ICollection<SampleCaseTypeTracking> SampleCaseTypeTrackings { get; set; }
     }
 }

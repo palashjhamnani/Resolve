@@ -1,0 +1,45 @@
+﻿@model Resolve.Models.SampleCaseTypeTracking
+
+@{
+    ViewData["Title"] = "Specific Details Edit Log";
+}
+
+<h1>Edit Log</h1>
+
+<h4>Sample Case Type Edit Tracking</h4>
+<hr />
+
+@{
+    var logs = ViewData["Logs"] as List<SampleCaseTypeTracking>;
+
+    if (logs != null)
+    {
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr>
+                    <th class="th-sm" style="width: 10%">Value Type</th>
+                    <th class="th-sm" style="width: 40%">Case Description</th>
+                    <th class="th-sm" style="width: 10%">Employee Name</th>
+                    <th class="th-sm" style="width: 20%">Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in logs)
+                {
+                    <tr>
+                        <td><b>@item.Status</b></td>
+                        <td>@item.CaseDescription</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Salary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No logs found currently</p>
+    }
+}
+
+

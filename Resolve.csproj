@@ -32,6 +32,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Models\CaseTypeModels\EditTracking\" />
     <Folder Include="Views\Reports\" />
   </ItemGroup>
 
