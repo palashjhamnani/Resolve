@@ -5,6 +5,28 @@ Resolve is a case management software developed to manage cases, which are servi
 
 ![Resolve Case Creation Demo](Demo/resolve_demo.gif)
 
+### Updated Screens:
+
+#### Homepage
+
+![](Demo/1.PNG)
+
+#### Ticket View
+
+![](Demo/2.PNG)
+
+#### Preferences
+
+![](Demo/3.PNG)
+
+#### Assignments
+
+![](Demo/4.PNG)
+
+#### Attachment/Attachments
+
+![](Demo/5.PNG)
+
 Before you run the application, you would need to create an "appsettings.json" file in the parent directory of the application with the following contents:
 
 
